@@ -17,3 +17,5 @@ After having cloned the repository to your disk you have to follow these few ste
 11. Select your operating system and click OK until you get back to the default eclipse window.
 12. Press play to check it it works.
 13. Now, you can start making your own game.
+
+Perkele is about the Finnish Devil who have stolen all your loot!

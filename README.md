@@ -19,3 +19,4 @@ After having cloned the repository to your disk you have to follow these few ste
 13. Now, you can start making your own game.
 
 Perkele is about the Finnish Devil who have stolen all your loot!
+You will start off naked and try to recover and get your vengence!

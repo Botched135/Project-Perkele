@@ -23,7 +23,7 @@ public class SimpleSlickGame extends BasicGame
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
-		g.drawString("Emil er en kæmpe faggot", 250, 200);
+		g.drawString("Welcome to Project Perkele!", 500, 300);
 	}
 
 	public static void main(String[] args)
@@ -32,7 +32,7 @@ public class SimpleSlickGame extends BasicGame
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new SimpleSlickGame("Simple Slick Game"));
-			appgc.setDisplayMode(640, 480, false);
+			appgc.setDisplayMode(1280, 720, true);
 			appgc.start();
 		}
 		catch (SlickException ex)

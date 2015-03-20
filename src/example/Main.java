@@ -19,11 +19,11 @@ public class Main extends StateBasedGame
 	{
 		try
 		{
-			AppGameContainer appgc;
-			appgc = new AppGameContainer(new Main("Simple Slick Game"));
-			appgc.setDisplayMode(Window.WIDTH, Window.HEIGHT, false);
-			appgc.setTargetFrameRate(Window.FPS);
-			appgc.start();
+			AppGameContainer gc;
+			gc = new AppGameContainer(new Main("Simple Slick Game"));
+			gc.setDisplayMode(Window.WIDTH, Window.HEIGHT, Window.Fullscreen);
+			gc.setTargetFrameRate(Window.FPS);
+			gc.start();
 		}
 		catch (SlickException ex)
 		{

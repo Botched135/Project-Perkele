@@ -7,7 +7,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.sun.glass.ui.Screen;
 
 public class GameState extends BasicGameState {
 
@@ -29,13 +28,12 @@ public class GameState extends BasicGameState {
 			if(gc.getInput().isKeyPressed(Input.KEY_S)) {
 				//SOME MOVEMENT DOWNWARDS HERE
 			}
+			
 	}
 	
 	
 	public void render(GameContainer appgc, StateBasedGame game, Graphics g) throws SlickException {
 		g.drawString("HEJ TOSSER!", 500, 200);
-		
-
 	}
 
 

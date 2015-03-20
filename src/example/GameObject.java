@@ -2,9 +2,9 @@ package example;
 
 public class GameObject {
 
-	private float xPos;
-	private float yPos;
-	private boolean render;
+	protected float xPos;
+	protected float yPos;
+	protected boolean render;
 
  GameObject() {
 	 
@@ -29,11 +29,11 @@ public class GameObject {
 	 
  }
  
- float getxPos(){
+ public float getXPos(){
 	 return xPos;
  }
  
- float getyPos(){
+ public float getYPos(){
 	 return yPos;
  }
 
@@ -41,17 +41,17 @@ public class GameObject {
 	 return render;
  }
  
- void setxPos(float _xPos){
+ public void setXPos(float _xPos){
 	 //Insert if-statement restrictions for the setting of the xPos, if needed.
 	 xPos = _xPos;
  }
  
- void setyPos(float _yPos){
+ public void setYPos(float _yPos){
 	 //Insert if-statement restrictions for the setting of the yPos, if needed.
 	 yPos = _yPos;
  }
  
- void setRenderstate(boolean _render){
+ public void setRenderstate(boolean _render){
 	 render = _render;
  }
 }

@@ -1,5 +1,8 @@
 package example;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -17,24 +20,42 @@ public class GameState extends BasicGameState {
 		Player test = new Player();
 		private Shape testCircle = new Circle(test.getXPos(),test.getYPos(), test.hitboxX);
 		private Shape testLine = new Line(test.getXPos(),test.getYPos(), Mouse.getX(), Mouse.getY());
+		private ArrayList <Loot> lootList = new ArrayList <Loot>();
+		private ArrayList <Circle> circleList = new ArrayList <Circle>();
+		private Random randLoot = new Random();
+		private int lootDropDist = 50;
+		
+
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
+			//CHARACTER MOVEMENT
 			if(gc.getInput().isKeyDown(Input.KEY_A)) {
-				//SOME MOVEMENT TO THE LEFT HERE
 				test.changeXPos(-1.0f);
 			}
 			if(gc.getInput().isKeyDown(Input.KEY_W)) {
-				//SOME MOVEMENT DOWNWARDS HERE
 				test.changeYPos(-1.0f);
 			}
 			if(gc.getInput().isKeyDown(Input.KEY_D)) {
-				//SOME MOVEMENT TO THE RIGHT HERE
 				test.changeXPos(1.0f);
 			}
 			if(gc.getInput().isKeyDown(Input.KEY_S)) {
-				//SOME MOVEMENT DOWNWARDS HERE
 				test.changeYPos(1.0f);
+			}
+			
+			
+			//LOOT SPAWNING
+			if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
+				lootList.add(new Loot());
+				System.out.println(lootList.size());
+				for(int i = lootList.size()-1; i < lootList.size(); i++) {
+					Loot tempLoot = lootList.get(i);
+					tempLoot.setXPos(randLoot.nextInt(lootDropDist));
+					tempLoot.setYPos(randLoot.nextInt(lootDropDist));
+				
+					Circle tempCircle = new Circle(Mouse.getX() + tempLoot.getXPos()-(lootDropDist/2) ,Window.HEIGHT - Mouse.getY() + tempLoot.getYPos()-(lootDropDist/2), 50f);
+					circleList.add(tempCircle); 
+				}
 			}
 			
 
@@ -49,6 +70,10 @@ public class GameState extends BasicGameState {
 
 		g.draw(testCircle);
 		g.draw(testLine);
+		
+		for(int i = 0; i < circleList.size(); i++) {
+			g.draw(circleList.get(i));
+		}
 	}
 
 

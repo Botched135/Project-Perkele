@@ -11,13 +11,11 @@ import com.sun.glass.ui.Screen;
 
 public class GameState extends BasicGameState {
 
-	public void init(GameContainer arg0, StateBasedGame arg1)
-			throws SlickException {		
+	public void init(GameContainer appgc, StateBasedGame game) throws SlickException {
 	}
 
 	
-	public void update(GameContainer gc, StateBasedGame arg1, int arg2)
-			throws SlickException {
+	public void update(GameContainer gc, StateBasedGame game, int delta) throws SlickException {
 		
 			if(gc.getInput().isKeyPressed(Input.KEY_A)) {
 				//SOME MOVEMENT TO THE LEFT HERE
@@ -34,9 +32,9 @@ public class GameState extends BasicGameState {
 	}
 	
 	
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics g)
-			throws SlickException {
+	public void render(GameContainer appgc, StateBasedGame game, Graphics g) throws SlickException {
 		g.drawString("HEJ TOSSER!", 500, 200);
+		
 
 	}
 

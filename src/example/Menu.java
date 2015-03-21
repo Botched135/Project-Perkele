@@ -9,12 +9,12 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Menu extends BasicGameState {
 
-	public void init(GameContainer arg0, StateBasedGame arg1)
+	public void init(GameContainer arg0, StateBasedGame sbg)
 			throws SlickException {		
 	}
 
 	
-	public void update(GameContainer gc, StateBasedGame sbg, int arg2)
+	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
 		if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {						//Code for changing state, each state is a new class
 			sbg.enterState(1);													//and in this line of code we go to the state "GameState"
@@ -23,7 +23,7 @@ public class Menu extends BasicGameState {
 	}
 	
 	
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics g)
+	public void render(GameContainer arg0, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		g.drawString("Menu", 600, 200);
 		g.drawString("Press enter to start", 530, 230);

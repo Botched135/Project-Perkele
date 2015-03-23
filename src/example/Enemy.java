@@ -45,11 +45,7 @@ public class Enemy extends GameObject {
 	//stateManager chooses the state of the Enemy based on certain criteria
 	void stateManager(Player _player){
 		
-		float distToPlayer;
-		//Pythagoras to calculate distance from enemy to player
-		distToPlayer = (float)(Math.sqrt(Math.pow((this.xPos-_player.getXPos()),2) + Math.pow((this.yPos-_player.getYPos()),2)));
-		
-		if(distToPlayer < 100){
+		if(this.distToObj(_player) < 100){
 			
 			fleeState();
 		}

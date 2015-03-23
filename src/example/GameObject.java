@@ -32,6 +32,14 @@ public class GameObject {
 	 	render = _render;
 	 
 	}
+	
+	float distToObj(GameObject _obj){
+		
+		 float distToObj;
+		//Pythagoras to calculate distance between objects
+		distToObj = (float)(Math.sqrt(Math.pow((this.xPos-_obj.getXPos()),2) + Math.pow((this.yPos-_obj.getYPos()),2)));
+		return distToObj;
+	}
  
 	public float getXPos(){
 		return xPos;

@@ -9,10 +9,10 @@ import org.newdawn.slick.geom.*;
 
 public class Player extends GameObject{
 	
-	private float speedMultiplier = 5.0f;
-	private float hitboxX = 50.0f;
-	private float hitboxY = 50.0f;
-	private GameContainer input;
+	protected GameContainer input;
+	protected float speedMultiplier = 5.0f;
+	protected float hitboxX = 25.0f;
+	protected float hitboxY = 25.0f;
 	
 	public void changeXPos(float _xPos){
 	

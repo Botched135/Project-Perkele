@@ -17,6 +17,7 @@ import org.newdawn.slick.geom.*;
 public class GameState extends BasicGameState {
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		
 	}
 		
 		//VARIABLE DECLARATION
@@ -35,6 +36,8 @@ public class GameState extends BasicGameState {
 	
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		gc.reinit();	//Clears the the GameContainer
+		
 		mouseXPOS = gc.getInput().getMouseX();
 		mouseYPOS = gc.getInput().getMouseY();
 		
@@ -104,6 +107,10 @@ public class GameState extends BasicGameState {
 		System.out.println(enemyList.get(0).distToPlayer);
 		}
 		*/
+		
+		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+			sbg.enterState(0);
+		}
 	}
 	
 	

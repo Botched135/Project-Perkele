@@ -12,6 +12,7 @@ public class Loot extends GameObject {
 	}
 	
 	Loot(Enemy _enemy) {
-		
+		hitboxX = 25.0f;
+		hitboxY = 25.0f;
 	}
 }

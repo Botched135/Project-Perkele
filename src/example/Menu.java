@@ -1,5 +1,6 @@
 package example;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -18,14 +19,19 @@ public class Menu extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) {						//Code for changing state, each state is a new class
 			sbg.enterState(1);													//and in this line of code we go to the state "GameState"
 		}
+		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+			gc.exit();
+		}
 		
 	}
 	
 	
 	public void render(GameContainer arg0, StateBasedGame sbg, Graphics g)
 			throws SlickException {
+		g.setColor(new Color(255,255,255));
 		g.drawString("Menu", 600, 200);
-		g.drawString("Press enter to start", 530, 230);
+		g.drawString("Press 'ENTER' to start", 530, 230);
+		g.drawString("Press 'ESC' to exit", 540, 260);
 	}
 
 

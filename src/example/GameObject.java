@@ -6,6 +6,8 @@ public class GameObject {
 	protected float xPos;
 	protected float yPos;
 	protected boolean render;
+	protected float hitboxX;
+	protected float hitboxY;
 
 	//CONTRUCTERS
 	GameObject() {

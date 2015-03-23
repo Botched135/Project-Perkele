@@ -1,21 +1,16 @@
 package example;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.BasicGameState;
-import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.geom.*;
 
 import org.newdawn.slick.Color;
 
 public class Player extends GameObject{
 	
 	protected float speedMultiplier = 5.0f;
-	protected float hitboxX = 25.0f;
-	protected float hitboxY = 25.0f;
 	protected static Color playerTestCol = new Color(50,50,255);
 	
+	Player() {
+		hitboxX = 25.0f;
+		hitboxY = 25.0f;
+	}
 	
 	
 	public void changeXPos(float _xPos){

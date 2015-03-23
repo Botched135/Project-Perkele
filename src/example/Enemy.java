@@ -6,8 +6,6 @@ public class Enemy extends GameObject {
 	
 	//VARIABLE DECLARATION
 	protected float speedMultiplier = 5.0f;
-	protected float hitboxX = 50.0f;
-	protected float hitboxY = 50.0f;
 	
 	protected static Color enemyTestCol = new Color(255,0,0);
 	
@@ -16,6 +14,8 @@ public class Enemy extends GameObject {
 		 
 		super(_xPos, _yPos);
 		
+		hitboxX = 50.0f;
+		hitboxY = 50.0f;
 		//Makes sure that the entire sprite (test circle at this point) is inside the window when spawned.
 		if(_xPos > Window.WIDTH - hitboxX){
 			super.xPos = Window.WIDTH - hitboxX;

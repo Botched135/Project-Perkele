@@ -7,12 +7,16 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.geom.*;
 
+import org.newdawn.slick.Color;
+
 public class Player extends GameObject{
 	
 	protected GameContainer input;
 	protected float speedMultiplier = 5.0f;
 	protected float hitboxX = 25.0f;
 	protected float hitboxY = 25.0f;
+	protected static Color playerTestCol = new Color(50,50,255);
+	
 	
 	public void changeXPos(float _xPos){
 	

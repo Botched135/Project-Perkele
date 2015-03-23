@@ -11,11 +11,11 @@ import org.newdawn.slick.Color;
 
 public class Player extends GameObject{
 	
-	protected GameContainer input;
 	protected float speedMultiplier = 5.0f;
 	protected float hitboxX = 25.0f;
 	protected float hitboxY = 25.0f;
 	protected static Color playerTestCol = new Color(50,50,255);
+	
 	
 	
 	public void changeXPos(float _xPos){
@@ -40,11 +40,18 @@ public class Player extends GameObject{
 		}
 	
 	}
-	public boolean isAttacking(){
-		if(input.isMousePressed(input.MOUSE_LEFT_BUTTON)){
-		return true;
+	public boolean isAttacking(float mouseX, float mouseY){
+		//if(PlayerContainer.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){//actually left button, but we need to change it later after testing is done with other function
+		if(AttackReady(10f)){	
+		System.out.println("Debugging: X = "+mouseX+" & Y = "+mouseY);
+			return true;
 		}
-		return false;
+		else
+			return false;
+	}
+	public static boolean AttackReady(float AS){
+		//updates
+		return true;
 	}
 
 }

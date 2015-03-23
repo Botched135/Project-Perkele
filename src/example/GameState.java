@@ -29,14 +29,17 @@ public class GameState extends BasicGameState {
 		private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
 		private Random randLoot = new Random();
 		private int lootDropDist = 50;
+		private float mouseXPOS,mouseYPOS;
 		
 
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		
+		mouseXPOS = gc.getInput().getMouseX();
+		mouseYPOS = gc.getInput().getMouseY();
 		
 		//UPDATING PLAYER
-		
+		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON))
+			player.isAttacking(mouseXPOS,mouseYPOS);
 		//PLAYER MOVEMENT INPUT
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
 			player.changeXPos(-1.0f);
@@ -54,7 +57,7 @@ public class GameState extends BasicGameState {
 		//UDATES PLAYER SPRITE
 		playerTestCircle = new Circle(player.getXPos(),player.getYPos(), player.hitboxX); 
 		playerToMouseTestLine = new Line(player.getXPos(),player.getYPos(), Mouse.getX(), Window.HEIGHT-Mouse.getY());
-			
+		
 			
 		//LOOT SPAWNING - by using "space key" as input
 		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {

@@ -58,4 +58,10 @@ public class GameObject {
 	public void setRenderstate(boolean _render){
 		render = _render;
 	}
+	public boolean isColliding(GameObject _obj){
+		if(this.distToObj(_obj)<this.hitboxX/2+_obj.hitboxX/2){
+			return true;
+		}else
+			return false;
+	}
 }

@@ -48,5 +48,12 @@ public class Player extends GameObject{
 		//updates
 		return true;
 	}
+	public float dmg(Loot weapon){
+		//return weapon.Damage;
+		return 1;
+	}
+	public float dmg(){
+		return 1;
+	}
 
 }

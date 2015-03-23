@@ -44,6 +44,12 @@ public class GameState extends BasicGameState {
 		//UPDATING PLAYER
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON))
 			player.isAttacking(mouseXPOS,mouseYPOS);
+		
+		//UPDATING COLLISION
+		for(int i = 0; i<enemyList.size(); i++){
+			if(player.isColliding(enemyList.get(i)))
+				System.out.println(player.isColliding(enemyList.get(i)));
+		}
 		//PLAYER MOVEMENT INPUT
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
 			player.changeXPos(-1.0f);

@@ -67,7 +67,7 @@ public class GameObject {
 		render = _render;
 	}
 	public boolean isColliding(GameObject _obj){
-		if(this.distToObj(_obj)<this.hitboxX/2+_obj.hitboxX/2){
+		if(this.distToObj(_obj)<this.hitboxX+_obj.hitboxX){
 			return true;
 		}else
 			return false;

@@ -14,6 +14,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.geom.*;
 
 
+
 public class GameState extends BasicGameState {
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -21,9 +22,9 @@ public class GameState extends BasicGameState {
 	}
 		
 		//VARIABLE DECLARATION
-		Player player = new Player();
-		private Circle playerTestCircle = new Circle(player.getXPos(),player.getYPos(), player.hitboxX);
-		private Line playerToMouseTestLine = new Line(player.getXPos(),player.getYPos(), Mouse.getX(), Mouse.getY());
+		Player player = new Player(new Vector2f(Window.WIDTH/2, Window.HEIGHT/2));
+		private Circle playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
+		private Line playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Mouse.getY());
 		private ArrayList <Loot> lootList = new ArrayList <Loot>();
 		private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
 		private ArrayList <Circle> lootRenderList = new ArrayList <Circle>();
@@ -31,42 +32,40 @@ public class GameState extends BasicGameState {
 		private Random randLoot = new Random();
 		private Random randDrop = new Random();
 		private int lootDropDist = 50;
-		private float mouseXPOS,mouseYPOS;
+		private Vector2f mousePos;
 		
 	
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		gc.reinit();	//Clears the the GameContainer
 		
-		mouseXPOS = gc.getInput().getMouseX();
-		mouseYPOS = gc.getInput().getMouseY();
+		mousePos = new Vector2f(gc.getInput().getMouseX(), gc.getInput().getMouseY());
 		
 		//UPDATING PLAYER
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON))
-			player.isAttacking(mouseXPOS,mouseYPOS);
+			player.isAttacking(mousePos);
 		
 		//UPDATING COLLISION
 		for(int i = 0; i<enemyList.size(); i++){
 			if(player.isColliding(enemyList.get(i)))
-				System.out.println(player.isColliding(enemyList.get(i)));
+				System.out.println("player is colliding with enemy nr. "+ i);
 		}
 		//PLAYER MOVEMENT INPUT
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
-			player.changeXPos(-1.0f);
+			player.changeXPos(new Vector2f(-1.0f, 0f));
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_W)) {
-			player.changeYPos(-1.0f);
+			player.changeYPos(new Vector2f(0f, -1.0f));
 			}
 		if(gc.getInput().isKeyDown(Input.KEY_D)) {
-			player.changeXPos(1.0f);
+			player.changeXPos(new Vector2f(1.0f, 0f));
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_S)) {
-			player.changeYPos(1.0f);
+			player.changeYPos(new Vector2f(0.0f, 1.0f));
 		}
 		
 		//UDATES PLAYER SPRITE
-		playerTestCircle = new Circle(player.getXPos(),player.getYPos(), player.hitboxX); 
-		playerToMouseTestLine = new Line(player.getXPos(),player.getYPos(), Mouse.getX(), Window.HEIGHT-Mouse.getY());
+		playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX); 
+		playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		
 			
 		//LOOT SPAWNING - by using "space key" as input.
@@ -76,10 +75,10 @@ public class GameState extends BasicGameState {
 				lootList.add(new Loot());
 				for(int i = lootList.size()-1; i < lootList.size(); i++) {
 					Loot tempLoot = lootList.get(i);
-					tempLoot.setXPos(randLoot.nextInt(lootDropDist));
-					tempLoot.setYPos(randLoot.nextInt(lootDropDist));
+					tempLoot.vector.set(new Vector2f(randLoot.nextInt(lootDropDist), randLoot.nextInt(lootDropDist)));
+	
 				
-					Circle tempCircle = new Circle(Mouse.getX() + tempLoot.getXPos()-(lootDropDist/2) ,Window.HEIGHT - Mouse.getY() + tempLoot.getYPos()-(lootDropDist/2), 50f);
+					Circle tempCircle = new Circle(mousePos.getX() + (tempLoot.vector.getX())-(lootDropDist/2) , mousePos.getY() + (tempLoot.vector.getY())-(lootDropDist/2), 50f);
 					lootRenderList.add(tempCircle); 
 				}
 			}
@@ -87,9 +86,9 @@ public class GameState extends BasicGameState {
 			
 		//ENEMY SPAWNING - by using "E key" as input
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
-			enemyList.add(new Enemy((float)Mouse.getX(), (float)(Window.HEIGHT-Mouse.getY())));
+			enemyList.add(new Enemy(new Vector2f((float)Mouse.getX(), (float)(Window.HEIGHT - Mouse.getY()))));
 			for(int i = enemyList.size()-1; i < enemyList.size(); i++) {					
-				Circle tempCircle = new Circle(Mouse.getX(), Window.HEIGHT - Mouse.getY(), 50f);
+				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), 50f);
 				enemyRenderList.add(tempCircle);
 			}
 		}
@@ -103,18 +102,13 @@ public class GameState extends BasicGameState {
 				
 			//UPDATES ENEMY SPRITES
 			for(int i = 0; i < enemyList.size(); i++) {
-				enemyRenderList.set(i, new Circle(enemyList.get(i).getXPos(), enemyList.get(i).getYPos(), 50f));
+				enemyRenderList.set(i, new Circle(enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY(), 50f));
 			}
 		}
-			
-		/* Print out distance from player object to latest enemy object
-		 *
-		* if(enemyList.size() > 0){
-		System.out.println(enemyList.get(0).distToPlayer);
-		}
-		*/
 		
+		//BACK TO MAIN MENU (and clears the game container) - key input is "ESCAPE"
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+			gc.reinit();	//Clears the the GameContainer
 			sbg.enterState(0);
 		}
 	}

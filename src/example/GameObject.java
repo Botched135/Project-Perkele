@@ -1,10 +1,13 @@
 package example;
 
+import org.newdawn.slick.geom.*;
+
 public class GameObject {
 
 	//VARIABLE DECLARATION
 	protected float xPos;
 	protected float yPos;
+	protected Vector2f vector;
 	protected boolean render;
 	protected float hitboxX;
 	protected float hitboxY;
@@ -14,9 +17,25 @@ public class GameObject {
 	 
 		xPos = Window.WIDTH/2;
 		yPos = Window.HEIGHT/2; 
+		vector = new Vector2f(Window.WIDTH/2, Window.HEIGHT/2);
 		render = false;
 	}
  
+	GameObject(Vector2f _vector) {
+		 
+		vector = _vector; 
+		render = false;
+	 
+	}
+	
+	GameObject(Vector2f _vector, boolean _render) {
+		 
+		vector = _vector; 
+		render = _render;
+		
+	 
+	}
+	
 	GameObject(float _xPos, float _yPos) {
 	 
 		xPos = _xPos;
@@ -30,17 +49,8 @@ public class GameObject {
 		xPos = _xPos;
 		yPos = _yPos; 
 	 	render = _render;
-	 
 	}
 	
-	float distToObj(GameObject _obj){
-		
-		 float distToObj;
-		//Pythagoras to calculate distance between objects
-		distToObj = (float)(Math.sqrt(Math.pow((this.xPos-_obj.getXPos()),2) + Math.pow((this.yPos-_obj.getYPos()),2)));
-		return distToObj;
-	}
- 
 	public float getXPos(){
 		return xPos;
 	}
@@ -67,7 +77,7 @@ public class GameObject {
 		render = _render;
 	}
 	public boolean isColliding(GameObject _obj){
-		if(this.distToObj(_obj)<this.hitboxX+_obj.hitboxX){
+		if(this.vector.distance(_obj.vector)<this.hitboxX+_obj.hitboxX){
 			return true;
 		}else
 			return false;

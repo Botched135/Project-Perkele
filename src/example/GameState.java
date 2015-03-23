@@ -28,10 +28,11 @@ public class GameState extends BasicGameState {
 		private ArrayList <Circle> lootRenderList = new ArrayList <Circle>();
 		private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
 		private Random randLoot = new Random();
+		private Random randDrop = new Random();
 		private int lootDropDist = 50;
 		private float mouseXPOS,mouseYPOS;
 		
-
+	
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		mouseXPOS = gc.getInput().getMouseX();
@@ -59,16 +60,19 @@ public class GameState extends BasicGameState {
 		playerToMouseTestLine = new Line(player.getXPos(),player.getYPos(), Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		
 			
-		//LOOT SPAWNING - by using "space key" as input
+		//LOOT SPAWNING - by using "space key" as input.
 		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
-			lootList.add(new Loot());
-			for(int i = lootList.size()-1; i < lootList.size(); i++) {
-				Loot tempLoot = lootList.get(i);
-				tempLoot.setXPos(randLoot.nextInt(lootDropDist));
-				tempLoot.setYPos(randLoot.nextInt(lootDropDist));
+			int dropping = randDrop.nextInt(100);
+			if(dropping > 50) {
+				lootList.add(new Loot());
+				for(int i = lootList.size()-1; i < lootList.size(); i++) {
+					Loot tempLoot = lootList.get(i);
+					tempLoot.setXPos(randLoot.nextInt(lootDropDist));
+					tempLoot.setYPos(randLoot.nextInt(lootDropDist));
 				
-				Circle tempCircle = new Circle(Mouse.getX() + tempLoot.getXPos()-(lootDropDist/2) ,Window.HEIGHT - Mouse.getY() + tempLoot.getYPos()-(lootDropDist/2), 50f);
-				lootRenderList.add(tempCircle); 
+					Circle tempCircle = new Circle(Mouse.getX() + tempLoot.getXPos()-(lootDropDist/2) ,Window.HEIGHT - Mouse.getY() + tempLoot.getYPos()-(lootDropDist/2), 50f);
+					lootRenderList.add(tempCircle); 
+				}
 			}
 		}
 			

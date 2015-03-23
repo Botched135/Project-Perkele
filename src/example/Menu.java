@@ -9,8 +9,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Menu extends BasicGameState {
 
-	public void init(GameContainer arg0, StateBasedGame sbg)
-			throws SlickException {		
+	public void init(GameContainer arg0, StateBasedGame sbg) throws SlickException {		
 	}
 
 	

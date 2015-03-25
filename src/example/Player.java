@@ -5,19 +5,28 @@ import org.newdawn.slick.Color;
 
 public class Player extends GameObject{
 	
+	protected float hitpoints = 100;
+	protected float damage = 10;
+	protected float meleeRange = 100;
 	protected float speedMultiplier = 5.0f;
-	protected static Color playerTestCol = new Color(50,50,255);
+	
+	protected boolean isAttacking;
+	protected static Color playerTestCol = new Color(0,0,255);
 	
 	Player() {
 		
 		super();
-		hitboxX = 25.0f;
-		hitboxY = 25.0f;
+		hitboxX = 50.0f;
+		hitboxY = 50.0f;
+		
 	}
 	
 	Player(Vector2f _vector) {
 		 
 		super(_vector);
+		
+		hitboxX = 50.0f;
+		hitboxY = 50.0f;
 	 
 	}
 	

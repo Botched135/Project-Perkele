@@ -24,6 +24,7 @@ public class GameState extends BasicGameState {
 		//VARIABLE DECLARATION
 		Player player = new Player(new Vector2f(Window.WIDTH/2, Window.HEIGHT/2));
 		private Circle playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
+		private Circle playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), 150);
 		private Line playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Mouse.getY());
 		private ArrayList <Loot> lootList = new ArrayList <Loot>();
 		private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
@@ -32,7 +33,7 @@ public class GameState extends BasicGameState {
 		private Random randLoot = new Random();
 		private Random randDrop = new Random();
 		private int lootDropDist = 50;
-		private Vector2f mousePos;
+		protected static Vector2f mousePos;
 		
 	
 	
@@ -41,10 +42,13 @@ public class GameState extends BasicGameState {
 		mousePos = new Vector2f(gc.getInput().getMouseX(), gc.getInput().getMouseY());
 		
 		//UPDATING PLAYER
+		
+		player.isAttacking = true;
+		
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON))
 			player.isAttacking(mousePos);
 		
-		//UPDATING COLLISION
+		//UPDATING PLAYER COLLISION WITH ENEMIES
 		for(int i = 0; i<enemyList.size(); i++){
 			if(player.isColliding(enemyList.get(i)))
 				System.out.println("player is colliding with enemy nr. "+ i);
@@ -64,7 +68,8 @@ public class GameState extends BasicGameState {
 		}
 		
 		//UDATES PLAYER SPRITE
-		playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX); 
+		playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
+		playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), player.meleeRange);
 		playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		
 			
@@ -75,10 +80,14 @@ public class GameState extends BasicGameState {
 				lootList.add(new Loot());
 				for(int i = lootList.size()-1; i < lootList.size(); i++) {
 					Loot tempLoot = lootList.get(i);
-					tempLoot.vector.set(new Vector2f(randLoot.nextInt(lootDropDist), randLoot.nextInt(lootDropDist)));
-	
-				
-					Circle tempCircle = new Circle(mousePos.getX() + (tempLoot.vector.getX())-(lootDropDist/2) , mousePos.getY() + (tempLoot.vector.getY())-(lootDropDist/2), 50f);
+					
+					float tempRandX = randLoot.nextInt(lootDropDist);
+					float tempRandY = randLoot.nextInt(lootDropDist);
+					float tempX = mousePos.getX() + (tempRandX)-(lootDropDist/2);
+					float tempY = mousePos.getY() + (tempRandY)-(lootDropDist/2);
+					
+					tempLoot.vector.set(new Vector2f(tempX, tempY));				
+					Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
 					lootRenderList.add(tempCircle); 
 				}
 			}
@@ -88,21 +97,34 @@ public class GameState extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f((float)Mouse.getX(), (float)(Window.HEIGHT - Mouse.getY()))));
 			for(int i = enemyList.size()-1; i < enemyList.size(); i++) {					
-				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), 50f);
+				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), enemyList.get(i).hitboxX);
 				enemyRenderList.add(tempCircle);
 			}
 		}
 		//UPDATING ENEMIES
 		if(enemyList.size() > 0){
-				
+			
 			//UPDATES ENEMY LOGIC
-			for(int i = 0; i < enemyList.size(); i++) {
+			for(int i = enemyList.size()-1; i >= 0; i--) {
+				System.out.println("mouseX: " + mousePos.getX() + "   mouseY: " + mousePos.getY() +"   enemyX: " + enemyList.get(i).vector.getX() +"   enemyY: " + enemyList.get(i).vector.getY());
 				enemyList.get(i).stateManager(player);
+				
+			}
+				
+			//KILL ENEMIES (remove them from array list)
+			for(int i = enemyList.size()-1; i >= 0; i--) {
+				System.out.println("enemy[" + i + "] hitpoints: " + enemyList.get(i).hitpoints);
+				if(enemyList.get(i).hitpoints <= 0){
+					enemyList.remove(i);
+					//for(int j = i; j < enemyList.size()-1; j++){
+						//enemyList.set(j,enemyList.get(j+1));
+					//}
+				}
 			}
 				
 			//UPDATES ENEMY SPRITES
 			for(int i = 0; i < enemyList.size(); i++) {
-				enemyRenderList.set(i, new Circle(enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY(), 50f));
+				enemyRenderList.set(i, new Circle(enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY(), enemyList.get(i).hitboxX));
 			}
 		}
 		
@@ -118,28 +140,73 @@ public class GameState extends BasicGameState {
 		
 		//RENDER TEXT (and miscellaneous)
 		g.setColor(new Color(255,255,255));
-		g.drawString("HEJ TOSSER!", 500, 200);
+		g.drawString("Red = idle", 10, 25);
+		g.drawString("Green = hovered", 10, 40);
+		g.drawString("White = collide with", 10, 55);
+		g.drawString("Yellow player ring = melee range", 10, 70);
+		g.drawString("Number of enemies: " + enemyList.size(), 10, 85);
+		g.drawString("Number of loot: " + lootList.size(), 10, 100);
 		g.draw(playerToMouseTestLine);
 		
 		
 		//RENDER PLAYER
-		g.setColor(Player.playerTestCol);
+		g.setColor(new Color(0,255,255));
 		g.draw(playerTestCircle);
+		g.setColor(new Color(255,255,0,80));
+		g.draw(playerMeleeRangeCircle);
 		
 		
 		//RENDER ENEMY SPRITES
 		if(enemyList.size() > 0){
 			g.setColor(Enemy.enemyTestCol);
-			for(int i = 0; i < enemyRenderList.size(); i++) {
+			for(int i = enemyList.size()-1; i >= 0; i--) {
+				
+				//Set hover color
+				if(mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX){
+					
+					g.setColor(new Color(0,255,0));
+					
+				}
+				//set collision color
+				else if(player.isColliding(enemyList.get(i)) == true){
+					
+					g.setColor(new Color(255,255,255));
+					
+				}
+				else{
+					
+					g.setColor(Enemy.enemyTestCol);
+				}
 				g.draw(enemyRenderList.get(i));
+				g.drawString(Integer.toString(i), enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY());
 			}
 		}
 		
 		//RENDER LOOT SPRITES
 		if(lootList.size() > 0){
 			g.setColor(Loot.lootTestCol);
-			for(int i = 0; i < lootRenderList.size(); i++) {
+			for(int i = lootList.size()-1; i >= 0; i--) {
+				
+				//Set hover color
+				if(mousePos.distance(lootList.get(i).vector) < lootList.get(i).hitboxX){
+					
+					g.setColor(new Color(0,255,0));
+					
+				}
+				//set collision color
+				else if(player.isColliding(lootList.get(i)) == true){
+					
+					g.setColor(new Color(255,255,255));
+					
+				}
+				else{
+					
+					g.setColor(Loot.lootTestCol);
+					
+				}
+					
 				g.draw(lootRenderList.get(i));
+				g.drawString(Integer.toString(i), lootList.get(i).vector.getX(), lootList.get(i).vector.getY());
 			}
 		}
 	}

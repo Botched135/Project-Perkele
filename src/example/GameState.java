@@ -43,7 +43,6 @@ public class GameState extends BasicGameState {
 		
 		//PLAYER STUFF ======================================================================================================================================
 		
-		player.isAttacking = true;
 		
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON))
 			player.isAttacking(mousePos);

@@ -9,6 +9,10 @@ public class Player extends GameObject{
 	protected float damage = 10;
 	protected float meleeRange = 100;
 	protected float speedMultiplier = 5.0f;
+	protected float AttackSpeed = 1;//Attacks per second
+	protected float isReady;
+	protected boolean isAttackReady = false;
+	protected long time = 0;
 	
 	protected boolean isAttacking;
 	protected static Color playerTestCol = new Color(0,0,255);
@@ -61,14 +65,21 @@ public class Player extends GameObject{
 		//if(PlayerContainer.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){//actually left button, but we need to change it later after testing is done with other function
 		if(AttackReady(10f)){	
 		System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
-			return true;
+			this.isAttacking = true;
 		}
 		else
-			return false;
+			this.isAttacking = false;
+		return isAttacking;
 	}
-	public static boolean AttackReady(float AS){
-		//updates
-		return true;
+	public boolean AttackReady(float AS){
+		if(this.isAttackReady == false){ 
+		this.time = System.nanoTime();
+		this.isReady = 1000000/AS;
+		if(this.time%isReady == 0){
+			this.isAttackReady=true;//set the isAttackReady to true
+		}
+		}
+		return isAttackReady;
 	}
 	public float dmg(Loot weapon){
 		//return weapon.Damage;

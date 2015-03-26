@@ -41,7 +41,7 @@ public class GameState extends BasicGameState {
 		
 		mousePos = new Vector2f(gc.getInput().getMouseX(), gc.getInput().getMouseY());
 		
-		//UPDATING PLAYER
+		//PLAYER STUFF ======================================================================================================================================
 		
 		player.isAttacking = true;
 		
@@ -72,12 +72,19 @@ public class GameState extends BasicGameState {
 		playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), player.meleeRange);
 		playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		
-			
-		//LOOT SPAWNING - by using "space key" as input.
+		//LOOT STUFF ======================================================================================================================================
+		//LOOT!!!!! - by using "space key" as input and picking it up using "V".
 		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
 			int dropping = randDrop.nextInt(100);
-			if(dropping > 50) {
-				lootList.add(new Loot());
+			if(dropping > 20) {
+				int lootType = randDrop.nextInt(2);
+				if(lootType == 1) {
+					lootList.add(new Armor());
+				}
+				else {
+					lootList.add(new Weapon());
+				}
+				
 				for(int i = lootList.size()-1; i < lootList.size(); i++) {
 					Loot tempLoot = lootList.get(i);
 					
@@ -92,9 +99,24 @@ public class GameState extends BasicGameState {
 				}
 			}
 		}
-			
-		//ENEMY SPAWNING - by using "E key" as input
-		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
+		if(lootList.size() > 0) {
+			if(gc.getInput().isKeyPressed(Input.KEY_V)) {
+				for(int i = lootList.size()-1; i >= 0; i--) {
+					if(lootList.get(i).pickUp(player) == true) {
+						//either a method for picking up armor or a weapon
+						lootList.remove(i);
+					}
+				}
+			}
+			for(int i = 0; i < lootList.size(); i++) {
+				lootRenderList.set(i, new Circle(lootList.get(i).vector.getX(), lootList.get(i).vector.getY(), lootList.get(i).hitboxX));
+			}
+		}
+		
+		
+		//ENEMY STUFF =================================================================================================================================================	
+		//ENEMY!!!!!! - by using "E key" as input
+		if(gc.getInput().isKeyDown(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f((float)Mouse.getX(), (float)(Window.HEIGHT - Mouse.getY()))));
 			for(int i = enemyList.size()-1; i < enemyList.size(); i++) {					
 				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), enemyList.get(i).hitboxX);
@@ -116,9 +138,7 @@ public class GameState extends BasicGameState {
 				System.out.println("enemy[" + i + "] hitpoints: " + enemyList.get(i).hitpoints);
 				if(enemyList.get(i).hitpoints <= 0){
 					enemyList.remove(i);
-					//for(int j = i; j < enemyList.size()-1; j++){
-						//enemyList.set(j,enemyList.get(j+1));
-					//}
+
 				}
 			}
 				
@@ -128,6 +148,7 @@ public class GameState extends BasicGameState {
 			}
 		}
 		
+		//======================================================================================================================================================
 		//BACK TO MAIN MENU (and clears the game container) - key input is "ESCAPE"
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
 			gc.reinit();	//Clears the the GameContainer
@@ -147,16 +168,17 @@ public class GameState extends BasicGameState {
 		g.drawString("Number of enemies: " + enemyList.size(), 10, 85);
 		g.drawString("Number of loot: " + lootList.size(), 10, 100);
 		g.draw(playerToMouseTestLine);
+		g.drawString("Hit Points: " + player.hitPoints, 10, 115);
 		
 		
-		//RENDER PLAYER
+		//RENDER PLAYER ==============================================================================================================================
 		g.setColor(new Color(0,255,255));
 		g.draw(playerTestCircle);
 		g.setColor(new Color(255,255,0,80));
 		g.draw(playerMeleeRangeCircle);
 		
 		
-		//RENDER ENEMY SPRITES
+		//RENDER ENEMY SPRITES ==============================================================================================================================
 		if(enemyList.size() > 0){
 			g.setColor(Enemy.enemyTestCol);
 			for(int i = enemyList.size()-1; i >= 0; i--) {
@@ -182,7 +204,7 @@ public class GameState extends BasicGameState {
 			}
 		}
 		
-		//RENDER LOOT SPRITES
+		//RENDER LOOT SPRITES ==============================================================================================================================
 		if(lootList.size() > 0){
 			g.setColor(Loot.lootTestCol);
 			for(int i = lootList.size()-1; i >= 0; i--) {
@@ -206,7 +228,13 @@ public class GameState extends BasicGameState {
 				}
 					
 				g.draw(lootRenderList.get(i));
-				g.drawString(Integer.toString(i), lootList.get(i).vector.getX(), lootList.get(i).vector.getY());
+				if(lootList.get(i).ID == 3) {
+					g.drawString("Armor" + Integer.toString(i), lootList.get(i).vector.getX() -20, lootList.get(i).vector.getY());
+				}
+				else if(lootList.get(i).ID == 4) {
+					g.drawString("Weapon" + Integer.toString(i), lootList.get(i).vector.getX() -20, lootList.get(i).vector.getY());
+				}
+				
 			}
 		}
 	}

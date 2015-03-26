@@ -10,6 +10,7 @@ public class GameObject {
 	protected boolean render;
 	protected float hitboxX;
 	protected float hitboxY;
+	protected byte ID; //PLAYER == 1:	ENEMY == 2:		ARMOR == 3:		WEAPON == 4:
 
 	//CONTRUCTERS
 	GameObject() {

@@ -17,6 +17,7 @@ public class Enemy extends GameObject {
 	Enemy(){
 		
 		super(); 
+		ID = 2;
 	}
 	
 	Enemy(Vector2f _vector) {
@@ -25,6 +26,7 @@ public class Enemy extends GameObject {
 	 
 		hitboxX = 50.0f;
 		hitboxY = 50.0f;
+		ID = 2;
 		
 		//Makes sure that the entire sprite (test circle at this point) is inside the window when spawned.
 		

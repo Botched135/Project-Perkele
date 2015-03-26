@@ -7,17 +7,15 @@ public class Loot extends GameObject {
 
 	protected static Color lootTestCol = new Color(255,255,0);
 	
-	//CONTRUCTERS
-	Loot() {
-			 
-		super();
-		hitboxX = 50.0f;
-		hitboxY = 50.0f;
-	}
+
 	
-	Loot(Enemy _enemy) {
-		hitboxX = 50.0f;
-		hitboxY = 50.0f;
+	public boolean pickUp(Player _player) {
+		if(GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	

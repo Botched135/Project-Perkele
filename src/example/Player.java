@@ -5,7 +5,7 @@ import org.newdawn.slick.Color;
 
 public class Player extends GameObject{
 	
-	protected float hitpoints = 100;
+	protected float hitPoints = 100;
 	protected float damage = 10;
 	protected float meleeRange = 100;
 	protected float speedMultiplier = 5.0f;
@@ -18,6 +18,7 @@ public class Player extends GameObject{
 		super();
 		hitboxX = 50.0f;
 		hitboxY = 50.0f;
+		ID = 1;
 		
 	}
 	
@@ -27,6 +28,7 @@ public class Player extends GameObject{
 		
 		hitboxX = 50.0f;
 		hitboxY = 50.0f;
+		ID = 1;
 	 
 	}
 	

@@ -45,7 +45,9 @@ public class GameState extends BasicGameState {
 		
 		
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON))
-			player.isAttacking(mousePos);
+			player.setAttackReady();
+			//player.isAttacking(mousePos);
+		System.out.println(player.StartTime);
 		
 		//UPDATING PLAYER COLLISION WITH ENEMIES
 		for(int i = 0; i<enemyList.size(); i++){

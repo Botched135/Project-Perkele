@@ -8,15 +8,15 @@ public class Weapon extends Loot{
 	Weapon() {
 		 
 		super();
-		hitboxX = 50.0f;
-		hitboxY = 50.0f;
+		hitboxX = 10.0f;
+		hitboxY = 10.0f;
 		ID = 4;
 
 	}
 	
 	Weapon(Enemy _enemy) {
-		hitboxX = 50.0f;
-		hitboxY = 50.0f;
+		hitboxX = 10.0f;
+		hitboxY = 10.0f;
 		ID = 4;
 	}
 

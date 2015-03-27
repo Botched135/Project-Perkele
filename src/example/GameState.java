@@ -30,10 +30,12 @@ public class GameState extends BasicGameState {
 		private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
 		private ArrayList <Circle> lootRenderList = new ArrayList <Circle>();
 		private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
+		private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
 		private Random randLoot = new Random();
 		private Random randDrop = new Random();
-		private int lootDropDist = 50;
+		private int lootDropDist = 10;
 		protected static Vector2f mousePos;
+		private boolean placed = false;
 		
 	
 	
@@ -75,36 +77,61 @@ public class GameState extends BasicGameState {
 		//LOOT STUFF ======================================================================================================================================
 		//LOOT!!!!! - by using "space key" as input and picking it up using "V".
 		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
+			placed = false;
+			boolean foundSpot = false;
+			lootDropDist = 50;
 			int dropping = randDrop.nextInt(100);
 			if(dropping > 20) {
+				
 				int lootType = randDrop.nextInt(2);
 				if(lootType == 1) {
-					lootList.add(new Armor());
+					lootList.add(new Armor());	
 				}
 				else {
 					lootList.add(new Weapon());
 				}
 				
-				for(int i = lootList.size()-1; i < lootList.size(); i++) {
-					Loot tempLoot = lootList.get(i);
-					
-					float tempRandX = randLoot.nextInt(lootDropDist);
-					float tempRandY = randLoot.nextInt(lootDropDist);
-					float tempX = mousePos.getX() + (tempRandX)-(lootDropDist/2);
-					float tempY = mousePos.getY() + (tempRandY)-(lootDropDist/2);
-					
-					tempLoot.vector.set(new Vector2f(tempX, tempY));				
-					Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
-					lootRenderList.add(tempCircle); 
-				}
+					 if(lootList.size() > 0) {
+						
+						while(!placed) {
+							Loot tempLoot = lootList.get(lootList.size()-1);
+							
+							float tempRandX = randLoot.nextInt(lootDropDist);
+							float tempRandY = randLoot.nextInt(lootDropDist);
+							float tempX = mousePos.getX() + (tempRandX)-(lootDropDist/2);
+							float tempY = mousePos.getY() + (tempRandY)-(lootDropDist/2);
+							Vector2f tempVec = new Vector2f(tempX, tempY);
+							
+							for(int i = lootList.size()-1; i >= 0; i--) {
+								System.out.println(tempVec.distance(lootList.get(i).vector));
+								if(tempVec.distance(tempLoot.vector) > lootList.get(i).hitboxX *2){
+									foundSpot = true;
+									break;
+								}
+								else {
+									foundSpot = false;
+									
+								}
+							}
+							if(foundSpot) {
+								lootList.get(lootList.size()-1).vector.set(new Vector2f(tempX, tempY));				
+								Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
+								lootRenderList.add(tempCircle); 
+								placed = true;
+							}
+							lootDropDist += 10;
+						}
+					} 
+						
 			}
 		}
+		
 		if(lootList.size() > 0) {
 			if(gc.getInput().isKeyPressed(Input.KEY_V)) {
 				for(int i = lootList.size()-1; i >= 0; i--) {
 					if(lootList.get(i).pickUp(player) == true) {
-						//either a method for picking up armor or a weapon
-						lootList.remove(i);
+							//either a method for picking up armor or a weapon
+							lootList.remove(i);
 					}
 				}
 			}
@@ -229,10 +256,10 @@ public class GameState extends BasicGameState {
 					
 				g.draw(lootRenderList.get(i));
 				if(lootList.get(i).ID == 3) {
-					g.drawString("Armor" + Integer.toString(i), lootList.get(i).vector.getX() -20, lootList.get(i).vector.getY());
+					g.drawString("A" + Integer.toString(i), lootList.get(i).vector.getX() -5, lootList.get(i).vector.getY() -5);
 				}
 				else if(lootList.get(i).ID == 4) {
-					g.drawString("Weapon" + Integer.toString(i), lootList.get(i).vector.getX() -20, lootList.get(i).vector.getY());
+					g.drawString("W" + Integer.toString(i), lootList.get(i).vector.getX() -5, lootList.get(i).vector.getY() -5);
 				}
 				
 			}

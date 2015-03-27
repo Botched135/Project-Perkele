@@ -76,7 +76,6 @@ public class Enemy extends GameObject {
 		}
 	}
 	
-	//fleeState makes the Enemy flee from the player (OBS, only works in one direction so far..)
 	void seekState(Player _player){
 		
 		//float dotProduct = this.vector.dot(_player.vector);

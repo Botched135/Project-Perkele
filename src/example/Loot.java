@@ -8,6 +8,10 @@ public class Loot extends GameObject {
 	protected static Color lootTestCol = new Color(255,255,0);
 	
 
+	Loot() {
+		
+		vector = new Vector2f(GameState.mousePos);
+	}
 	
 	public boolean pickUp(Player _player) {
 		if(GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){

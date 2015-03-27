@@ -32,7 +32,7 @@ public class GameObject {
 		vector = _vector; 
 		render = _render;
 		 
-	}
+	}	
 
 	boolean getRenderState(){
 		return render;

@@ -8,7 +8,8 @@ public class Enemy extends GameObject {
 	//VARIABLE DECLARATION
 	
 	protected float hitpoints = 100;
-	protected float speedMultiplier = 5.0f;
+	protected float speedMultiplier = 0.5f;
+	protected Vector2f steering;
 
 	protected static Color enemyTestCol = new Color(255,0,0);
 	
@@ -18,6 +19,7 @@ public class Enemy extends GameObject {
 		
 		super(); 
 		ID = 2;
+		steering = new Vector2f(0.0f, 0.0f);
 	}
 	
 	Enemy(Vector2f _vector) {
@@ -27,6 +29,7 @@ public class Enemy extends GameObject {
 		hitboxX = 50.0f;
 		hitboxY = 50.0f;
 		ID = 2;
+		steering = new Vector2f(0.0f, 0.0f);
 		
 		//Makes sure that the entire sprite (test circle at this point) is inside the window when spawned.
 		
@@ -70,25 +73,30 @@ public class Enemy extends GameObject {
 			
 		beingMeleeAttacked(_player);
 		
-		if(this.vector.distance(_player.vector) < 300){
-			
-		seekState(_player);
+		if(vector.distance(_player.vector) < 300){
+		
+		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
+		seekState(_player.vector);
+		_player.vector.set(temp.getX(), temp.getY()); 
 		}
 	}
 	
-	void seekState(Player _player){
+	//fleeState makes the enemy seek out the player
+	void seekState(Vector2f _target){
+				
+		MoveTo(_target);
 		
-		//float dotProduct = this.vector.dot(_player.vector);
-		//double magnitude1 = Math.sqrt(this.vector.length());
-		//double magnitude2 = Math.sqrt(_player.vector.length());
-		//double angleBewteenVectors = dotProduct/(magnitude1*magnitude2);
-		//float a
-		float xDistance = this.vector.getX() - _player.vector.getX();
-		float yDistance = this.vector.getY() - _player.vector.getY();
-		double angleToTurn = Math.toDegrees(Math.atan2(yDistance, xDistance));
-		//System.out.println(angleToTurn);
-		this.changeXPos(new Vector2f(0.1f * (float)Math.cos(angleToTurn - Math.PI), 0f));
-		this.changeYPos(new Vector2f(0f, 0.1f * (float)Math.sin(angleToTurn  - Math.PI)));
+	}
+	
+	public void MoveTo(Vector2f _target){
+		
+		Vector2f dir = new Vector2f(0.0f, 0.0f);
+	
+		dir = _target.sub(vector);
+		dir.normalise();
+		dir = dir.scale(speedMultiplier);	
+		vector = vector.add(dir);
+
 	}
 	
 	void beingMeleeAttacked (Player _player){
@@ -98,28 +106,5 @@ public class Enemy extends GameObject {
 			this.hitpoints -= _player.damage;
 			//System.out.println("ATTACKED!");
 		}
-	}
-	
-	public void changeXPos(Vector2f _vector){
-		
-		if(this.vector.getX() +_vector.getX()*speedMultiplier > Window.WIDTH - hitboxX || this.vector.getX() +_vector.getX()*speedMultiplier < hitboxX){
-		
-		} 
-		else {
-	
-			this.vector.set(this.vector.getX()+_vector.getX()*speedMultiplier, this.vector.getY());
-		}
-	}
-
-	public void changeYPos(Vector2f _vector){
-	
-		if(this.vector.getY() +_vector.getY()*speedMultiplier > Window.HEIGHT - hitboxY || this.vector.getY() +_vector.getY()*speedMultiplier < hitboxY){
-		
-		} 
-		else {
-		
-			this.vector.set(this.vector.getX(), this.vector.getY() + _vector.getY()*speedMultiplier);
-		}
-	
 	}
 }

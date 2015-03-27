@@ -44,7 +44,11 @@ public class GameState extends BasicGameState {
 		mousePos = new Vector2f(gc.getInput().getMouseX(), gc.getInput().getMouseY());
 		
 		//PLAYER STUFF ======================================================================================================================================
+
+		System.out.println("X: " + player.vector.getX() + "     Y: " + player.vector.getY());
 		
+		player.isAttacking = true;
+
 		
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON))
 			player.setAttackReady();
@@ -58,16 +62,16 @@ public class GameState extends BasicGameState {
 		}
 		//PLAYER MOVEMENT INPUT
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
-			player.changeXPos(new Vector2f(-1.0f, 0f));
+			player.MoveSelf(new Vector2f(-1.0f, 0f));
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_W)) {
-			player.changeYPos(new Vector2f(0f, -1.0f));
+			player.MoveSelf(new Vector2f(0f, -1.0f));
 			}
 		if(gc.getInput().isKeyDown(Input.KEY_D)) {
-			player.changeXPos(new Vector2f(1.0f, 0f));
+			player.MoveSelf(new Vector2f(1.0f, 0f));
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_S)) {
-			player.changeYPos(new Vector2f(0.0f, 1.0f));
+			player.MoveSelf(new Vector2f(0.0f, 1.0f));
 		}
 		
 		//UDATES PLAYER SPRITE
@@ -156,14 +160,14 @@ public class GameState extends BasicGameState {
 			
 			//UPDATES ENEMY LOGIC
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				System.out.println("mouseX: " + mousePos.getX() + "   mouseY: " + mousePos.getY() +"   enemyX: " + enemyList.get(i).vector.getX() +"   enemyY: " + enemyList.get(i).vector.getY());
+				//System.out.println("mouseX: " + mousePos.getX() + "   mouseY: " + mousePos.getY() +"   enemyX: " + enemyList.get(i).vector.getX() +"   enemyY: " + enemyList.get(i).vector.getY());
 				enemyList.get(i).stateManager(player);
 				
 			}
 				
 			//KILL ENEMIES (remove them from array list)
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				System.out.println("enemy[" + i + "] hitpoints: " + enemyList.get(i).hitpoints);
+				//System.out.println("enemy[" + i + "] hitpoints: " + enemyList.get(i).hitpoints);
 				if(enemyList.get(i).hitpoints <= 0){
 					enemyList.remove(i);
 

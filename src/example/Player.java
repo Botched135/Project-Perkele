@@ -8,7 +8,7 @@ public class Player extends GameObject{
 	protected float hitPoints = 100;
 	protected float damage = 10;
 	protected float meleeRange = 100;
-	protected float speedMultiplier = 5.0f;
+	protected float speedMultiplier = 1.0f;
 	protected float AttackSpeed = 1;//Attacks per second
 	protected float isReady;
 	protected boolean isAttackReady = false;
@@ -34,36 +34,31 @@ public class Player extends GameObject{
 		hitboxX = 50.0f;
 		hitboxY = 50.0f;
 		ID = 1;
-	 
 	}
 	
-	
-	public void changeXPos(Vector2f _vector){
-	
-		if(super.vector.getX() +_vector.getX()*speedMultiplier > Window.WIDTH - hitboxX || super.vector.getX() +_vector.getX()*speedMultiplier < hitboxX){
+	public void MoveSelf(Vector2f _target){
 		
-			super.vector.set(super.vector.getX(), super.vector.getY());
-		} 
-		else {
-	
-			super.vector.set(super.vector.getX()+_vector.getX()*speedMultiplier, super.vector.getY());
-		}
-	}
-
-	public void changeYPos(Vector2f _vector){
-	
-		if(super.vector.getY() +_vector.getY()*speedMultiplier > Window.HEIGHT - hitboxY || super.vector.getY() +_vector.getY()*speedMultiplier < hitboxY){
+		_target = _target.add(vector);
+		
+		Vector2f dir = _target.sub(vector);
+		
+		dir.normalise();
+		dir = dir.scale(speedMultiplier);	
+		vector = vector.add(dir); 
+		
+		if(vector.add(dir).getX() < hitboxX || vector.add(dir).getX() > Window.WIDTH - hitboxX || vector.add(dir).getY() < hitboxX || vector.add(dir).getY() > Window.HEIGHT - hitboxX  ) {
 			
-			super.vector.set(super.vector.getX(), super.vector.getY());
-		} 
-		else {
-		
-			super.vector.set(super.vector.getX(), super.vector.getY() + _vector.getY()*speedMultiplier);
+			 //No movement happens then	<-- BUT IT STILL SLOWLY MOVES OUT OF THE GAME CONTAINERS BOUNDS!! FIX SOMEHOW!!		
 		}
-	
+		else{
+			
+			vector = vector.add(dir.scale(speedMultiplier));
+		}
 	}
+	
 	public boolean isAttacking(Vector2f vector){
 		//if(PlayerContainer.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){//actually left button, but we need to change it later after testing is done with other function
+		
 		if(this.isAttackReady){	
 		System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
 			this.isAttacking = true;

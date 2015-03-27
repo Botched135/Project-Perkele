@@ -93,7 +93,7 @@ public class Enemy extends GameObject {
 	
 	void beingMeleeAttacked (Player _player){
 		
-		if(_player.isAttacking = true && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
+		if(_player.isAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			
 			this.hitpoints -= _player.damage;
 			//System.out.println("ATTACKED!");

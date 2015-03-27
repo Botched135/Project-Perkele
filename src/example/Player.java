@@ -9,6 +9,11 @@ public class Player extends GameObject{
 	protected float damage = 10;
 	protected float meleeRange = 100;
 	protected float speedMultiplier = 5.0f;
+	protected float AttackSpeed = 1;//Attacks per second
+	protected float isReady;
+	protected boolean isAttackReady = false;
+	protected long StartTime = 0;
+	protected long EndTime = 0;
 	
 	protected boolean isAttacking;
 	protected static Color playerTestCol = new Color(0,0,255);
@@ -59,16 +64,28 @@ public class Player extends GameObject{
 	}
 	public boolean isAttacking(Vector2f vector){
 		//if(PlayerContainer.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){//actually left button, but we need to change it later after testing is done with other function
-		if(AttackReady(10f)){	
+		if(this.isAttackReady){	
 		System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
-			return true;
+			this.isAttacking = true;
+			this.isAttackReady=false;
 		}
 		else
-			return false;
+			this.isAttacking = false;
+		return isAttacking;
 	}
-	public static boolean AttackReady(float AS){
-		//updates
-		return true;
+	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
+		float AS =AttackSpeed;
+		if(this.isAttackReady == false){ 
+		this.EndTime = System.currentTimeMillis();//StartTime should start from without
+		this.isReady = 1000000/AS;
+		if(this.EndTime-this.StartTime >= 1000){
+			this.isAttackReady=true;//set the isAttackReady to true
+			this.StartTime = EndTime;
+			this.EndTime = 0;
+		}
+		}
+		isAttackReady = this.isAttackReady;
+		return isAttackReady;
 	}
 	public float dmg(Loot weapon){
 		//return weapon.Damage;

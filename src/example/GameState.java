@@ -42,9 +42,7 @@ public class GameState extends BasicGameState {
 		
 		mousePos = new Vector2f(gc.getInput().getMouseX(), gc.getInput().getMouseY());
 		
-		//PLAYER STUFF ======================================================================================================================================
 
-		//System.out.println("X: " + player.vector.getX() + "     Y: " + player.vector.getY());
 		
 		player.isAttacking = false;
 
@@ -57,10 +55,11 @@ public class GameState extends BasicGameState {
 			//player.isAttacking(mousePos);
 		
 		//UPDATING PLAYER COLLISION WITH ENEMIES
-		for(int i = 0; i<enemyList.size(); i++){
+		/*for(int i = 0; i<enemyList.size(); i++){
 			if(player.isColliding(enemyList.get(i)))
 				System.out.println("player is colliding with enemy nr. "+ i);
-		}
+		}*/
+		
 		//PLAYER MOVEMENT INPUT
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
 			player.MoveSelf(new Vector2f(-1.0f, 0f));
@@ -96,7 +95,6 @@ public class GameState extends BasicGameState {
 					lootList.add(new Weapon());
 				}
 				
-				
 				Loot tempLoot = lootList.get(lootList.size()-1);
 				
 				float tempRandX = randLoot.nextInt(lootDropDist);
@@ -106,9 +104,12 @@ public class GameState extends BasicGameState {
 				
 				lootList.get(lootList.size()-1).vector.set(new Vector2f(tempX, tempY));				
 				Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
-				lootRenderList.add(tempCircle); 
-						
+				lootRenderList.add(tempCircle); 		
 			}
+		}
+		
+		if(lootList.size() > 0) {
+			lootList.get(lootList.size()-1).stateManager(player, lootList);
 		}
 		
 		if(lootList.size() > 0) {
@@ -128,7 +129,7 @@ public class GameState extends BasicGameState {
 		
 		//ENEMY STUFF =================================================================================================================================================	
 		//ENEMY!!!!!! - by using "E key" as input
-		if(gc.getInput().isKeyDown(Input.KEY_E)) {
+		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f((float)Mouse.getX(), (float)(Window.HEIGHT - Mouse.getY()))));
 			for(int i = enemyList.size()-1; i < enemyList.size(); i++) {					
 				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), enemyList.get(i).hitboxX);
@@ -140,14 +141,12 @@ public class GameState extends BasicGameState {
 			
 			//UPDATES ENEMY LOGIC
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				//System.out.println("mouseX: " + mousePos.getX() + "   mouseY: " + mousePos.getY() +"   enemyX: " + enemyList.get(i).vector.getX() +"   enemyY: " + enemyList.get(i).vector.getY());
-				enemyList.get(i).stateManager(player);
+				enemyList.get(i).stateManager(player, enemyList);
 				
 			}
 				
 			//KILL ENEMIES (remove them from array list)
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				//System.out.println("enemy[" + i + "] hitpoints: " + enemyList.get(i).hitpoints);
 				if(enemyList.get(i).hitpoints <= 0){
 					enemyList.remove(i);
 

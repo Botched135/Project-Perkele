@@ -19,5 +19,7 @@ public class Weapon extends Loot{
 		hitboxY = 10.0f;
 		ID = 4;
 	}
+	
+	
 
 }

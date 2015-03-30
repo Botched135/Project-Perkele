@@ -78,12 +78,10 @@ public class Player extends GameObject{
 		}
 		return isAttackReady;
 	}
-	public float dmg(Loot weapon){
-		//return weapon.Damage;
-		return 1;
-	}
-	public float dmg(){
-		return 1;
+	//Setting the weapon loot to the player
+	public void setLootWep(Weapon weap){
+		this.damage = weap.wepDMG;
+		this.AttackSpeed = weap.attackSpeed;
 	}
 
 }

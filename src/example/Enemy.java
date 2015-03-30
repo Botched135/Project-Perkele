@@ -10,6 +10,10 @@ public class Enemy extends GameObject {
 	protected float hitpoints = 100;
 	protected float speedMultiplier = 0.5f;
 	protected Vector2f steering;
+	protected float AttackSpeed = 1;
+	protected long StartTime = System.currentTimeMillis();
+	protected long EndTime = 0;
+	protected boolean isAttackReady = false;
 
 	protected static Color enemyTestCol = new Color(255,0,0);
 	
@@ -97,6 +101,19 @@ public class Enemy extends GameObject {
 		dir = dir.scale(speedMultiplier);	
 		vector = vector.add(dir);
 
+	}
+	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
+		float AS =AttackSpeed;
+		if(this.isAttackReady == false){ 
+		this.EndTime = System.currentTimeMillis();//StartTime should start from without
+		if(this.EndTime-this.StartTime >= 1000/AS){
+			this.isAttackReady=true;//set the isAttackReady to true
+			this.StartTime = this.EndTime;
+			this.EndTime = 0;
+		}
+		}
+		//isAttackReady = this.isAttackReady;
+		return isAttackReady;
 	}
 	
 	void beingMeleeAttacked (Player _player){

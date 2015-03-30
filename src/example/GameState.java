@@ -50,10 +50,12 @@ public class GameState extends BasicGameState {
 		player.isAttacking = true;
 
 		
-		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON))
-			player.setAttackReady();
+		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
+			
+			player.isAttackReady = false;
+		}
+		player.setAttackReady();
 			//player.isAttacking(mousePos);
-		System.out.println(player.StartTime);
 		
 		//UPDATING PLAYER COLLISION WITH ENEMIES
 		for(int i = 0; i<enemyList.size(); i++){
@@ -201,6 +203,7 @@ public class GameState extends BasicGameState {
 		g.drawString("Number of loot: " + lootList.size(), 10, 100);
 		g.draw(playerToMouseTestLine);
 		g.drawString("Hit Points: " + player.hitPoints, 10, 115);
+		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 130);
 		
 		
 		//RENDER PLAYER ==============================================================================================================================

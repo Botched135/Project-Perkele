@@ -37,7 +37,8 @@ public class GameState extends BasicGameState {
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
-		mousePos = new Vector2f(gc.getInput().getMouseX(), gc.getInput().getMouseY());
+		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())), (gc.getInput().getMouseY() + (player.vector.getY())+(Window.HEIGHT/2)));
+		System.out.println("MouseX: " + mousePos.getX() + "   Y: " + mousePos.getY());
 		
 
 		
@@ -58,6 +59,7 @@ public class GameState extends BasicGameState {
 		}*/
 		
 		//PLAYER MOVEMENT INPUT
+		
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
 			player.MoveSelf(new Vector2f(-1.0f, 0f));
 		}
@@ -72,9 +74,9 @@ public class GameState extends BasicGameState {
 		}
 		
 		//UDATES PLAYER SPRITE
-		playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
-		playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), player.meleeRange);
-		playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Window.HEIGHT-Mouse.getY());
+		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
+		playerMeleeRangeCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.meleeRange);
+		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		
 		//LOOT STUFF ======================================================================================================================================
 		//LOOT!!!!! - by using "space key" as input and picking it up using "V".
@@ -183,6 +185,9 @@ public class GameState extends BasicGameState {
 		g.setColor(new Color(255,255,0,80));
 		g.draw(playerMeleeRangeCircle);
 		
+		//TRANSLATE (move "camera") ACCORDING TO PLAYER MOVEMENT ============================================================================================
+		
+		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
 		
 		//RENDER ENEMY SPRITES ==============================================================================================================================
 		if(enemyList.size() > 0){

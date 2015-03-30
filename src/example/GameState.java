@@ -1,7 +1,6 @@
 package example;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
@@ -31,9 +30,7 @@ public class GameState extends BasicGameState {
 		private ArrayList <Circle> lootRenderList = new ArrayList <Circle>();
 		private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
 		private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
-		private Random randLoot = new Random();
-		private Random randDrop = new Random();
-		private int lootDropDist = 10;
+
 		protected static Vector2f mousePos;
 		
 	
@@ -81,34 +78,11 @@ public class GameState extends BasicGameState {
 		//LOOT STUFF ======================================================================================================================================
 		//LOOT!!!!! - by using "space key" as input and picking it up using "V".
 		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
-
-			lootDropDist = 50;
-			int dropping = randDrop.nextInt(100);
-			if(dropping > 20) {
-				
-				int lootType = randDrop.nextInt(2);
-				if(lootType == 1) {
-					lootList.add(new Armor());	
-				}
-				else {
-					lootList.add(new Weapon());
-				}
-				
-				Loot tempLoot = lootList.get(lootList.size()-1);
-				
-				float tempRandX = randLoot.nextInt(lootDropDist);
-				float tempRandY = randLoot.nextInt(lootDropDist);
-				float tempX = mousePos.getX() + (tempRandX)-(lootDropDist/2);
-				float tempY = mousePos.getY() + (tempRandY)-(lootDropDist/2);
-				
-				lootList.get(lootList.size()-1).vector.set(new Vector2f(tempX, tempY));				
-				Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
-				lootRenderList.add(tempCircle); 		
-			}
+			Loot.spawnLoot(lootList, lootRenderList);
 		}
 		
-		if(lootList.size() > 0) {
-			lootList.get(lootList.size()-1).stateManager(player, lootList);
+		for(int i = 0; i < lootList.size()-1; i++){
+			lootList.get(i).stateManager(player, lootList, lootRenderList, gc, i+1);
 		}
 		
 		if(lootList.size() > 0) {

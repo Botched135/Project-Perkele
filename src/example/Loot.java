@@ -1,14 +1,17 @@
 package example;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.newdawn.slick.geom.*;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
 
 public class Loot extends GameObject {
 
 	protected static Color lootTestCol = new Color(255,255,0);
 	protected float speedMultiplier = 5.0f;
+
 	
 
 	Loot() {
@@ -25,13 +28,19 @@ public class Loot extends GameObject {
 		}
 	}
 	
-	void stateManager(Player _player,  ArrayList<Loot> _lootList){
+
+	
+	void stateManager(Player _player,  ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList, GameContainer _gc, int _index){
 		
-		separate(_lootList);
+		if(_lootList.size() > 0 && _index == _lootList.size()-1) {
+			separate(_lootList);
+		}
+
 	}
 	
+	
 	void separate(ArrayList<Loot> _lootList){
-		
+
 		float desiredSeparation = hitboxX*2;
 		Vector2f sum = new Vector2f(0.0f, 0.0f);
 		int count = 0;
@@ -55,6 +64,35 @@ public class Loot extends GameObject {
 				vector.add(sum);
 			}
 			
+		}
+	}
+	
+	
+	public static void spawnLoot(ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList) {
+		
+		Random randLoot = new Random();
+		Random randDrop = new Random();
+		int lootDropDist = 10;
+		int dropping = randDrop.nextInt(100);
+		if(dropping > 20) {
+			
+			int lootType = randDrop.nextInt(2);
+			if(lootType == 1) {
+				_lootList.add(new Armor());	
+			}
+			else {
+				_lootList.add(new Weapon());
+			}
+			
+			Loot tempLoot = _lootList.get(_lootList.size()-1);
+			float tempRandX = randLoot.nextInt(lootDropDist);
+			float tempRandY = randLoot.nextInt(lootDropDist);
+			float tempX = GameState.mousePos.getX() + (tempRandX)-(lootDropDist/2);
+			float tempY = GameState.mousePos.getY() + (tempRandY)-(lootDropDist/2);
+			
+			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));				
+			Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
+			_lootRenderList.add(tempCircle); 		
 		}
 	}
 }

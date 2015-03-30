@@ -83,5 +83,8 @@ public class Player extends GameObject{
 		this.damage = weap.wepDMG;
 		this.AttackSpeed = weap.attackSpeed;
 	}
+	public void setLootArmor(Armor armor){
+		this.hitPoints+= armor.hpBonus;
+	}
 
 }

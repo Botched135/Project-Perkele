@@ -69,13 +69,14 @@ public class Player extends GameObject{
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		float AS =AttackSpeed;
 		if(this.isAttackReady == false){ 
-		this.EndTime = System.currentTimeMillis();//StartTime should start from without
-		if(this.EndTime-this.StartTime >= 1000/AS){
-			this.isAttackReady=true;//set the isAttackReady to true
-			this.StartTime = this.EndTime;
-			this.EndTime = 0;
+			this.EndTime = System.currentTimeMillis();//StartTime should start from without
+			if(this.EndTime-this.StartTime >= 1000/AS){
+				this.isAttackReady=true;//set the isAttackReady to true
+				this.StartTime = this.EndTime;
+				this.EndTime = 0;
+			}
 		}
-		}
+
 		return isAttackReady;
 	}
 	//Setting the weapon loot to the player

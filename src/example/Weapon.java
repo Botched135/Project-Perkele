@@ -1,9 +1,12 @@
 package example;
 
+import java.util.Random;
+
 public class Weapon extends Loot{
 	
-	protected float wepDMG;
-	protected float attackSpeed;
+
+	protected int wepDMG = randDmg.nextInt(100);
+	protected float attackSpeed = randSpeed.nextFloat()*5;
 	
 	Weapon() {
 		 
@@ -11,6 +14,8 @@ public class Weapon extends Loot{
 		hitboxX = 10.0f;
 		hitboxY = 10.0f;
 		ID = 4;
+		wepDMG=this.wepDMG;
+		
 
 	}
 	

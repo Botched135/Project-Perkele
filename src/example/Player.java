@@ -56,33 +56,39 @@ public class Player extends GameObject{
 		}
 	}
 	
-	public boolean isAttacking(Vector2f vector){
+	public void isAttacking(Vector2f vector){
 		if(this.isAttackReady){	
-		System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
+			System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
 			this.isAttacking = true;
-			this.isAttackReady=false;
+			isAttackReady=false;
 		}
 		else
 			this.isAttacking = false;
-		return this.isAttacking;
 	}
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
-		float AS =AttackSpeed;
 		if(this.isAttackReady == false){ 
 			this.EndTime = System.currentTimeMillis();//StartTime should start from without
-			if(this.EndTime-this.StartTime >= 1000/AS){
-				this.isAttackReady=true;//set the isAttackReady to true
+			if((this.EndTime-this.StartTime) >= 1000/AttackSpeed){
 				this.StartTime = this.EndTime;
-				this.EndTime = 0;
+				this.isAttackReady=true;//set the isAttackReady to true
+				//this.EndTime = 0;
 			}
+		}
+		else if(this.isAttackReady){
+			StartTime = System.currentTimeMillis();
 		}
 
 		return isAttackReady;
 	}
 	//Setting the weapon loot to the player
-	public void setLootWep(Weapon weap){
+	public void setLootEquipment(Loot weap){
+		if(weap.ID==4){
 		this.damage = weap.wepDMG;
 		this.AttackSpeed = weap.attackSpeed;
+		}
+		if(weap.ID==3){
+			this.hitPoints+=weap.hpBonus;
+		}
 	}
 	public void setLootArmor(Armor armor){
 		this.hitPoints+= armor.hpBonus;

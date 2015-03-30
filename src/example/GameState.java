@@ -45,9 +45,10 @@ public class GameState extends BasicGameState {
 
 		//UPDATE PLAYER ATTACK
 		player.setAttackReady();
-		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
+		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			player.isAttacking(mousePos);
 		}
+		
 		
 		
 		//UPDATING PLAYER COLLISION WITH ENEMIES
@@ -90,7 +91,12 @@ public class GameState extends BasicGameState {
 				for(int i = lootList.size()-1; i >= 0; i--) {
 					if(lootList.get(i).pickUp(player) == true) {
 							//either a method for picking up armor or a weapon
-						
+						if(lootList.get(i).ID ==4){
+							inventoryList.add(1,lootList.get(i));
+						}
+						else if(lootList.get(i).ID ==3){
+							inventoryList.add(0,lootList.get(i));
+						}
 							lootList.remove(i);
 					}
 				}
@@ -98,6 +104,14 @@ public class GameState extends BasicGameState {
 			for(int i = 0; i < lootList.size(); i++) {
 				lootRenderList.set(i, new Circle(lootList.get(i).vector.getX(), lootList.get(i).vector.getY(), lootList.get(i).hitboxX));
 			}
+		}
+		//EQUIPMENT
+		if(inventoryList.size()<2){
+		inventoryList.add(null);//Initially just setting the inventory to null to avoid crashing. 
+		inventoryList.add(null);//Im pretty sure that there is an easier way, but they have to be intialised before we can do anything.
+		}
+		if(inventoryList.get(1)!=null){
+			player.setLootEquipment(inventoryList.get(1));
 		}
 		
 		
@@ -156,6 +170,11 @@ public class GameState extends BasicGameState {
 		g.drawString("Hit Points: " + player.hitPoints, 10, 115);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 130);
 		g.drawString("The player is attacking : "+player.isAttacking, 10, 145);
+		g.drawString("Start Time: "+player.StartTime,1000 , 25);
+		g.drawString("End Time: "+player.EndTime,1000 , 40);
+		g.drawString("Attack Speed(Attacks per second): "+player.AttackSpeed, 900, 55);
+		g.drawString("Damage: "+player.damage, 1000, 70);
+		g.drawString("DPS: " +player.damage*player.AttackSpeed, 1000, 85);
 		
 		
 		//RENDER PLAYER ==============================================================================================================================

@@ -1,13 +1,17 @@
 package example;
 
+import java.util.Random;
+
 import org.newdawn.slick.geom.*;
 import org.newdawn.slick.Color;
 
 public class Loot extends GameObject {
 
+	protected Random randDmg = new Random();
+	protected Random randSpeed = new Random();
 	protected static Color lootTestCol = new Color(255,255,0);
-	protected float wepDMG = 50;
-	protected float attackSpeed=0.2f;
+	protected int wepDMG = randDmg.nextInt(100);
+	protected float attackSpeed = (randSpeed.nextFloat()*3);
 	protected float hpBonus;
 	
 

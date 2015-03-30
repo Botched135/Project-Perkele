@@ -2,7 +2,7 @@ package example;
 
 public class Armor extends Loot{
 	
-	protected float hpBonnus;
+	protected float hpBonus;
 	
 	Armor() {
 		 

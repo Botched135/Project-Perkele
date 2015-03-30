@@ -52,7 +52,6 @@ public class GameState extends BasicGameState {
 			player.isAttacking(mousePos);
 		}
 		
-			//player.isAttacking(mousePos);
 		
 		//UPDATING PLAYER COLLISION WITH ENEMIES
 		/*for(int i = 0; i<enemyList.size(); i++){
@@ -117,6 +116,7 @@ public class GameState extends BasicGameState {
 				for(int i = lootList.size()-1; i >= 0; i--) {
 					if(lootList.get(i).pickUp(player) == true) {
 							//either a method for picking up armor or a weapon
+						
 							lootList.remove(i);
 					}
 				}

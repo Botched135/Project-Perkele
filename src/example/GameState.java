@@ -46,14 +46,14 @@ public class GameState extends BasicGameState {
 
 		//System.out.println("X: " + player.vector.getX() + "     Y: " + player.vector.getY());
 		
-		player.isAttacking = true;
+		player.isAttacking = false;
 
-		
-		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
-			
-			player.isAttackReady = false;
-		}
+		//UPDATE PLAYER ATTACK
 		player.setAttackReady();
+		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
+			player.isAttacking(mousePos);
+		}
+		
 			//player.isAttacking(mousePos);
 		
 		//UPDATING PLAYER COLLISION WITH ENEMIES
@@ -182,6 +182,7 @@ public class GameState extends BasicGameState {
 		g.draw(playerToMouseTestLine);
 		g.drawString("Hit Points: " + player.hitPoints, 10, 115);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 130);
+		g.drawString("The player is attacking : "+player.isAttacking, 10, 145);
 		
 		
 		//RENDER PLAYER ==============================================================================================================================

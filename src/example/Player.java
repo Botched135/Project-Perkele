@@ -76,7 +76,6 @@ public class Player extends GameObject{
 			this.EndTime = 0;
 		}
 		}
-		//isAttackReady = this.isAttackReady;
 		return isAttackReady;
 	}
 	public float dmg(Loot weapon){

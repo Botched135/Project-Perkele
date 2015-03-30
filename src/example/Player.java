@@ -12,7 +12,7 @@ public class Player extends GameObject{
 	protected float AttackSpeed = 1;//Attacks per second
 	protected float isReady;
 	protected boolean isAttackReady = false;
-	protected long StartTime = 0;
+	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
 	
 	protected boolean isAttacking;
@@ -72,8 +72,7 @@ public class Player extends GameObject{
 		float AS =AttackSpeed;
 		if(this.isAttackReady == false){ 
 		this.EndTime = System.currentTimeMillis();//StartTime should start from without
-		this.isReady = 1000000/AS;
-		if(this.EndTime-this.StartTime >= 1000){
+		if(this.EndTime-this.StartTime >= 1000/AS){
 			this.isAttackReady=true;//set the isAttackReady to true
 			this.StartTime = EndTime;
 			this.EndTime = 0;

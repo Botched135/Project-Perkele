@@ -6,6 +6,9 @@ import org.newdawn.slick.Color;
 public class Loot extends GameObject {
 
 	protected static Color lootTestCol = new Color(255,255,0);
+	protected float wepDMG = 50;
+	protected float attackSpeed=0.2f;
+	protected float hpBonus;
 	
 
 	Loot() {

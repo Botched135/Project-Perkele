@@ -2,8 +2,8 @@ package example;
 
 public class Weapon extends Loot{
 	
-	protected float wepDMG;
-	protected float attackSpeed;
+	protected float wepDMG = 50;
+	protected float attackSpeed=0.2f;
 	
 	Weapon() {
 		 

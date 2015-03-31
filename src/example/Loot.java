@@ -18,7 +18,7 @@ public class Loot extends GameObject {
 	
 	protected int wepDMG = randDmg.nextInt(100);
 	protected float attackSpeed = (randSpeed.nextFloat()*3);
-	protected float hpBonus;
+	protected float hpBonus = 10;
 	
 
 	Loot() {

@@ -9,6 +9,7 @@ public class Armor extends Loot{
 		super();
 		hitboxX = 10.0f;
 		hitboxY = 10.0f;
+		hpBonus = 10;
 		ID = 3;
 
 	}

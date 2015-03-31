@@ -136,6 +136,11 @@ public class GameState extends BasicGameState {
 		inventoryList.add(null);//Initially just setting the inventory to null to avoid crashing. 
 		inventoryList.add(null);//Im pretty sure that there is an easier way, but they have to be initialized before we can do anything.
 		}
+		if(inventoryList.get(0)!=null){
+			player.setLootEquipment(inventoryList.get(0));
+			inventoryList.remove(0);
+		}
+		
 		if(inventoryList.get(1)!=null){
 			player.setLootEquipment(inventoryList.get(1));
 		}

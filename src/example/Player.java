@@ -81,8 +81,4 @@ public class Player extends GameObject{
 			this.hitPoints+=weap.hpBonus;
 		}
 	}
-	public void setLootArmor(Armor armor){
-		this.hitPoints+= armor.hpBonus;
-	}
-
 }

@@ -113,7 +113,7 @@ public class Enemy extends GameObject {
 			if(count > 0){
 				sum.scale(1/count);
 				sum.normalise();
-				sum.scale(speedMultiplier);				
+				sum.scale(speedMultiplier*1.5f);				
 				vector.add(sum);
 			}
 			

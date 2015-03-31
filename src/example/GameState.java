@@ -27,7 +27,9 @@ public class GameState extends BasicGameState {
 		private Line playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Mouse.getY());
 		private ArrayList <Loot> lootList = new ArrayList <Loot>();
 		private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
+		private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
 		private ArrayList <Circle> lootRenderList = new ArrayList <Circle>();
+		private ArrayList <Circle> projectileRenderList = new ArrayList <Circle>();
 		private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
 		private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
 
@@ -37,7 +39,7 @@ public class GameState extends BasicGameState {
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
-		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())), (gc.getInput().getMouseY() + (player.vector.getY())+(Window.HEIGHT/2)));
+		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);
 		System.out.println("MouseX: " + mousePos.getX() + "   Y: " + mousePos.getY());
 		
 
@@ -46,11 +48,19 @@ public class GameState extends BasicGameState {
 
 		//UPDATE PLAYER ATTACK
 		player.setAttackReady();
+		
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			player.isAttacking(mousePos);
 		}
 		
-		
+		//PLAYER SHOOTS ARROW AT "mousePos"
+		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
+			player.isAttacking(mousePos);
+			projectileList.add(new Arrow(player, mousePos, 6));
+			
+			Circle tempCircle = new Circle(projectileList.get(projectileList.size()-1).vector.getX(), projectileList.get(projectileList.size()-1).vector.getY(), projectileList.get(projectileList.size()-1).hitboxX);
+			projectileRenderList.add(tempCircle);
+		}
 		
 		//UPDATING PLAYER COLLISION WITH ENEMIES
 		/*for(int i = 0; i<enemyList.size(); i++){
@@ -77,11 +87,25 @@ public class GameState extends BasicGameState {
 		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
 		playerMeleeRangeCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.meleeRange);
 		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
+				
+				
+		//PROJECTILES STUFF =================================================================================================================
+		
+		if(projectileList.size() > 0){
+			for(int i = projectileList.size()-1; i >= 0; i--){
+			
+				projectileList.get(i).stateManager(i, projectileList, enemyList);
+			}
+			//UPDATES PROJECTILE SPRITES
+			for(int i = projectileList.size()-1; i >= 0; i--) {
+				projectileRenderList.set(i, new Circle(projectileList.get(i).vector.getX(), projectileList.get(i).vector.getY(), projectileList.get(i).hitboxX));
+			}
+		}
 		
 		//LOOT STUFF ======================================================================================================================================
 		//LOOT!!!!! - by using "space key" as input and picking it up using "V".
 		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
-			Loot.spawnLoot(lootList, lootRenderList);
+			//Loot.spawnLoot(lootList, lootRenderList);
 		}
 		
 		for(int i = 0; i < lootList.size()-1; i++){
@@ -110,7 +134,7 @@ public class GameState extends BasicGameState {
 		//EQUIPMENT
 		if(inventoryList.size()<2){
 		inventoryList.add(null);//Initially just setting the inventory to null to avoid crashing. 
-		inventoryList.add(null);//Im pretty sure that there is an easier way, but they have to be intialised before we can do anything.
+		inventoryList.add(null);//Im pretty sure that there is an easier way, but they have to be initialized before we can do anything.
 		}
 		if(inventoryList.get(1)!=null){
 			player.setLootEquipment(inventoryList.get(1));
@@ -120,7 +144,7 @@ public class GameState extends BasicGameState {
 		//ENEMY STUFF =================================================================================================================================================	
 		//ENEMY!!!!!! - by using "E key" as input
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
-			enemyList.add(new Enemy(new Vector2f((float)Mouse.getX(), (float)(Window.HEIGHT - Mouse.getY()))));
+			enemyList.add(new Enemy(new Vector2f(mousePos.getX(),  mousePos.getY())));
 			for(int i = enemyList.size()-1; i < enemyList.size(); i++) {					
 				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), enemyList.get(i).hitboxX);
 				enemyRenderList.add(tempCircle);
@@ -162,21 +186,15 @@ public class GameState extends BasicGameState {
 		
 		//RENDER TEXT (and miscellaneous)
 		g.setColor(new Color(255,255,255));
-		g.drawString("Red = idle", 10, 25);
-		g.drawString("Green = hovered", 10, 40);
-		g.drawString("White = collide with", 10, 55);
-		g.drawString("Yellow player ring = melee range", 10, 70);
-		g.drawString("Number of enemies: " + enemyList.size(), 10, 85);
-		g.drawString("Number of loot: " + lootList.size(), 10, 100);
+		g.drawString("Number of enemies: " + enemyList.size(), 10, 50);
+		g.drawString("Number of loot: " + lootList.size(), 10, 65);
 		g.draw(playerToMouseTestLine);
-		g.drawString("Hit Points: " + player.hitPoints, 10, 115);
-		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 130);
-		g.drawString("The player is attacking : "+player.isAttacking, 10, 145);
-		g.drawString("Start Time: "+player.StartTime,1000 , 25);
-		g.drawString("End Time: "+player.EndTime,1000 , 40);
-		g.drawString("Attack Speed(Attacks per second): "+player.AttackSpeed, 900, 55);
-		g.drawString("Damage: "+player.damage, 1000, 70);
-		g.drawString("DPS: " +player.damage*player.AttackSpeed, 1000, 85);
+		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
+		g.drawString("The player is attacking : "+player.isAttacking, 10, 95);
+		g.drawString("Hit Points:                " + player.hitPoints, 1000, 40);
+		g.drawString("Attack Speed(Att pr. sec): " +player.AttackSpeed, 1000, 55);
+		g.drawString("Damage:                    " +player.damage, 1000, 70);
+		g.drawString("DPS:                       " +player.damage*player.AttackSpeed, 1000, 85);
 		
 		
 		//RENDER PLAYER ==============================================================================================================================
@@ -188,6 +206,14 @@ public class GameState extends BasicGameState {
 		//TRANSLATE (move "camera") ACCORDING TO PLAYER MOVEMENT ============================================================================================
 		
 		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
+		
+		//RENDER PROJECTILE SPRITES
+		if(projectileList.size() > 0){
+			g.setColor(Arrow.arrowTestCol);
+			for(int i = projectileList.size()-1; i >= 0; i--) {
+				g.draw(projectileRenderList.get(i));
+			}
+		}
 		
 		//RENDER ENEMY SPRITES ==============================================================================================================================
 		if(enemyList.size() > 0){

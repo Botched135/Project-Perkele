@@ -105,7 +105,7 @@ public class GameState extends BasicGameState {
 		//LOOT STUFF ======================================================================================================================================
 		//LOOT!!!!! - by using "space key" as input and picking it up using "V".
 		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
-			//Loot.spawnLoot(lootList, lootRenderList);
+			Loot.spawnLoot(lootList, lootRenderList);
 		}
 		
 		for(int i = 0; i < lootList.size()-1; i++){

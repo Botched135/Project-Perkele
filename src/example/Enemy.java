@@ -33,41 +33,7 @@ public class Enemy extends GameObject {
 		hitboxY = 50.0f;
 		ID = 2;
 		
-		//Makes sure that the entire sprite (test circle at this point) is inside the window when spawned.
-		
-		float tempX;
-		float tempY;
-		
-		if(_vector.getX() > Window.WIDTH - hitboxX){
-			
-			tempX = Window.WIDTH - hitboxX;
-		}
-		else if(_vector.getX() < 0 + hitboxX){
-			
-			tempX = hitboxX;
-		}
-		else{
-			
-			tempX = _vector.getX();
-		}
-
-		if(_vector.getY() > Window.HEIGHT - hitboxY){
-			
-			tempY = Window.HEIGHT - hitboxY;
-		
-		}
-		else if(_vector.getY() < hitboxY){
-			tempY = hitboxY;
-			
-		}
-		else{
-			
-			tempY = _vector.getY();
-		}
-		
-		_vector.set(tempX, tempY);
 	}
-	
 	//METHODS
 	
 	//stateManager chooses the state of the Enemy based on certain criteria

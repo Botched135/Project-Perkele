@@ -8,7 +8,7 @@ public class Player extends GameObject{
 	protected float hitPoints = 100;
 	protected float damage = 10;
 	protected float meleeRange = 100;
-	protected float speedMultiplier = 1.0f;
+	protected float speedMultiplier = 5.0f;
 	protected float AttackSpeed = 0.5f;//Attacks per second
 	protected float isReady;
 	protected boolean isAttackReady = false;
@@ -45,15 +45,6 @@ public class Player extends GameObject{
 		dir.normalise();
 		dir = dir.scale(speedMultiplier);	
 		vector = vector.add(dir); 
-		
-		if(vector.add(dir).getX() < hitboxX || vector.add(dir).getX() > Window.WIDTH - hitboxX || vector.add(dir).getY() < hitboxX || vector.add(dir).getY() > Window.HEIGHT - hitboxX  ) {
-			
-			 //No movement happens then	<-- BUT IT STILL SLOWLY MOVES OUT OF THE GAME CONTAINERS BOUNDS!! FIX SOMEHOW!!		
-		}
-		else{
-			
-			vector = vector.add(dir.scale(speedMultiplier));
-		}
 	}
 	
 	public void isAttacking(Vector2f vector){

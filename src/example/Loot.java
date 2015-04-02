@@ -15,10 +15,10 @@ public class Loot extends GameObject {
 	protected Random randSpeed = new Random();
 	protected static Color lootTestCol = new Color(255,255,0);
 	protected float speedMultiplier = 5.0f;
-	
-	protected int wepDMG = randDmg.nextInt(100);
-	protected float attackSpeed = (randSpeed.nextFloat()*3);
-	protected float hpBonus = 10;
+	public int LootLevel=1;//This little piece of shit is a fucking feminazi.. I wont be changed, but except everyone else to change when it eventually does so 
+	protected int wepDMG;
+	protected float attackSpeed;
+	protected float hpBonus;
 	
 
 	Loot() {
@@ -101,5 +101,38 @@ public class Loot extends GameObject {
 			Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
 			_lootRenderList.add(tempCircle); 		
 		}
+	}
+//So the loot spawn from the enemy, and not where the mouse is atm	
+public static void spawnLoot(ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList, Enemy enemy) {
+		
+		Random randLoot = new Random();
+		Random randDrop = new Random();
+		int lootDropDist = 10;
+		int dropping = randDrop.nextInt(100);
+		if(dropping > 20) {
+			
+			int lootType = randDrop.nextInt(2);
+			if(lootType == 1) {
+				_lootList.add(new Armor());	
+			}
+			else {
+				_lootList.add(new Weapon());
+			}
+			//enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY()
+			
+			Loot tempLoot = _lootList.get(_lootList.size()-1);
+			float tempRandX = randLoot.nextInt(lootDropDist);
+			float tempRandY = randLoot.nextInt(lootDropDist);
+			float tempX = GameState.mousePos.getX() + (tempRandX)-(lootDropDist/2);
+			float tempY = GameState.mousePos.getY() + (tempRandY)-(lootDropDist/2);
+			
+			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));				
+			Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
+			_lootRenderList.add(tempCircle); 		
+		}
+	}
+	
+	public void SetLootLevel(Enemy enemy){
+		this.LootLevel = enemy.EnemyLevel;
 	}
 }

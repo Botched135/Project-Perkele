@@ -6,7 +6,7 @@ import org.newdawn.slick.Color;
 public class Player extends GameObject{
 	
 	protected float hitPoints = 100;
-	protected float damage = 10;
+	protected float damage = 100;
 	protected float meleeRange = 100;
 	protected float speedMultiplier = 5.0f;
 	protected float AttackSpeed = 0.5f;//Attacks per second
@@ -78,7 +78,7 @@ public class Player extends GameObject{
 		this.AttackSpeed = weap.attackSpeed;
 		}
 		if(weap.ID==3){
-			this.hitPoints+=weap.hpBonus;
+			this.hitPoints=weap.hpBonus;
 		}
 	}
 }

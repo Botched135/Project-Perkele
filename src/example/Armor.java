@@ -2,14 +2,14 @@ package example;
 
 public class Armor extends Loot{
 	
-	protected float hpBonus = 10;
+	//protected float hpBonus = 10;
 	
 	Armor() {
 		 
 		super();
 		hitboxX = 10.0f;
 		hitboxY = 10.0f;
-		hpBonus = 10;
+		this.hpBonus = 100+(10*LootLevel);
 		ID = 3;
 
 	}

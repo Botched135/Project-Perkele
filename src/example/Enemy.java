@@ -1,6 +1,7 @@
 package example;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.newdawn.slick.geom.*;
 import org.newdawn.slick.Color;
@@ -8,7 +9,7 @@ import org.newdawn.slick.Color;
 public class Enemy extends GameObject {
 	
 	//VARIABLE DECLARATION
-	
+	public int EnemyLevel;
 	protected float hitpoints = 100;
 	protected float speedMultiplier = 0.5f;
 	protected float AttackSpeed = 1;
@@ -16,6 +17,7 @@ public class Enemy extends GameObject {
 	protected long EndTime = 0;
 	protected boolean isAttackReady = false;
 	protected static Color enemyTestCol = new Color(255,0,0);
+	protected Random randLvl = new Random();
 	
 	//CONTRUCTERS
 	
@@ -116,5 +118,8 @@ public class Enemy extends GameObject {
 			
 			this.hitpoints -= _player.damage;
 		}
+	}
+	void SetEnemyLevel(){
+		this.EnemyLevel=randLvl.nextInt(5)+1;
 	}
 }

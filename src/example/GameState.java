@@ -138,7 +138,7 @@ public class GameState extends BasicGameState {
 		}
 		if(inventoryList.get(0)!=null){
 			player.setLootEquipment(inventoryList.get(0));
-			inventoryList.remove(0);
+			//inventoryList.remove(0);
 		}
 		
 		if(inventoryList.get(1)!=null){
@@ -150,6 +150,7 @@ public class GameState extends BasicGameState {
 		//ENEMY!!!!!! - by using "E key" as input
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(),  mousePos.getY())));
+			enemyList.get(enemyList.size()-1).SetEnemyLevel();
 			for(int i = enemyList.size()-1; i < enemyList.size(); i++) {					
 				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), enemyList.get(i).hitboxX);
 				enemyRenderList.add(tempCircle);
@@ -167,6 +168,9 @@ public class GameState extends BasicGameState {
 			//KILL ENEMIES (remove them from array list)
 			for(int i = enemyList.size()-1; i >= 0; i--) {
 				if(enemyList.get(i).hitpoints <= 0){
+					Loot.spawnLoot(lootList, lootRenderList,enemyList.get(i));
+					if(lootList.size()>0)
+						lootList.get(lootList.size()-1).SetLootLevel(enemyList.get(i));
 					enemyList.remove(i);
 
 				}
@@ -195,7 +199,12 @@ public class GameState extends BasicGameState {
 		g.drawString("Number of loot: " + lootList.size(), 10, 65);
 		g.draw(playerToMouseTestLine);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
-		g.drawString("The player is attacking : "+player.isAttacking, 10, 95);
+		
+		if(inventoryList.get(1)!=null)
+		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).LootLevel, 10, 95);
+		if(enemyList.size()>0)
+			g.drawString("Enemy Level: "+enemyList.get(enemyList.size()-1).EnemyLevel, 10, 110);	
+		
 		g.drawString("Hit Points:                " + player.hitPoints, 1000, 40);
 		g.drawString("Attack Speed(Att pr. sec): " +player.AttackSpeed, 1000, 55);
 		g.drawString("Damage:                    " +player.damage, 1000, 70);

@@ -5,11 +5,14 @@ import org.newdawn.slick.Color;
 
 public class Player extends GameObject{
 	
+	//PLAYER STATS ===========================================
 	protected float hitPoints = 100;
 	protected float damage = 100;
 	protected float meleeRange = 100;
 	protected float speedMultiplier = 5.0f;
-	protected float AttackSpeed = 5.0f;//Attacks per second
+	protected float AttackSpeed = 5.0f; //Attacks per second
+	//=======================================================
+	
 	protected float isReady;
 	protected boolean isAttackReady = false;
 	protected long StartTime = System.currentTimeMillis();

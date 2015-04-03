@@ -25,6 +25,7 @@ public class GameState extends BasicGameState {
 		private Circle playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
 		private Circle playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), 150);
 		private Line playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Mouse.getY());
+		private Inventory inventory = new Inventory(player);
 		private ArrayList <Loot> lootList = new ArrayList <Loot>();
 		private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
 		private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
@@ -38,6 +39,8 @@ public class GameState extends BasicGameState {
 	
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		
+		inventory.update(gc, sbg, delta);
 		
 		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
@@ -193,23 +196,32 @@ public class GameState extends BasicGameState {
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
+	
+		//inventory.render(gc, sbg, g);
+
+		
 		//RENDER TEXT (and miscellaneous)
 		g.setColor(new Color(255,255,255));
 		g.drawString("Number of enemies: " + enemyList.size(), 10, 50);
 		g.drawString("Number of loot: " + lootList.size(), 10, 65);
 		g.draw(playerToMouseTestLine);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
+		g.drawString("Press 'I'"
+				+ ""
+				+ "i"
+				+ " to toggle inventory", 10, 95);
 		
 		if(inventoryList.get(1)!=null)
 		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).LootLevel, 10, 95);
 		if(enemyList.size()>0)
 			g.drawString("Enemy Level: "+enemyList.get(enemyList.size()-1).EnemyLevel, 10, 110);	
 		
+		/*
 		g.drawString("Hit Points:                " + player.hitPoints, 1000, 40);
 		g.drawString("Attack Speed(Att pr. sec): " +player.AttackSpeed, 1000, 55);
 		g.drawString("Damage:                    " +player.damage, 1000, 70);
 		g.drawString("DPS:                       " +player.damage*player.AttackSpeed, 1000, 85);
-		
+		*/
 		
 		//RENDER PLAYER ==============================================================================================================================
 		g.setColor(new Color(0,255,255));
@@ -289,6 +301,9 @@ public class GameState extends BasicGameState {
 				
 			}
 		}
+		
+		inventory.render(gc, sbg, g);
+		
 	}
 
 

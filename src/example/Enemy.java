@@ -39,9 +39,10 @@ public class Enemy extends GameObject {
 	//METHODS
 	
 	//stateManager chooses the state of the Enemy based on certain criteria
-	void stateManager(Player _player, ArrayList<Enemy> _enemyList){
+	void stateManager(Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList){
 			
 		beingMeleeAttacked(_player);
+		beingRangedAttacked(_projectileList);
 		
 		separate(_enemyList);
 		
@@ -114,11 +115,25 @@ public class Enemy extends GameObject {
 	
 	void beingMeleeAttacked (Player _player){
 		
-		if(_player.isAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
+		if(_player.isMeleeAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			
 			this.hitpoints -= _player.damage;
 		}
 	}
+	
+	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
+		
+		if(_projectileList.size() > 0){
+			for(int i = _projectileList.size()-1; i >= 0; i--){
+				if(_projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX+1){
+			
+					this.hitpoints -= _projectileList.get(i).damage;
+					_projectileList.get(i).disableDmg = true;
+				}
+			}
+		}
+	}
+
 	void SetEnemyLevel(){
 		this.EnemyLevel=randLvl.nextInt(5)+1;
 	}

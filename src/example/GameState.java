@@ -39,27 +39,27 @@ public class GameState extends BasicGameState {
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
-		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);
-		System.out.println("MouseX: " + mousePos.getX() + "   Y: " + mousePos.getY());
+		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
-
-		
-		player.isAttacking = false;
+		player.isMeleeAttacking = false;
+		player.isRangedAttacking = false;
 
 		//UPDATE PLAYER ATTACK
 		player.setAttackReady();
 		
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
-			player.isAttacking(mousePos);
+			player.isMeleeAttacking(mousePos);
 		}
 		
-		//PLAYER SHOOTS ARROW AT "mousePos"
+		//PLAYER SHOOTS ARROW TOWARDS "mousePos"
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
-			player.isAttacking(mousePos);
-			projectileList.add(new Arrow(player, mousePos, 6));
+			if(player.isAttackReady == true){
+				player.isRangedAttacking(mousePos);
+				projectileList.add(new Arrow(player, mousePos, 10));
 			
-			Circle tempCircle = new Circle(projectileList.get(projectileList.size()-1).vector.getX(), projectileList.get(projectileList.size()-1).vector.getY(), projectileList.get(projectileList.size()-1).hitboxX);
-			projectileRenderList.add(tempCircle);
+				Circle tempCircle = new Circle(projectileList.get(projectileList.size()-1).vector.getX(), projectileList.get(projectileList.size()-1).vector.getY(), projectileList.get(projectileList.size()-1).hitboxX);
+				projectileRenderList.add(tempCircle);
+			}
 		}
 		
 		//UPDATING PLAYER COLLISION WITH ENEMIES
@@ -87,20 +87,7 @@ public class GameState extends BasicGameState {
 		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
 		playerMeleeRangeCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.meleeRange);
 		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
-				
-				
-		//PROJECTILES STUFF =================================================================================================================
-		
-		if(projectileList.size() > 0){
-			for(int i = projectileList.size()-1; i >= 0; i--){
 			
-				projectileList.get(i).stateManager(i, projectileList, enemyList);
-			}
-			//UPDATES PROJECTILE SPRITES
-			for(int i = projectileList.size()-1; i >= 0; i--) {
-				projectileRenderList.set(i, new Circle(projectileList.get(i).vector.getX(), projectileList.get(i).vector.getY(), projectileList.get(i).hitboxX));
-			}
-		}
 		
 		//LOOT STUFF ======================================================================================================================================
 		//LOOT!!!!! - by using "space key" as input and picking it up using "V".
@@ -161,7 +148,7 @@ public class GameState extends BasicGameState {
 			
 			//UPDATES ENEMY LOGIC
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				enemyList.get(i).stateManager(player, enemyList);
+				enemyList.get(i).stateManager(player, enemyList, projectileList);
 				
 			}
 				
@@ -181,6 +168,19 @@ public class GameState extends BasicGameState {
 				enemyRenderList.set(i, new Circle(enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY(), enemyList.get(i).hitboxX));
 			}
 		}
+		
+		//PROJECTILES STUFF =================================================================================================================
+		
+				if(projectileList.size() > 0){
+					for(int i = projectileList.size()-1; i >= 0; i--){
+					
+						projectileList.get(i).stateManager(i, projectileList, enemyList);
+					}
+					//UPDATES PROJECTILE SPRITES
+					for(int i = projectileList.size()-1; i >= 0; i--) {
+						projectileRenderList.set(i, new Circle(projectileList.get(i).vector.getX(), projectileList.get(i).vector.getY(), projectileList.get(i).hitboxX));
+					}
+				}
 		
 		//======================================================================================================================================================
 		//BACK TO MAIN MENU (and clears the game container) - key input is "ESCAPE"
@@ -251,7 +251,8 @@ public class GameState extends BasicGameState {
 					g.setColor(Enemy.enemyTestCol);
 				}
 				g.draw(enemyRenderList.get(i));
-				g.drawString(Integer.toString(i), enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY());
+				g.drawString("HP:" + enemyList.get(i).hitpoints, enemyList.get(i).vector.getX()-40, enemyList.get(i).vector.getY()-15);
+				g.drawString("Nr." + Integer.toString(i), enemyList.get(i).vector.getX()-15, enemyList.get(i).vector.getY());
 			}
 		}
 		

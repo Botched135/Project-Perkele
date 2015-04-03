@@ -9,13 +9,14 @@ public class Player extends GameObject{
 	protected float damage = 100;
 	protected float meleeRange = 100;
 	protected float speedMultiplier = 5.0f;
-	protected float AttackSpeed = 0.5f;//Attacks per second
+	protected float AttackSpeed = 5.0f;//Attacks per second
 	protected float isReady;
 	protected boolean isAttackReady = false;
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
 	
-	protected boolean isAttacking;
+	protected boolean isMeleeAttacking;
+	protected boolean isRangedAttacking;
 	protected static Color playerTestCol = new Color(0,0,255);
 	
 	Player() {
@@ -47,15 +48,26 @@ public class Player extends GameObject{
 		vector = vector.add(dir); 
 	}
 	
-	public void isAttacking(Vector2f vector){
+	public void isMeleeAttacking(Vector2f vector){
 		if(this.isAttackReady){	
-			System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
-			this.isAttacking = true;
+			//System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
+			this.isMeleeAttacking = true;
 			isAttackReady=false;
 		}
 		else
-			this.isAttacking = false;
+			this.isMeleeAttacking = false;
 	}
+	
+	public void isRangedAttacking(Vector2f vector){
+		if(this.isAttackReady){	
+			//System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
+			this.isRangedAttacking = true;
+			isAttackReady=false;
+		}
+		else
+			this.isRangedAttacking = false;
+	}
+	
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		if(this.isAttackReady == false){ 
 			this.EndTime = System.currentTimeMillis();//StartTime should start from without

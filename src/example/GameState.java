@@ -206,10 +206,7 @@ public class GameState extends BasicGameState {
 		g.drawString("Number of loot: " + lootList.size(), 10, 65);
 		g.draw(playerToMouseTestLine);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
-		g.drawString("Press 'I'"
-				+ ""
-				+ "i"
-				+ " to toggle inventory", 10, 95);
+		g.drawString("Press 'I'" + "" + " to toggle inventory", 10, 95);
 		
 		if(inventoryList.get(1)!=null)
 		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).LootLevel, 10, 95);

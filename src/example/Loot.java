@@ -74,7 +74,7 @@ public class Loot extends GameObject {
 		}
 	}
 	
-	
+//This loot spawning method is to be removed later in inplementation as it spawns using spacebar	
 	public static void spawnLoot(ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList) {
 		
 		Random randLoot = new Random();
@@ -102,8 +102,8 @@ public class Loot extends GameObject {
 			_lootRenderList.add(tempCircle); 		
 		}
 	}
-//So the loot spawn from the enemy, and not where the mouse is atm	
-public static void spawnLoot(ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList, Enemy enemy) {
+//spawnLoot method used for spawning loot at the enemys position regardless of where the mouse is.
+	public static void spawnLoot(ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList, Enemy enemy) {
 		
 		Random randLoot = new Random();
 		Random randDrop = new Random();
@@ -118,13 +118,12 @@ public static void spawnLoot(ArrayList<Loot> _lootList, ArrayList<Circle> _lootR
 			else {
 				_lootList.add(new Weapon());
 			}
-			//enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY()
 			
 			Loot tempLoot = _lootList.get(_lootList.size()-1);
 			float tempRandX = randLoot.nextInt(lootDropDist);
 			float tempRandY = randLoot.nextInt(lootDropDist);
-			float tempX = GameState.mousePos.getX() + (tempRandX)-(lootDropDist/2);
-			float tempY = GameState.mousePos.getY() + (tempRandY)-(lootDropDist/2);
+			float tempX = enemy.vector.getX() + (tempRandX)-(lootDropDist/2);
+			float tempY = enemy.vector.getY() + (tempRandY)-(lootDropDist/2);
 			
 			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));				
 			Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);

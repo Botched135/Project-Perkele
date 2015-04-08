@@ -107,10 +107,12 @@ public class GameState extends BasicGameState {
 				for(int i = lootList.size()-1; i >= 0; i--) {
 					if(lootList.get(i).pickUp(player) == true) {
 							//either a method for picking up armor or a weapon
-						if(lootList.get(i).ID ==4){
+						if(lootList.get(i) instanceof Weapon){
+							inventoryList.remove(1);
 							inventoryList.add(1,lootList.get(i));
 						}
-						else if(lootList.get(i).ID ==3){
+						else if(lootList.get(i) instanceof Armor){
+							inventoryList.remove(0);
 							inventoryList.add(0,lootList.get(i));
 						}
 							lootList.remove(i);
@@ -209,9 +211,9 @@ public class GameState extends BasicGameState {
 		g.drawString("Press 'I'" + "" + " to toggle inventory", 10, 95);
 		
 		if(inventoryList.get(1)!=null)
-		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).LootLevel, 10, 95);
+		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).LootLevel, 10, 110);
 		if(enemyList.size()>0)
-			g.drawString("Enemy Level: "+enemyList.get(enemyList.size()-1).EnemyLevel, 10, 110);	
+			g.drawString("Enemy Level: "+enemyList.get(enemyList.size()-1).EnemyLevel, 10, 125);	
 		
 		/*
 		g.drawString("Hit Points:                " + player.hitPoints, 1000, 40);
@@ -262,6 +264,7 @@ public class GameState extends BasicGameState {
 				g.draw(enemyRenderList.get(i));
 				g.drawString("HP:" + enemyList.get(i).hitpoints, enemyList.get(i).vector.getX()-40, enemyList.get(i).vector.getY()-15);
 				g.drawString("Nr." + Integer.toString(i), enemyList.get(i).vector.getX()-15, enemyList.get(i).vector.getY());
+				g.drawString("Lvl " + enemyList.get(i).EnemyLevel, enemyList.get(i).vector.getX()-20, enemyList.get(i).vector.getY()-35);
 			}
 		}
 		
@@ -290,9 +293,11 @@ public class GameState extends BasicGameState {
 					
 				g.draw(lootRenderList.get(i));
 				if(lootList.get(i).ID == 3) {
+					g.drawString("lvl:" + lootList.get(i).LootLevel, lootList.get(i).vector.getX()-10, lootList.get(i).vector.getY()-17);
 					g.drawString("A" + Integer.toString(i), lootList.get(i).vector.getX() -5, lootList.get(i).vector.getY() -5);
 				}
 				else if(lootList.get(i).ID == 4) {
+					g.drawString("lvl:" + lootList.get(i).LootLevel, lootList.get(i).vector.getX()-10, lootList.get(i).vector.getY()-17);
 					g.drawString("W" + Integer.toString(i), lootList.get(i).vector.getX() -5, lootList.get(i).vector.getY() -5);
 				}
 				

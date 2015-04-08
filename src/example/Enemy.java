@@ -136,5 +136,6 @@ public class Enemy extends GameObject {
 
 	void SetEnemyLevel(){
 		this.EnemyLevel=randLvl.nextInt(5)+1;
+		this.hitpoints = 100*this.EnemyLevel;
 	}
 }

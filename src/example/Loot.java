@@ -14,8 +14,7 @@ public class Loot extends GameObject {
 	protected Random randDmg = new Random();
 	protected Random randSpeed = new Random();
 	protected static Color lootTestCol = new Color(255,255,0);
-	protected float speedMultiplier = 5.0f;
-	public int LootLevel=1;//This little piece of shit is a fucking feminazi.. I wont be changed, but except everyone else to change when it eventually does so 
+	protected float speedMultiplier = 5.0f; 
 	protected int wepDMG;
 	protected float attackSpeed;
 	protected float hpBonus;
@@ -133,5 +132,13 @@ public class Loot extends GameObject {
 	
 	public void SetLootLevel(Enemy enemy){
 		this.LootLevel = enemy.EnemyLevel;
+		if(this instanceof Armor){
+			this.hpBonus = 100+(20*this.LootLevel);
+		}
+		else if(this instanceof Weapon){
+			this.wepDMG = this.LootLevel+(int)Math.pow(randDmg.nextInt(5)+1,5);
+			this.attackSpeed = 2*this.LootLevel*(randSpeed.nextFloat()+0.5f);
+		}
+		
 	}
 }

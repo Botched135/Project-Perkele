@@ -11,6 +11,7 @@ public class GameObject {
 	protected float hitboxX;
 	protected float hitboxY;
 	protected byte ID; //PLAYER == 1:	ENEMY == 2:		ARMOR == 3:		WEAPON == 4:
+	public int LootLevel=1;
 
 	//CONTRUCTERS
 	GameObject() {

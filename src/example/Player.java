@@ -88,11 +88,11 @@ public class Player extends GameObject{
 	}
 	//Setting the weapon loot to the player
 	public void setLootEquipment(Loot weap){
-		if(weap.ID==4){
+		if(weap instanceof Weapon){
 		this.damage = weap.wepDMG;
 		this.AttackSpeed = weap.attackSpeed;
 		}
-		if(weap.ID==3){
+		else if(weap instanceof Armor){
 			this.hitPoints=weap.hpBonus;
 		}
 	}

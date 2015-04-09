@@ -14,7 +14,7 @@ public class Arrow extends Projectile {
 		super(_owner, _target);
 		owner = _owner;
 		target = _target;
-		damage = 5;
+		damage = 100;
 		speedMultiplier = _speedMultiplier;
 		hitboxX = 5;
 		disableDmg = false;

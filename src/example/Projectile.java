@@ -3,11 +3,13 @@ package example;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.state.StateBasedGame;
 
 public class Projectile extends GameObject {
 	
-	//VARIABLE DECLARATION
+	//VARIABLE DECLARATION ===========================================================================================================================================================
 	protected GameObject owner;
 	protected Vector2f target;
 	protected Vector2f dir;
@@ -17,7 +19,7 @@ public class Projectile extends GameObject {
 	protected boolean disableDmg;
 	protected long startTime = System.currentTimeMillis();
 
-	//CONSTRUCTERS
+	//CONSTRUCTERS ===========================================================================================================================================================
 	Projectile(GameObject _owner, Vector2f _target){
 	
 		vector.set(_owner.vector.getX(), _owner.vector.getY());
@@ -26,7 +28,14 @@ public class Projectile extends GameObject {
 		dir = snapshotTargetVector.sub(vector);
 	}
 	
-	//METHODS
+	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
+		
+		stateManager(index, _projectileList, _enemyList);
+	}
+	
+	
+	//METHODS ===========================================================================================================================================================
 	void stateManager(int index, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
 		
 		//Moves towards a snapshotted vector position of the enemies target

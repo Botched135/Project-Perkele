@@ -1,10 +1,16 @@
 package example;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.geom.*;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
 
 public class Player extends GameObject{
 	
+	//VARIABLE DECLARATION ===========================================================================================================================================================
 	//PLAYER STATS ===========================================
 	protected float hitPoints = 100;
 	protected float damage = 100;
@@ -22,6 +28,7 @@ public class Player extends GameObject{
 	protected boolean isRangedAttacking;
 	protected static Color playerTestCol = new Color(0,0,255);
 	
+	//CONSTRUCTORS ===========================================================================================================================================================
 	Player() {
 		
 		super();
@@ -39,7 +46,54 @@ public class Player extends GameObject{
 		hitboxY = 50.0f;
 		ID = 1;
 	}
+	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
+	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList){
+		
+		isMeleeAttacking = false;
+		isRangedAttacking = false;
+
+		//UPDATE PLAYER ATTACK
+		setAttackReady();
+		
+		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+			isMeleeAttacking(GameState.mousePos);
+		}
+		
+		//PLAYER SHOOTS ARROW TOWARDS "mousePos"
+		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
+			if(isAttackReady == true){
+				isRangedAttacking(GameState.mousePos);
+				_projectileList.add(new Arrow(this, GameState.mousePos, 10));
+			
+				Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
+				_projectileRenderList.add(tempCircle);
+			}
+		}
+		
+		//UPDATING PLAYER COLLISION WITH ENEMIES
+		/*for(int i = 0; i<enemyList.size(); i++){
+			if(player.isColliding(enemyList.get(i)))
+				System.out.println("player is colliding with enemy nr. "+ i);
+		}*/
+		
+		//PLAYER MOVEMENT INPUT
+		
+		if(gc.getInput().isKeyDown(Input.KEY_A)) {
+			MoveSelf(new Vector2f(-1.0f, 0f));
+		}
+		if(gc.getInput().isKeyDown(Input.KEY_W)) {
+			MoveSelf(new Vector2f(0f, -1.0f));
+			}
+		if(gc.getInput().isKeyDown(Input.KEY_D)) {
+			MoveSelf(new Vector2f(1.0f, 0f));
+		}
+		if(gc.getInput().isKeyDown(Input.KEY_S)) {
+			MoveSelf(new Vector2f(0.0f, 1.0f));
+		}
+	}
 	
+	
+	//METHODS ===========================================================================================================================================================
 	public void MoveSelf(Vector2f _target){
 		
 		_target = _target.add(vector);
@@ -88,11 +142,11 @@ public class Player extends GameObject{
 	}
 	//Setting the weapon loot to the player
 	public void setLootEquipment(Loot weap){
-		if(weap.ID==4){
+		if(weap instanceof Weapon){
 		this.damage = weap.wepDMG;
 		this.AttackSpeed = weap.attackSpeed;
 		}
-		if(weap.ID==3){
+		else if(weap instanceof Armor){
 			this.hitPoints=weap.hpBonus;
 		}
 	}

@@ -35,56 +35,16 @@ public class GameState extends BasicGameState {
 		private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
 
 		protected static Vector2f mousePos;
-		
 	
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
-		inventory.update(gc, sbg, delta);
-		
 		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
-		player.isMeleeAttacking = false;
-		player.isRangedAttacking = false;
-
-		//UPDATE PLAYER ATTACK
-		player.setAttackReady();
+		inventory.update(gc, sbg, delta);
 		
-		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
-			player.isMeleeAttacking(mousePos);
-		}
-		
-		//PLAYER SHOOTS ARROW TOWARDS "mousePos"
-		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
-			if(player.isAttackReady == true){
-				player.isRangedAttacking(mousePos);
-				projectileList.add(new Arrow(player, mousePos, 10));
-			
-				Circle tempCircle = new Circle(projectileList.get(projectileList.size()-1).vector.getX(), projectileList.get(projectileList.size()-1).vector.getY(), projectileList.get(projectileList.size()-1).hitboxX);
-				projectileRenderList.add(tempCircle);
-			}
-		}
-		
-		//UPDATING PLAYER COLLISION WITH ENEMIES
-		/*for(int i = 0; i<enemyList.size(); i++){
-			if(player.isColliding(enemyList.get(i)))
-				System.out.println("player is colliding with enemy nr. "+ i);
-		}*/
-		
-		//PLAYER MOVEMENT INPUT
-		
-		if(gc.getInput().isKeyDown(Input.KEY_A)) {
-			player.MoveSelf(new Vector2f(-1.0f, 0f));
-		}
-		if(gc.getInput().isKeyDown(Input.KEY_W)) {
-			player.MoveSelf(new Vector2f(0f, -1.0f));
-			}
-		if(gc.getInput().isKeyDown(Input.KEY_D)) {
-			player.MoveSelf(new Vector2f(1.0f, 0f));
-		}
-		if(gc.getInput().isKeyDown(Input.KEY_S)) {
-			player.MoveSelf(new Vector2f(0.0f, 1.0f));
-		}
+		//PLAYER STUFF ====================================================================================================================================
+		player.update(gc, sbg, projectileList, projectileRenderList);
 		
 		//UDATES PLAYER SPRITE
 		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
@@ -93,38 +53,17 @@ public class GameState extends BasicGameState {
 			
 		
 		//LOOT STUFF ======================================================================================================================================
-		//LOOT!!!!! - by using "space key" as input and picking it up using "V".
-		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
-			Loot.spawnLoot(lootList, lootRenderList);
-		}
 		
-		for(int i = 0; i < lootList.size()-1; i++){
-			lootList.get(i).stateManager(player, lootList, lootRenderList, gc, i+1);
-		}
-		
-		if(lootList.size() > 0) {
-			if(gc.getInput().isKeyPressed(Input.KEY_V)) {
-				for(int i = lootList.size()-1; i >= 0; i--) {
-					if(lootList.get(i).pickUp(player) == true) {
-							//either a method for picking up armor or a weapon
-						if(lootList.get(i).ID ==4){
-							inventoryList.add(1,lootList.get(i));
-						}
-						else if(lootList.get(i).ID ==3){
-							inventoryList.add(0,lootList.get(i));
-						}
-							lootList.remove(i);
-					}
-				}
-			}
-			for(int i = 0; i < lootList.size(); i++) {
-				lootRenderList.set(i, new Circle(lootList.get(i).vector.getX(), lootList.get(i).vector.getY(), lootList.get(i).hitboxX));
+		if(lootList.size() > 0){
+			for(int i = lootList.size()-1; i >= 0; i--){
+				lootList.get(i).update(gc, sbg, lootList, lootRenderList, inventoryList, player);
+				
 			}
 		}
 		//EQUIPMENT
 		if(inventoryList.size()<2){
 		inventoryList.add(null);//Initially just setting the inventory to null to avoid crashing. 
-		inventoryList.add(null);//Im pretty sure that there is an easier way, but they have to be initialized before we can do anything.
+		inventoryList.add(null);//I'm pretty sure that there is an easier way, but they have to be initialized before we can do anything.
 		}
 		if(inventoryList.get(0)!=null){
 			player.setLootEquipment(inventoryList.get(0));
@@ -140,6 +79,7 @@ public class GameState extends BasicGameState {
 		//ENEMY!!!!!! - by using "E key" as input
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(),  mousePos.getY())));
+			enemyList.get(enemyList.size()-1).init(gc, sbg);
 			enemyList.get(enemyList.size()-1).SetEnemyLevel();
 			for(int i = enemyList.size()-1; i < enemyList.size(); i++) {					
 				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), enemyList.get(i).hitboxX);
@@ -148,22 +88,10 @@ public class GameState extends BasicGameState {
 		}
 		//UPDATING ENEMIES
 		if(enemyList.size() > 0){
-			
-			//UPDATES ENEMY LOGIC
+		
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				enemyList.get(i).stateManager(player, enemyList, projectileList);
+				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, lootRenderList);
 				
-			}
-				
-			//KILL ENEMIES (remove them from array list)
-			for(int i = enemyList.size()-1; i >= 0; i--) {
-				if(enemyList.get(i).hitpoints <= 0){
-					Loot.spawnLoot(lootList, lootRenderList,enemyList.get(i));
-					if(lootList.size()>0)
-						lootList.get(lootList.size()-1).SetLootLevel(enemyList.get(i));
-					enemyList.remove(i);
-
-				}
 			}
 				
 			//UPDATES ENEMY SPRITES
@@ -206,15 +134,12 @@ public class GameState extends BasicGameState {
 		g.drawString("Number of loot: " + lootList.size(), 10, 65);
 		g.draw(playerToMouseTestLine);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
-		g.drawString("Press 'I'"
-				+ ""
-				+ "i"
-				+ " to toggle inventory", 10, 95);
+		g.drawString("Press 'I'" + "" + " to toggle inventory", 10, 95);
 		
 		if(inventoryList.get(1)!=null)
-		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).LootLevel, 10, 95);
+		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).lootLevel, 10, 110);
 		if(enemyList.size()>0)
-			g.drawString("Enemy Level: "+enemyList.get(enemyList.size()-1).EnemyLevel, 10, 110);	
+			g.drawString("Enemy Level: "+enemyList.get(enemyList.size()-1).EnemyLevel, 10, 125);	
 		
 		/*
 		g.drawString("Hit Points:                " + player.hitPoints, 1000, 40);
@@ -242,37 +167,20 @@ public class GameState extends BasicGameState {
 		}
 		
 		//RENDER ENEMY SPRITES ==============================================================================================================================
+		
 		if(enemyList.size() > 0){
-			g.setColor(Enemy.enemyTestCol);
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				
-				//Set hover color
-				if(mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX){
-					
-					g.setColor(new Color(0,255,0));
-					
-				}
-				//set collision color
-				else if(player.isColliding(enemyList.get(i)) == true){
-					
-					g.setColor(new Color(255,255,255));
-					
-				}
-				else{
-					
-					g.setColor(Enemy.enemyTestCol);
-				}
-				g.draw(enemyRenderList.get(i));
-				g.drawString("HP:" + enemyList.get(i).hitpoints, enemyList.get(i).vector.getX()-40, enemyList.get(i).vector.getY()-15);
-				g.drawString("Nr." + Integer.toString(i), enemyList.get(i).vector.getX()-15, enemyList.get(i).vector.getY());
+				enemyList.get(i).render(i, gc, sbg, g, player);
 			}
 		}
 		
 		//RENDER LOOT SPRITES ==============================================================================================================================
 		if(lootList.size() > 0){
-			g.setColor(Loot.lootTestCol);
+			//g.setColor(Loot.lootTestCol);
 			for(int i = lootList.size()-1; i >= 0; i--) {
-				
+				lootList.get(i).render(i, gc, sbg, g);
+			}
+			/*
 				//Set hover color
 				if(mousePos.distance(lootList.get(i).vector) < lootList.get(i).hitboxX){
 					
@@ -293,13 +201,17 @@ public class GameState extends BasicGameState {
 					
 				g.draw(lootRenderList.get(i));
 				if(lootList.get(i).ID == 3) {
+					g.drawString("lvl:" + lootList.get(i).lootLevel, lootList.get(i).vector.getX()-10, lootList.get(i).vector.getY()-17);
 					g.drawString("A" + Integer.toString(i), lootList.get(i).vector.getX() -5, lootList.get(i).vector.getY() -5);
 				}
 				else if(lootList.get(i).ID == 4) {
+					g.drawString("lvl:" + lootList.get(i).lootLevel, lootList.get(i).vector.getX()-10, lootList.get(i).vector.getY()-17);
 					g.drawString("W" + Integer.toString(i), lootList.get(i).vector.getX() -5, lootList.get(i).vector.getY() -5);
 				}
 				
 			}
+		}
+		*/
 		}
 		
 		inventory.render(gc, sbg, g);

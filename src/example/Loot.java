@@ -20,9 +20,11 @@ public class Loot extends GameObject {
 	protected Random randSpeed = new Random();
 	protected static Color lootTestCol = new Color(255,255,0);
 	protected float speedMultiplier = 5.0f; 
-	protected int wepDMG;
+	protected float wepMinDMG;
+	protected float wepMaxDMG;
 	protected float attackSpeed;
 	protected float hpBonus;
+	protected float Armor;
 	public int lootLevel = 1;
 	
 	//CONSTRUCTORS ======================================================================================================================================================
@@ -178,11 +180,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	public void SetLootLevel(Enemy enemy){
 		this.lootLevel = enemy.EnemyLevel;
 		if(this instanceof Armor){
-			this.hpBonus = 100+(20*this.lootLevel);
+			this.Armor = 10*this.lootLevel;
 		}
 		else if(this instanceof Weapon){
-			this.wepDMG = this.lootLevel+(int)Math.pow(randDmg.nextInt(5)+1,5);
-			this.attackSpeed = 2*this.lootLevel*(randSpeed.nextFloat()+0.5f);
+			//this.wepDMG = this.lootLevel+(int)Math.pow(randDmg.nextInt(5)+1,5);
+			this.attackSpeed = 1.5f*this.lootLevel*(randSpeed.nextFloat()+0.3f);
 		}
 		
 	}

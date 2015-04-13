@@ -23,6 +23,8 @@ public class Enemy extends GameObject {
 	protected boolean isAttackReady = false;
 	protected static Color enemyTestCol = new Color(255,0,0);
 	protected Random randLvl = new Random();
+	protected String[]EnemyNames = {"Dwarf","Dwarf Soldier","Dwarf Veteran","Dwarf Lord", "Dwarf Faggot"};
+	protected String EnemyName;
 	
 	//Sprites
 	private Image enemyTestSprite = null; 
@@ -62,11 +64,19 @@ public class Enemy extends GameObject {
 	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g, Player _player) throws SlickException {
 		
 		enemyTestSprite.draw(vector.getX()-32, vector.getY()-32);
-		g.setColor(new Color(255,255,255));
 		
-		g.drawString("HP:" + hitpoints, vector.getX()-32, vector.getY()-60);
+	
+		g.setColor(new Color(255,0,0));
+		g.drawRect(vector.getX()-33, vector.getY()-60, 76.9f, 15);
+		g.fillRect(vector.getX()-33, vector.getY()-60,(this.hitpoints/this.EnemyLevel)/1.3f, 15);
+		g.drawRect(vector.getX()-33, vector.getY()-60,(this.hitpoints/this.EnemyLevel)/1.3f, 15);
+		
+		g.setColor(new Color(255,255,255));
+		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
 		g.drawString("Nr." + Integer.toString(index), vector.getX()-32, vector.getY()+32);
-		g.drawString("Lvl " + EnemyLevel, vector.getX()-32, vector.getY()-80);
+		g.drawString("Lvl " + EnemyLevel, vector.getX()-20, vector.getY()-80);
+		g.drawString(this.EnemyName, vector.getX()-(4*this.EnemyName.length()), vector.getY()-95);
+		
 		
 	}
 	
@@ -156,7 +166,7 @@ public class Enemy extends GameObject {
 		
 		if(_player.isMeleeAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			
-			this.hitpoints -= _player.damage;
+			this.hitpoints -= _player.damage;//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 		}
 	}
 	//Method to check if the enemy is being hit by a ranged attack
@@ -176,6 +186,7 @@ public class Enemy extends GameObject {
 	void SetEnemyLevel(){
 		this.EnemyLevel=randLvl.nextInt(5)+1;
 		this.hitpoints = 100*this.EnemyLevel;
+		this.EnemyName = EnemyNames[this.EnemyLevel-1];
 	}
 	//Method to drop loot from the enemy
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList) throws SlickException{

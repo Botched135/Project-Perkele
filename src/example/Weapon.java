@@ -20,7 +20,9 @@ public class Weapon extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 4;
-		wepDMG = 20+lootLevel*(randDmg.nextInt(80));
+		//20+lootLevel*(randDmg.nextInt(80));
+		wepMinDMG = lootLevel*20+randDmg.nextInt(20);
+		wepMaxDMG = lootLevel*20+40+randDmg.nextInt(15);
 		attackSpeed = 0.5f+2*lootLevel*(randSpeed.nextFloat());
 		
 

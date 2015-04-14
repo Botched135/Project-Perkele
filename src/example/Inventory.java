@@ -55,7 +55,7 @@ public class Inventory {
 		g.fillRect(xOrigin+47, yOrigin+70, 70, 70);
 		g.fillRect(xOrigin+187, yOrigin+70, 70, 70);
 		
-		for(int y = 0; y < 4; y++){
+		for(int y = 0; y < 5; y++){
 			g.fillRect(xOrigin+187, yOrigin+y*2+150+(y*25), 100, 25);
 		}
 		
@@ -75,11 +75,13 @@ public class Inventory {
 		g.drawString("Attack Speed", xOrigin+30, yOrigin+180);
 		g.drawString("Damage", xOrigin+30, yOrigin+205);
 		g.drawString("DPS",xOrigin+30, yOrigin+230);
+		g.drawString("Armor",xOrigin+30, yOrigin+255);
 		
 		g.drawString(df.format(player.hitPoints), xOrigin+195, yOrigin+154);
 		g.drawString(df.format(player.AttackSpeed), xOrigin+195, yOrigin+180);
-		g.drawString(df.format(player.damage), xOrigin+195, yOrigin+208);
-		g.drawString(df.format(player.damage*player.AttackSpeed), xOrigin+195, yOrigin+235);
+		g.drawString(df.format(player.MinDamage)+"-"+df.format(player.MaxDamage), xOrigin+195, yOrigin+208);
+		g.drawString(df.format(((player.MinDamage+player.MaxDamage)/2)*player.AttackSpeed), xOrigin+195, yOrigin+235);
+		g.drawString(df.format(player.Armor), xOrigin+195, yOrigin+260);
 		
 		
 		

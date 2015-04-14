@@ -75,7 +75,7 @@ public class Enemy extends GameObject {
 		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
 		g.drawString("Nr." + Integer.toString(index), vector.getX()-32, vector.getY()+32);
 		g.drawString("Lvl " + EnemyLevel, vector.getX()-20, vector.getY()-80);
-		g.drawString(this.EnemyName, vector.getX()-(4*this.EnemyName.length()), vector.getY()-95);
+		
 		
 		
 	}
@@ -85,6 +85,7 @@ public class Enemy extends GameObject {
 	void stateManager(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList) throws SlickException{
 			
 		if(this.hitpoints <= 0){
+			this.hitpoints=0;
 			this.dropLoot(gc, sbg, _lootList, _lootRenderList);
 			this.destroy(index, _enemyList);
 		}
@@ -165,8 +166,11 @@ public class Enemy extends GameObject {
 	void beingMeleeAttacked (Player _player){
 		
 		if(_player.isMeleeAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
-			
-			this.hitpoints -= _player.damage;//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
+			_player.AttackDamage();
+			this.hitpoints -= _player.PlayerDamage;//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
+			if(this.hitpoints <0){
+				this.hitpoints=0;
+			}
 		}
 	}
 	//Method to check if the enemy is being hit by a ranged attack

@@ -183,8 +183,9 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			this.Armor = 10*this.lootLevel;
 		}
 		else if(this instanceof Weapon){
-			//this.wepDMG = this.lootLevel+(int)Math.pow(randDmg.nextInt(5)+1,5);
-			this.attackSpeed = 1.5f*this.lootLevel*(randSpeed.nextFloat()+0.3f);
+			this.wepMinDMG = lootLevel*20+randDmg.nextInt(20);
+			this.wepMaxDMG = lootLevel*20+40+randDmg.nextInt(15);
+			this.attackSpeed = 0.3f*this.lootLevel+(randSpeed.nextFloat());
 		}
 		
 	}

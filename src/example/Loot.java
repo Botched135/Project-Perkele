@@ -21,9 +21,11 @@ public class Loot extends GameObject {
 	protected Random randSpeed = new Random();
 	protected static Color lootTestCol = new Color(255,255,0);
 	protected float speedMultiplier = 5.0f; 
-	protected int wepDMG;
+	protected float wepMinDMG;
+	protected float wepMaxDMG;
 	protected float attackSpeed;
 	protected float hpBonus;
+	protected float Armor;
 	public int lootLevel = 1;
 	
 	//CONSTRUCTORS ======================================================================================================================================================
@@ -49,12 +51,6 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	//UPDATE FUNCTION/METHOD ============================================================================================================================================
 	
 	public void update(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Loot> _inventoryList, Player _player){
-		
-		//Place loot using "space key" as input and picking it up using "V".
-		/*if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
-			Loot.spawnLoot(gc, sbg, _lootList, _lootRenderList);
-		}
-		*/
 						
 		if(_lootList.size() >= 0) {
 			if(gc.getInput().isKeyPressed(Input.KEY_V)) {
@@ -77,6 +73,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}	
 		stateManager(index, _lootList);
 	}
+	
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
+		
+	}
+
 	//METHODS
 	
 	void stateManager(int _index, ArrayList<Loot> _lootList){
@@ -173,15 +174,12 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	public void SetLootLevel(Enemy enemy){
 		this.lootLevel = enemy.EnemyLevel;
 		if(this instanceof Armor){
-			this.hpBonus = 100+(20*this.lootLevel);
+			this.Armor = 10*this.lootLevel;
 		}
 		else if(this instanceof Weapon){
-			this.wepDMG = this.lootLevel+(int)Math.pow(randDmg.nextInt(5)+1,5);
-			this.attackSpeed = 2*this.lootLevel*(randSpeed.nextFloat()+0.5f);
-		}	
-	}
-
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
-		
+			this.wepMinDMG = lootLevel*20+randDmg.nextInt(20);
+			this.wepMaxDMG = lootLevel*20+40+randDmg.nextInt(15);
+			this.attackSpeed = 0.3f*this.lootLevel+(randSpeed.nextFloat());
+		}
 	}
 }

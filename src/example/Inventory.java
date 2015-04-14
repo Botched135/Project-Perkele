@@ -7,7 +7,6 @@ import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.*;
@@ -16,9 +15,9 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Inventory {
 	
 	//VARIABLE DECLARATION
+	private ArrayList <Loot> inventoryLootList = new ArrayList <Loot>();
 	protected boolean toggleInventory;
 	protected Player player;
-	private ArrayList <Loot> inventoryLootList = new ArrayList <Loot>();
 		//Inventory window boundaries
 		protected float xOrigin = 900;
 		protected float yOrigin = 100;
@@ -32,7 +31,8 @@ public class Inventory {
 		
 		toggleInventory = false;
 		player = _player;
-		}
+		
+	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
@@ -49,7 +49,7 @@ public class Inventory {
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
-		inventoryLootList.get(1).vector.set(20,20);
+		
 		if(gc.getInput().isKeyPressed(Input.KEY_I)){
 			toggleInventory = !toggleInventory;
 		}
@@ -69,13 +69,13 @@ public class Inventory {
 			g.fillRect(xOrigin+47, yOrigin+70, 70, 70);
 			g.fillRect(xOrigin+187, yOrigin+70, 70, 70);
 		
-			for(int y = 0; y < 4; y++){
-				g.fillRect(xOrigin+187, yOrigin+y*2+150+(y*25), 93, 25);
+			for(int y = 0; y < 5; y++){
+				g.fillRect(xOrigin+187, yOrigin+y*2+150+(y*25), 100, 25);
 			}
 		
-			for(int x = 0; x < 4; x++){
-				for(int y = 0; y < 3; y++){
-					g.fillRect(xOrigin+20+x+(64*x), yOrigin+(height/2)+35+y+(64*y), 64, 64);
+			for(int x = 0; x < 6; x++){
+				for(int y = 0; y < 5; y++){
+					g.fillRect(xOrigin+12+x+(45*x), yOrigin+(height/2)+10+y+(45*y), 45, 45);
 				}
 			}
 			g.setColor(new Color(255,255,255));
@@ -89,21 +89,25 @@ public class Inventory {
 			g.drawString("Attack Speed", xOrigin+30, yOrigin+180);
 			g.drawString("Damage", xOrigin+30, yOrigin+205);
 			g.drawString("DPS",xOrigin+30, yOrigin+230);
+			g.drawString("Armor",xOrigin+30, yOrigin+255);
 		
 			g.drawString(df.format(player.hitPoints), xOrigin+195, yOrigin+154);
 			g.drawString(df.format(player.AttackSpeed), xOrigin+195, yOrigin+180);
-			g.drawString(df.format(player.damage), xOrigin+195, yOrigin+208);
-			g.drawString(df.format(player.damage*player.AttackSpeed), xOrigin+195, yOrigin+235);
+			g.drawString(df.format(player.MinDamage)+"-"+df.format(player.MaxDamage), xOrigin+195, yOrigin+208);
+			g.drawString(df.format(((player.MinDamage+player.MaxDamage)/2)*player.AttackSpeed), xOrigin+195, yOrigin+235);
+			g.drawString(df.format(player.Armor), xOrigin+195, yOrigin+260);
 		
 			//Draw the items in the bag
 			inventoryLootList.get(1).render(gc, sbg, g);
 			for(int i = 0; i < 12; i++){
 				inventoryLootList.get(i).render(gc, sbg, g);
-			}
+			}	
 		}
 	}
+	
 	//Adds clicked item to inventory bag space if there is enough inventory bag space
 	public static void addToInventory(){
-		
+			
 	}
 }
+

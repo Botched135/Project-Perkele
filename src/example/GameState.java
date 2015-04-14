@@ -135,7 +135,11 @@ public class GameState extends BasicGameState {
 		g.draw(playerToMouseTestLine);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
 		g.drawString("Press 'I'" + "" + " to toggle inventory", 10, 95);
-		
+		g.drawString("Player Damage: "+player.PlayerDamage, 10, 140);
+		for(int i = 0; i<enemyList.size();i++ ){
+			if(GameState.mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX)
+		    g.drawString(enemyList.get(i).EnemyName, (Window.WIDTH/2)-(4*enemyList.get(i).EnemyName.length()), 10);
+		}
 		if(inventoryList.get(1)!=null)
 		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).lootLevel, 10, 110);
 		if(enemyList.size()>0)

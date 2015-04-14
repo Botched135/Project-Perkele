@@ -1,6 +1,7 @@
 package example;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.newdawn.slick.geom.*;
 import org.newdawn.slick.state.StateBasedGame;
@@ -14,9 +15,13 @@ public class Player extends GameObject{
 	//PLAYER STATS ===========================================
 	protected float hitPoints = 100;
 	protected float damage = 100;
+	protected float MinDamage = 75;
+	protected float MaxDamage = 125;
+	protected float PlayerDamage;
 	protected float meleeRange = 100;
 	protected float speedMultiplier = 5.0f;
 	protected float AttackSpeed = 5.0f; //Attacks per second
+	protected float Armor = 0; //Damage reductions
 	//=======================================================
 	
 	protected float isReady;
@@ -27,6 +32,8 @@ public class Player extends GameObject{
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
 	protected static Color playerTestCol = new Color(0,0,255);
+	
+	protected Random randDmg = new Random();
 	
 	//CONSTRUCTORS ===========================================================================================================================================================
 	Player() {
@@ -143,11 +150,15 @@ public class Player extends GameObject{
 	//Setting the weapon loot to the player
 	public void setLootEquipment(Loot weap){
 		if(weap instanceof Weapon){
-		this.damage = weap.wepDMG;
+		this.MinDamage = weap.wepMinDMG;
+		this.MaxDamage = weap.wepMaxDMG;
 		this.AttackSpeed = weap.attackSpeed;
 		}
 		else if(weap instanceof Armor){
-			this.hitPoints=weap.hpBonus;
+			this.Armor=weap.Armor;
 		}
+	}
+	public void AttackDamage(){
+		PlayerDamage = (randDmg.nextFloat()*(this.MaxDamage-this.MinDamage))+this.MinDamage;
 	}
 }

@@ -53,9 +53,9 @@ public class Enemy extends GameObject {
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList ) throws SlickException {
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList) throws SlickException {
 		
-		stateManager(index, gc, sbg, _player, _enemyList, _projectileList, _lootList, _lootRenderList);
+		stateManager(index, gc, sbg, _player, _enemyList, _projectileList, _lootList);
 		
 	}
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
@@ -72,10 +72,10 @@ public class Enemy extends GameObject {
 	
 	//METHODS ===========================================================================================================================================================
 	//stateManager chooses the state of the Enemy based on certain criteria
-	void stateManager(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList) throws SlickException{
+	void stateManager(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList) throws SlickException{
 			
 		if(this.hitpoints <= 0){
-			this.dropLoot(gc, sbg, _lootList, _lootRenderList);
+			this.dropLoot(gc, sbg, _lootList);
 			this.destroy(index, _enemyList);
 		}
 		
@@ -178,8 +178,8 @@ public class Enemy extends GameObject {
 		this.hitpoints = 100*this.EnemyLevel;
 	}
 	//Method to drop loot from the enemy
-	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList) throws SlickException{
-		Loot.spawnLoot(gc, sbg, _lootList, _lootRenderList, this);
+	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList) throws SlickException{
+		Loot.spawnLoot(gc, sbg, _lootList, this);
 		
 		if(_lootList.size()>0){
 			_lootList.get(_lootList.size()-1).SetLootLevel(this);

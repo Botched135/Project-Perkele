@@ -18,6 +18,8 @@ public class GameState extends BasicGameState {
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
+		inventory.init(gc, sbg);
+		
 	}
 		
 		//VARIABLE DECLARATION
@@ -29,7 +31,6 @@ public class GameState extends BasicGameState {
 		private ArrayList <Loot> lootList = new ArrayList <Loot>();
 		private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
 		private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
-		private ArrayList <Circle> lootRenderList = new ArrayList <Circle>();
 		private ArrayList <Circle> projectileRenderList = new ArrayList <Circle>();
 		private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
 		private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
@@ -56,8 +57,7 @@ public class GameState extends BasicGameState {
 		
 		if(lootList.size() > 0){
 			for(int i = lootList.size()-1; i >= 0; i--){
-				lootList.get(i).update(gc, sbg, lootList, lootRenderList, inventoryList, player);
-				
+				lootList.get(i).update(i, gc, sbg, lootList, inventoryList, player);
 			}
 		}
 		//EQUIPMENT
@@ -90,7 +90,7 @@ public class GameState extends BasicGameState {
 		if(enemyList.size() > 0){
 		
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, lootRenderList);
+				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList);
 				
 			}
 				
@@ -165,6 +165,7 @@ public class GameState extends BasicGameState {
 				g.draw(projectileRenderList.get(i));
 			}
 		}
+		g.setColor(new Color(255,255,255));
 		
 		//RENDER ENEMY SPRITES ==============================================================================================================================
 		

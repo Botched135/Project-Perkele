@@ -8,6 +8,7 @@ import org.newdawn.slick.geom.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -29,7 +30,7 @@ public class Loot extends GameObject {
 	
 	Loot() {
 		
-		vector = new Vector2f(GameState.mousePos);
+		vector = new Vector2f(0,0);
 	}
 	
 	public boolean pickUp(Player _player) {
@@ -47,13 +48,14 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	//UPDATE FUNCTION/METHOD ============================================================================================================================================
 	
-	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList, ArrayList<Loot> _inventoryList, Player _player){
+	public void update(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Loot> _inventoryList, Player _player){
 		
 		//Place loot using "space key" as input and picking it up using "V".
-		if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
+		/*if(gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
 			Loot.spawnLoot(gc, sbg, _lootList, _lootRenderList);
 		}
-				
+		*/
+						
 		if(_lootList.size() >= 0) {
 			if(gc.getInput().isKeyPressed(Input.KEY_V)) {
 				for(int i = _lootList.size()-1; i >= 0; i--) {
@@ -72,14 +74,12 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 					}
 				}
 			}
-			for(int i = 0; i < _lootList.size(); i++) {
-				_lootRenderList.set(i, new Circle(_lootList.get(i).vector.getX(), _lootList.get(i).vector.getY(), _lootList.get(i).hitboxX));
-			}
 		}	
+		stateManager(index, _lootList);
 	}
 	//METHODS
 	
-	void stateManager(Player _player,  ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList, GameContainer _gc, int _index){
+	void stateManager(int _index, ArrayList<Loot> _lootList){
 		
 		if(_lootList.size() > 0 && _index == _lootList.size()-1) {
 			separate(_lootList);
@@ -117,7 +117,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 //This loot spawning method is to be removed later in inplementation as it spawns using spacebar	
-	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList) {
+	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList) {
 		
 		Random randLoot = new Random();
 		Random randDrop = new Random();
@@ -133,19 +133,16 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				_lootList.add(new Weapon());
 			}
 			
-			Loot tempLoot = _lootList.get(_lootList.size()-1);
 			float tempRandX = randLoot.nextInt(lootDropDist);
 			float tempRandY = randLoot.nextInt(lootDropDist);
 			float tempX = GameState.mousePos.getX() + (tempRandX)-(lootDropDist/2);
 			float tempY = GameState.mousePos.getY() + (tempRandY)-(lootDropDist/2);
 			
-			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));				
-			Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
-			_lootRenderList.add(tempCircle); 		
+			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));		
 		}
 	}
 //spawnLoot method used for spawning loot at the enemys position regardless of where the mouse is.
-	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Circle> _lootRenderList, Enemy enemy) throws SlickException {
+	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Enemy enemy) throws SlickException {
 		
 		Random randLoot = new Random();
 		Random randDrop = new Random();
@@ -163,15 +160,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				_lootList.get(_lootList.size()-1).init(gc, sbg);
 			}
 			
-			Loot tempLoot = _lootList.get(_lootList.size()-1);
 			float tempRandX = randLoot.nextInt(lootDropDist);
 			float tempRandY = randLoot.nextInt(lootDropDist);
 			float tempX = enemy.vector.getX() + (tempRandX)-(lootDropDist/2);
 			float tempY = enemy.vector.getY() + (tempRandY)-(lootDropDist/2);
 			
-			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));				
-			Circle tempCircle = new Circle(tempX , tempY, tempLoot.hitboxX);
-			_lootRenderList.add(tempCircle); 		
+			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));
+			
 		}
 	}
 	
@@ -183,7 +178,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		else if(this instanceof Weapon){
 			this.wepDMG = this.lootLevel+(int)Math.pow(randDmg.nextInt(5)+1,5);
 			this.attackSpeed = 2*this.lootLevel*(randSpeed.nextFloat()+0.5f);
-		}
+		}	
+	}
+
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) {
 		
 	}
 }

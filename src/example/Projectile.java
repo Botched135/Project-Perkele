@@ -105,7 +105,7 @@ public class Projectile extends GameObject {
 		
 	void destroy(int index, ArrayList<Projectile> _projectileList){
 		
-		if(_projectileList.size() > 0){
+		if(_projectileList.size() > 0 && _projectileList.get(index) != null){
 			_projectileList.remove(index);
 		}
 	}

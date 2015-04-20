@@ -1,10 +1,9 @@
 package example;
 
-import java.util.Random;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -20,6 +19,11 @@ public class Weapon extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 4;
+		
+		wepMinDMG = 75;
+		wepMaxDMG = 125;
+		attackSpeed = 5;
+		
 		//20+lootLevel*(randDmg.nextInt(80));
 		//wepMinDMG = lootLevel*20+randDmg.nextInt(20);
 		//wepMaxDMG = lootLevel*20+40+randDmg.nextInt(15);
@@ -43,7 +47,9 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 		
 		weaponTestSprite.draw(vector.getX()-32, vector.getY()-32);
 	
-	g.drawString("lvl:" + lootLevel, vector.getX(), vector.getY()-32);
+		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
+			g.drawString("lvl:" + lootLevel, vector.getX()-23, vector.getY()-60);
+		}
 	
 }
 

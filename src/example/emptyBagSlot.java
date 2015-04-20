@@ -8,6 +8,9 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class emptyBagSlot extends Loot {
+	
+	//Images
+	private Image blankSlot = null; 
 
 	emptyBagSlot() {
 		
@@ -19,10 +22,12 @@ public class emptyBagSlot extends Loot {
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
+		blankSlot = new Image("data/blankSlot.png");
 	}
 	
 	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
+		blankSlot.draw(0,0);
 	
 	}
 	

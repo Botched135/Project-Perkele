@@ -9,7 +9,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
@@ -27,6 +26,7 @@ public class Loot extends GameObject {
 	protected float hpBonus;
 	protected float Armor;
 	public int lootLevel = 1;
+	boolean leftMousePressed = false;
 	
 	//CONSTRUCTORS ======================================================================================================================================================
 	
@@ -35,42 +35,42 @@ public class Loot extends GameObject {
 		vector = new Vector2f(0,0);
 	}
 	
-	public boolean pickUp(Player _player) {
-		if(GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 	
-public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {	
+	
+	leftMousePressed = false;
 		
 	}
 	
 	//UPDATE FUNCTION/METHOD ============================================================================================================================================
 	
 	public void update(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Loot> _inventoryList, Player _player){
-						
+		
+		if(!gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
+			leftMousePressed = false;
+		}
+		
 		if(_lootList.size() >= 0) {
-			if(gc.getInput().isKeyPressed(Input.KEY_V)) {
-				for(int i = _lootList.size()-1; i >= 0; i--) {
-					if(_lootList.get(i).pickUp(_player) == true) {
-						//either a method for picking up armor or a weapon
-						if(_lootList.get(i) instanceof Weapon){
-							_inventoryList.remove(1);
-							_inventoryList.add(1,_lootList.get(i));
+			if(gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false){
+				leftMousePressed = true;
+					for(int i = _lootList.size()-1; i >= 0; i--) {
+						if(GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX) {
+							//either a method for picking up armor or a weapon
+							if(_lootList.get(i) instanceof Weapon){
+								_inventoryList.remove(1);
+								_inventoryList.add(1,_lootList.get(i));
+								
+							}
+							else if(_lootList.get(i) instanceof Armor){
+								_inventoryList.remove(0);
+								_inventoryList.add(0,_lootList.get(i));
+							}
+								_lootList.remove(i);
+								break;
 						}
-						else if(_lootList.get(i) instanceof Armor){
-							_inventoryList.remove(0);
-							_inventoryList.add(0,_lootList.get(i));
-						}
-							_lootList.remove(i);
-							break;
 					}
 				}
-			}
-		}	
+			}	
 		stateManager(index, _lootList);
 	}
 	

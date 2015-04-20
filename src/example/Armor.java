@@ -3,6 +3,7 @@ package example;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -18,6 +19,9 @@ public class Armor extends Loot{
 		hitboxY = 32.0f;
 		//hpBonus = 100+(10*LootLevel);
 		ID = 3;
+		
+		//hpBonus;
+		Armor = 50;
 
 	}
 	
@@ -36,7 +40,9 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 		
 		armorTestSprite.draw(vector.getX()-32, vector.getY()-32);
 	
-	g.drawString("lvl:" + lootLevel, vector.getX(), vector.getY()-32);
+		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
+			g.drawString("lvl:" + lootLevel, vector.getX()-23, vector.getY()-60);
+		}
 	
 }
 	

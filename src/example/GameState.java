@@ -1,5 +1,6 @@
 package example;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
@@ -15,28 +16,31 @@ import org.newdawn.slick.geom.*;
 
 
 public class GameState extends BasicGameState {
+	
+	//VARIABLE DECLARATION
+			Player player = new Player(new Vector2f(Window.WIDTH/2, Window.HEIGHT/2));
+			private Circle playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
+			private Circle playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), 150);
+			private Line playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Mouse.getY());
+			private Inventory inventory = new Inventory(player);
+			private ArrayList <Loot> lootList = new ArrayList <Loot>();
+			private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
+			private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
+			private ArrayList <Circle> projectileRenderList = new ArrayList <Circle>();
+			private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
+			private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
+
+			protected static Vector2f mousePos;
+			
+			//Misc.
+			DecimalFormat df = new DecimalFormat("#.##");
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		inventory.init(gc, sbg);
+		player.init(gc, sbg);
 		
 	}
-		
-		//VARIABLE DECLARATION
-		Player player = new Player(new Vector2f(Window.WIDTH/2, Window.HEIGHT/2));
-		private Circle playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
-		private Circle playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), 150);
-		private Line playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Mouse.getY());
-		private Inventory inventory = new Inventory(player);
-		private ArrayList <Loot> lootList = new ArrayList <Loot>();
-		private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
-		private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
-		private ArrayList <Circle> projectileRenderList = new ArrayList <Circle>();
-		private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
-		private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
-
-		protected static Vector2f mousePos;
-	
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
@@ -64,6 +68,8 @@ public class GameState extends BasicGameState {
 		if(inventoryList.size()<2){
 		inventoryList.add(null);//Initially just setting the inventory to null to avoid crashing. 
 		inventoryList.add(null);//I'm pretty sure that there is an easier way, but they have to be initialized before we can do anything.
+		inventoryList.set(0, new Armor());
+		inventoryList.set(1, new Weapon());
 		}
 		if(inventoryList.get(0)!=null){
 			player.setLootEquipment(inventoryList.get(0));
@@ -74,6 +80,13 @@ public class GameState extends BasicGameState {
 			player.setLootEquipment(inventoryList.get(1));
 		}
 		
+		inventoryList.get(0).vector.set(Window.WIDTH/2, Window.HEIGHT/2);
+		inventoryList.get(1).vector.set(100, 100);
+		inventoryList.get(0).init(gc, sbg);
+		inventoryList.get(1).init(gc, sbg);
+		//inventoryList.get(2).vector.set(600, 1000);
+		
+		System.out.println("X: " + inventoryList.get(0).vector.getX() + "    Y: " + inventoryList.get(0).vector.getY());
 		
 		//ENEMY STUFF =================================================================================================================================================	
 		//ENEMY!!!!!! - by using "E key" as input
@@ -136,9 +149,18 @@ public class GameState extends BasicGameState {
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
 		g.drawString("Press 'I'" + "" + " to toggle inventory", 10, 95);
 		g.drawString("Player Damage: "+player.PlayerDamage, 10, 140);
-		for(int i = 0; i<enemyList.size();i++ ){
-			if(GameState.mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX)
-		    g.drawString(enemyList.get(i).EnemyName, (Window.WIDTH/2)-(4*enemyList.get(i).EnemyName.length()), 10);
+		for(int i = enemyList.size()-1; i >= 0; i-- ){
+			if(GameState.mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX){
+
+				g.drawString(enemyList.get(i).EnemyName, (Window.WIDTH/2)-(4*enemyList.get(i).EnemyName.length()), 10);
+				g.setColor(new Color(255,0,0));
+				g.drawRect(Window.WIDTH/2 - 110, 30, 3*(76.9f), 15);
+				g.fillRect(Window.WIDTH/2 - 110, 30,(3*(enemyList.get(i).hitpoints/enemyList.get(i).EnemyLevel)/1.3f), 15);
+				g.drawRect(Window.WIDTH/2 - 110, 30,(3*(enemyList.get(i).hitpoints/enemyList.get(i).EnemyLevel)/1.3f), 15);
+				g.setColor(new Color(255,255,255));
+				break;
+			}
+			
 		}
 		if(inventoryList.get(1)!=null)
 		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).lootLevel, 10, 110);
@@ -151,12 +173,6 @@ public class GameState extends BasicGameState {
 		g.drawString("Damage:                    " +player.damage, 1000, 70);
 		g.drawString("DPS:                       " +player.damage*player.AttackSpeed, 1000, 85);
 		*/
-		
-		//RENDER PLAYER ==============================================================================================================================
-		g.setColor(new Color(0,255,255));
-		g.draw(playerTestCircle);
-		g.setColor(new Color(255,255,0,80));
-		g.draw(playerMeleeRangeCircle);
 		
 		//TRANSLATE (move "camera") ACCORDING TO PLAYER MOVEMENT ============================================================================================
 		
@@ -219,8 +235,101 @@ public class GameState extends BasicGameState {
 		*/
 		}
 		
-		inventory.render(gc, sbg, g);
+		//RENDER INVENTORY ===========================================================================================================================
 		
+		inventory.render(gc, sbg, g);
+		inventoryList.get(0).render(gc, sbg, g);
+		inventoryList.get(1).render(gc, sbg, g);
+		
+		//RENDER PLAYER ==============================================================================================================================
+		
+		player.render(gc, sbg, g);
+		g.setColor(new Color(0,255,255));
+		g.draw(playerTestCircle);
+		g.setColor(new Color(255,255,0,80));
+		g.draw(playerMeleeRangeCircle);
+		
+		//RENDER Loot info on "shift" hovering ========================================================================================================
+		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
+			
+			g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
+			
+			if(lootList.size() > 0){
+				for(int i = lootList.size()-1; i >= 0; i--) {
+	
+					if(mousePos.distance(lootList.get(i).vector) < lootList.get(i).hitboxX){
+						
+						if(lootList.get(i).vector.getY() - player.vector.getY() >= 170){
+							
+							g.setColor(new Color(70,70,70));
+							g.drawRect(lootList.get(i).vector.getX()-25, lootList.get(i).vector.getY()-62, 244, 22);
+							g.setColor(new Color(70,70,70));
+							g.fillRect(lootList.get(i).vector.getX()-25, lootList.get(i).vector.getY()-62, 244, 22);
+							
+							if(lootList.get(i) instanceof Weapon){
+								
+								g.setColor(new Color(255,255,255));
+								g.drawString("Item Name ##", lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								g.drawRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-123, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame. 20 pixels pr. attribute!
+								g.setColor(new Color(100,100,100));
+								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-123, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
+																		
+								g.setColor(new Color(255,255,255));
+								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-123);
+								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-103);
+								g.drawString("DPS: " + df.format(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2)*lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-83);
+							}
+							
+							if(lootList.get(i) instanceof Armor){
+								
+								g.setColor(new Color(255,255,255));
+								g.drawString("Item Name ##", lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								g.drawRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-82, 180, 20); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
+								g.setColor(new Color(100,100,100));
+								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-82, 180, 20); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
+								
+								g.setColor(new Color(255,255,255));
+								g.drawString("Armor: " + (int)lootList.get(i).Armor, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-82 );
+							}
+						}
+						
+						else{
+							
+							g.setColor(new Color(70,70,70));
+							g.drawRect(lootList.get(i).vector.getX()-25, lootList.get(i).vector.getY()-62, 244, 22);
+							g.setColor(new Color(70,70,70));
+							g.fillRect(lootList.get(i).vector.getX()-25, lootList.get(i).vector.getY()-62, 244, 22);
+							
+							if(lootList.get(i) instanceof Weapon){
+								
+								g.setColor(new Color(255,255,255));
+								g.drawRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
+								g.setColor(new Color(100,100,100));
+								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
+								
+								g.setColor(new Color(255,255,255));
+								g.drawString("Item Name ##", lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-40);
+								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
+								g.drawString("DPS: " + df.format(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2)*lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY());
+							}
+							
+							if(lootList.get(i) instanceof Armor){
+								
+								g.setColor(new Color(255,255,255));
+								g.drawString("Item Name ##", lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								g.drawRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 20); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
+								g.setColor(new Color(100,100,100));
+								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 20); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
+								
+								g.setColor(new Color(255,255,255));
+								g.drawString("Armor: " + (int)lootList.get(i).Armor, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-40);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 

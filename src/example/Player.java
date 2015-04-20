@@ -1,5 +1,6 @@
 package example;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,7 +8,10 @@ import org.newdawn.slick.geom.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 
 public class Player extends GameObject{
 	
@@ -35,6 +39,13 @@ public class Player extends GameObject{
 	
 	protected Random randDmg = new Random();
 	
+	//Images =================================================
+	
+	private Image hpBar = null; 
+	
+	
+	DecimalFormat df = new DecimalFormat("#.##");
+	
 	//CONSTRUCTORS ===========================================================================================================================================================
 	Player() {
 		
@@ -53,6 +64,13 @@ public class Player extends GameObject{
 		hitboxY = 50.0f;
 		ID = 1;
 	}
+	
+public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+		
+		hpBar = new Image("data/hpBar.png");
+		
+	}
+	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList){
 		
@@ -97,6 +115,13 @@ public class Player extends GameObject{
 		if(gc.getInput().isKeyDown(Input.KEY_S)) {
 			MoveSelf(new Vector2f(0.0f, 1.0f));
 		}
+	}
+	
+	//RENDER METHOD =====================================================================================================================================================
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		
+		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 1); // <----- Change the "1" to make the HP Bar resize according to remaining player health!
+		g.drawString(df.format(this.hitPoints), Inventory.xOrigin+628, Inventory.yOrigin+659);
 	}
 	
 	
@@ -148,14 +173,14 @@ public class Player extends GameObject{
 		return isAttackReady;
 	}
 	//Setting the weapon loot to the player
-	public void setLootEquipment(Loot weap){
-		if(weap instanceof Weapon){
-		this.MinDamage = weap.wepMinDMG;
-		this.MaxDamage = weap.wepMaxDMG;
-		this.AttackSpeed = weap.attackSpeed;
+	public void setLootEquipment(Loot loot){
+		if(loot instanceof Weapon){
+		this.MinDamage = loot.wepMinDMG;
+		this.MaxDamage = loot.wepMaxDMG;
+		this.AttackSpeed = loot.attackSpeed;
 		}
-		else if(weap instanceof Armor){
-			this.Armor=weap.Armor;
+		else if(loot instanceof Armor){
+			this.Armor=loot.Armor;
 		}
 	}
 	public void AttackDamage(){

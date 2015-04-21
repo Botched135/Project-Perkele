@@ -18,6 +18,7 @@ public class Player extends GameObject{
 	//VARIABLE DECLARATION ===========================================================================================================================================================
 	//PLAYER STATS ===========================================
 	protected float hitPoints = 100;
+	protected float MaxHitPoints = 100;
 	protected float damage = 100;
 	protected float MinDamage = 75;
 	protected float MaxDamage = 125;

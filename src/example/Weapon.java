@@ -36,6 +36,11 @@ public class Weapon extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 4;
+		
+		this.lootLevel = _enemy.EnemyLevel;
+		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(20);
+		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(15);
+		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
 	}
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
@@ -48,7 +53,7 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 		weaponTestSprite.draw(vector.getX()-32, vector.getY()-32);
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
-			g.drawString("lvl:" + lootLevel, vector.getX()-23, vector.getY()-60);
+			g.drawString("lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
 		}
 	
 }

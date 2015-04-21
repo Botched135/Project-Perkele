@@ -29,6 +29,8 @@ public class Armor extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 3;
+		this.lootLevel = _enemy.EnemyLevel;
+		this.Armor = _enemy.EnemyLevel*10;
 	}
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
@@ -41,7 +43,7 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 		armorTestSprite.draw(vector.getX()-32, vector.getY()-32);
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
-			g.drawString("lvl:" + lootLevel, vector.getX()-23, vector.getY()-60);
+			g.drawString("lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
 		}
 	
 }

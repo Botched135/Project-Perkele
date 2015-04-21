@@ -57,6 +57,7 @@ public class Inventory {
 			g.drawString(df.format(player.MinDamage)+"-"+df.format(player.MaxDamage), xOrigin+250, yOrigin+621);
 			g.drawString(df.format(player.AttackSpeed), xOrigin+250, yOrigin+642);
 			g.drawString(df.format(((player.MinDamage+player.MaxDamage)/2)*player.AttackSpeed), xOrigin+250, yOrigin+663);
+			g.drawString(df.format(player.MaxHitPoints), xOrigin+960, yOrigin+621);
 			g.drawString(df.format(player.Armor), xOrigin+960, yOrigin+642);
 		
 			//Draw the items in the bag

@@ -175,11 +175,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 			int lootType = randDrop.nextInt(2);
 			if(lootType == 1) {
-				_lootList.add(new Armor());
+				_lootList.add(new Armor(enemy));
 				_lootList.get(_lootList.size()-1).init(gc, sbg);
 			}
 			else {
-				_lootList.add(new Weapon());
+				_lootList.add(new Weapon(enemy));
 				_lootList.get(_lootList.size()-1).init(gc, sbg);
 			}
 			
@@ -195,13 +195,5 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	public void SetLootLevel(Enemy enemy){
 		this.lootLevel = enemy.EnemyLevel;
-		if(this instanceof Armor){
-			this.Armor = 10*this.lootLevel;
-		}
-		else if(this instanceof Weapon){
-			this.wepMinDMG = lootLevel*20+randDmg.nextInt(20);
-			this.wepMaxDMG = lootLevel*20+40+randDmg.nextInt(15);
-			this.attackSpeed = 0.3f*this.lootLevel+(randSpeed.nextFloat());
-		}
 	}
 }

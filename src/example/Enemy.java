@@ -197,9 +197,9 @@ public class Enemy extends GameObject {
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList) throws SlickException{
 		Loot.spawnLoot(gc, sbg, _lootList, this);
 		
-		if(_lootList.size()>0){
-			_lootList.get(_lootList.size()-1).SetLootLevel(this);
-		}
+		//if(_lootList.size()>0){
+			//_lootList.get(_lootList.size()-1).SetLootLevel(this);
+		//}
 	}
 	//Method to "kill" destroy the enemy (remove it from the list of enemies)
 	void destroy(int index, ArrayList<Enemy> _enemyList){

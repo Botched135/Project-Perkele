@@ -41,6 +41,7 @@ public class Player extends GameObject{
 	
 	//Images =================================================
 	
+	private Image playerTestSprite = null; 
 	private Image hpBar = null; 
 	
 	
@@ -50,8 +51,8 @@ public class Player extends GameObject{
 	Player() {
 		
 		super();
-		hitboxX = 50.0f;
-		hitboxY = 50.0f;
+		hitboxX = 32.0f;
+		hitboxY = 32.0f;
 		ID = 1;
 		
 	}
@@ -60,13 +61,14 @@ public class Player extends GameObject{
 		 
 		super(_vector);
 		
-		hitboxX = 50.0f;
-		hitboxY = 50.0f;
+		hitboxX = 32.0f;
+		hitboxY = 32.0f;
 		ID = 1;
 	}
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
+		playerTestSprite = new Image("data/player.png");
 		hpBar = new Image("data/hpBar.png");
 		
 	}
@@ -119,6 +121,12 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	//RENDER METHOD =====================================================================================================================================================
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		
+		g.translate((-vector.getX())+(Window.WIDTH/2), (-vector.getY())+(Window.HEIGHT/2));
+		
+		playerTestSprite.draw(vector.getX()-32, vector.getY()-32);
+		
+		g.translate((vector.getX())-(Window.WIDTH/2), (vector.getY())-(Window.HEIGHT/2));
 		
 		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 1); // <----- Change the "1" to make the HP Bar resize according to remaining player health!
 		g.drawString(df.format(this.hitPoints), Inventory.xOrigin+628, Inventory.yOrigin+659);

@@ -22,6 +22,7 @@ public class Armor extends Loot{
 		
 		//hpBonus;
 		Armor = 50;
+		hpBonus = 0;
 
 	}
 	
@@ -31,6 +32,7 @@ public class Armor extends Loot{
 		ID = 3;
 		this.lootLevel = _enemy.EnemyLevel;
 		this.Armor = _enemy.EnemyLevel*10;
+		this.hpBonus = _enemy.EnemyLevel*10;
 	}
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		

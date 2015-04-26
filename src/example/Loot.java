@@ -193,6 +193,27 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 	}
 	
+public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayList<healthGlobe> _healthGlobeList, Enemy enemy) throws SlickException {
+		
+		Random randLoot = new Random();
+		Random randDrop = new Random();
+		int lootDropDist = 10;
+		int dropping = randDrop.nextInt(100);
+		if(dropping > 80) {
+			
+			_healthGlobeList.add(new healthGlobe());
+			_healthGlobeList.get(_healthGlobeList.size()-1).init(gc, sbg);
+			
+			float tempRandX = randLoot.nextInt(lootDropDist);
+			float tempRandY = randLoot.nextInt(lootDropDist);
+			float tempX = enemy.vector.getX() + (tempRandX)-(lootDropDist/2);
+			float tempY = enemy.vector.getY() + (tempRandY)-(lootDropDist/2);
+			
+			_healthGlobeList.get(_healthGlobeList.size()-1).vector.set(new Vector2f(tempX, tempY));
+			
+		}
+	}
+	
 	public void SetLootLevel(Enemy enemy){
 		this.lootLevel = enemy.EnemyLevel;
 	}

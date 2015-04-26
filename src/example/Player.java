@@ -18,6 +18,7 @@ public class Player extends GameObject{
 	//VARIABLE DECLARATION ===========================================================================================================================================================
 	//PLAYER STATS ===========================================
 	protected float hitPoints = 100;
+	protected float baseHp = 100;
 	protected float MaxHitPoints = 100;
 	protected float damage = 100;
 	protected float MinDamage = 75;
@@ -75,13 +76,23 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
-	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList){
+	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList){
 		
 		isMeleeAttacking = false;
 		isRangedAttacking = false;
 
 		//UPDATE PLAYER ATTACK
 		setAttackReady();
+		
+
+		if(gc.getInput().isKeyPressed(Input.KEY_O)){
+			if(this.hitPoints <= 0){
+				this.hitPoints = 0;
+			}
+			else{
+				this.hitPoints -= 1;
+			}
+		}
 		
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			isMeleeAttacking(GameState.mousePos);
@@ -98,11 +109,21 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			}
 		}
 		
-		//UPDATING PLAYER COLLISION WITH ENEMIES
-		/*for(int i = 0; i<enemyList.size(); i++){
-			if(player.isColliding(enemyList.get(i)))
-				System.out.println("player is colliding with enemy nr. "+ i);
-		}*/
+		//healthGlobe pickup by player
+		if(this.hitPoints < this.MaxHitPoints){
+			for(int i = _healthGlobeList.size()-1; i >= 0 ; i--){
+				if(vector.distance(_healthGlobeList.get(i).vector) < hitboxX + _healthGlobeList.get(i).hitboxX)
+					if(this.hitPoints + 20 > this.MaxHitPoints){
+						this.hitPoints = MaxHitPoints;
+						_healthGlobeList.remove(i);
+					}
+					else{
+						
+					this.hitPoints += 20;
+					_healthGlobeList.remove(i);
+				}
+			}
+		}
 		
 		//PLAYER MOVEMENT INPUT
 		
@@ -128,8 +149,8 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		playerTestSprite.draw(vector.getX()-32, vector.getY()-32);
 		
 		g.translate((vector.getX())-(Window.WIDTH/2), (vector.getY())-(Window.HEIGHT/2));
-		
-		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 1); // <----- Change the "1" to make the HP Bar resize according to remaining player health!
+		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 378*(this.hitPoints/this.MaxHitPoints), 43);
+		//hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 1); // <----- Change the "1" to make the HP Bar resize according to remaining player health!
 		g.drawString(df.format(this.hitPoints), Inventory.xOrigin+628, Inventory.yOrigin+659);
 	}
 	
@@ -190,6 +211,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 		else if(loot instanceof Armor){
 			this.Armor=loot.Armor;
+			this.MaxHitPoints = baseHp + loot.hpBonus;
 		}
 	}
 	public void AttackDamage(){

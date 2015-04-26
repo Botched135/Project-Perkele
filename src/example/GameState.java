@@ -26,6 +26,7 @@ public class GameState extends BasicGameState {
 			private ArrayList <Loot> lootList = new ArrayList <Loot>();
 			private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
 			private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
+			private ArrayList <healthGlobe> healthGlobeList = new ArrayList <healthGlobe>();
 			private ArrayList <Circle> projectileRenderList = new ArrayList <Circle>();
 			private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
 			private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
@@ -49,7 +50,7 @@ public class GameState extends BasicGameState {
 		inventory.update(gc, sbg, delta);
 		
 		//PLAYER STUFF ====================================================================================================================================
-		player.update(gc, sbg, projectileList, projectileRenderList);
+		player.update(gc, sbg, projectileList, projectileRenderList, healthGlobeList);
 		
 		//UDATES PLAYER SPRITE
 		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
@@ -64,6 +65,14 @@ public class GameState extends BasicGameState {
 				lootList.get(i).update(i, gc, sbg, lootList, inventoryList, player);
 			}
 		}
+		
+		//update Health Globes
+		if(healthGlobeList.size() > 0){
+			for(int i = healthGlobeList.size()-1; i >= 0; i--){
+				healthGlobeList.get(i).update(gc, sbg, lootList);
+			}
+		}
+		
 		//EQUIPMENT
 		if(inventoryList.size()<2){
 		inventoryList.add(null);//Initially just setting the inventory to null to avoid crashing. 
@@ -103,7 +112,7 @@ public class GameState extends BasicGameState {
 		if(enemyList.size() > 0){
 		
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList);
+				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList);
 				
 			}
 				
@@ -201,38 +210,13 @@ public class GameState extends BasicGameState {
 			for(int i = lootList.size()-1; i >= 0; i--) {
 				lootList.get(i).render(i, gc, sbg, g);
 			}
-			/*
-				//Set hover color
-				if(mousePos.distance(lootList.get(i).vector) < lootList.get(i).hitboxX){
-					
-					g.setColor(new Color(0,255,0));
-					
-				}
-				//set collision color
-				else if(player.isColliding(lootList.get(i)) == true){
-					
-					g.setColor(new Color(255,255,255));
-					
-				}
-				else{
-					
-					g.setColor(Loot.lootTestCol);
-					
-				}
-					
-				g.draw(lootRenderList.get(i));
-				if(lootList.get(i).ID == 3) {
-					g.drawString("lvl:" + lootList.get(i).lootLevel, lootList.get(i).vector.getX()-10, lootList.get(i).vector.getY()-17);
-					g.drawString("A" + Integer.toString(i), lootList.get(i).vector.getX() -5, lootList.get(i).vector.getY() -5);
-				}
-				else if(lootList.get(i).ID == 4) {
-					g.drawString("lvl:" + lootList.get(i).lootLevel, lootList.get(i).vector.getX()-10, lootList.get(i).vector.getY()-17);
-					g.drawString("W" + Integer.toString(i), lootList.get(i).vector.getX() -5, lootList.get(i).vector.getY() -5);
-				}
-				
-			}
 		}
-		*/
+		
+		if(healthGlobeList.size() > 0){
+			//g.setColor(Loot.lootTestCol);
+			for(int i = healthGlobeList.size()-1; i >= 0; i--) {
+				healthGlobeList.get(i).render(i, gc, sbg, g);
+			}
 		}
 		
 		//RENDER INVENTORY ===========================================================================================================================

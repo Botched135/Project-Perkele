@@ -56,13 +56,15 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 						if(GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX) {
 							//either a method for picking up armor or a weapon
 							if(_lootList.get(index) instanceof Weapon){
-								_inventoryList.remove(1);
-								_inventoryList.add(1,_lootList.get(index));
+								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(1), _player);
+								//_inventoryList.remove(1);
+								//_inventoryList.add(1,_lootList.get(index));
 								
 							}
 							else if(_lootList.get(index) instanceof Armor){
-								_inventoryList.remove(0);
-								_inventoryList.add(0,_lootList.get(index));
+								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(0), _player);
+								//_inventoryList.remove(0);
+								//_inventoryList.add(0,_lootList.get(index));
 							}
 								_lootList.remove(index);
 						}
@@ -168,6 +170,30 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));
 			
 		}
+	}
+	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Loot _lootIndex, ArrayList<Loot> _inventoryList, Loot _inventoryIndex, Player _player){
+		Random randLoot = new Random();
+		int lootDropDist = 10;
+		
+		if(_inventoryIndex instanceof Weapon){
+			_lootList.add(_inventoryIndex);
+			_inventoryList.remove(1);
+			_inventoryList.add(1,_lootIndex);
+		}
+		else if(_inventoryIndex instanceof Armor){
+			_lootList.add(_inventoryIndex);
+			_inventoryList.remove(0);
+			_inventoryList.add(0,_lootIndex);
+			
+		}
+		
+		float tempRandX = randLoot.nextInt(lootDropDist);
+		float tempRandY = randLoot.nextInt(lootDropDist);
+		float tempX = _player.vector.getX() + (tempRandX)-(lootDropDist/2);
+		float tempY = _player.vector.getY() + (tempRandY)-(lootDropDist/2);
+		
+		_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));
+		
 	}
 	
 public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayList<healthGlobe> _healthGlobeList, Enemy enemy) throws SlickException {

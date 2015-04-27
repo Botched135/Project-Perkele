@@ -18,7 +18,7 @@ public class Enemy extends GameObject {
 	public int EnemyLevel;
 	protected float hitpoints = 100;
 	protected float speedMultiplier = 0.5f;
-	protected float AttackSpeed = 1;
+	protected float AttackSpeed = 0.0f;
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
 	protected boolean isAttackReady = false;
@@ -27,6 +27,13 @@ public class Enemy extends GameObject {
 	protected String[]EnemyNames = {"Dwarf","Dwarf Soldier","Dwarf Veteran","Dwarf Captain", "Dwarf Warchief"};
 	protected String EnemyName;
 	protected boolean beingHit = false;
+	protected boolean isMeleeAttacking;
+	protected boolean isRangedAttacking;
+	protected float MinDamage = 20;
+	protected float MaxDamage = 40;
+	protected float enemyDamage;
+	protected Random randDmg = new Random();
+	protected float meleeRange = 90;
 	
 	//Images =================================================
 	
@@ -111,6 +118,11 @@ public class Enemy extends GameObject {
 		
 		separate(_enemyList);
 		
+		setAttackReady();
+		if(vector.distance(_player.vector) <  meleeRange + _player.hitboxX){
+			isMeleeAttacking();
+		}
+		
 		if(vector.distance(_player.vector) < 300){
 		
 		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
@@ -178,6 +190,26 @@ public class Enemy extends GameObject {
 		//isAttackReady = this.isAttackReady;
 		return isAttackReady;
 	}
+	
+	public void isMeleeAttacking(){
+		if(this.isAttackReady){	
+			this.isMeleeAttacking = true;
+			System.out.println("hello");
+			isAttackReady=false;
+		}
+		else
+			this.isMeleeAttacking = false;
+	}
+	
+	public void isRangedAttacking(){
+		if(this.isAttackReady){	
+			this.isRangedAttacking = true;
+			isAttackReady=false;
+		}
+		else
+			this.isRangedAttacking = false;
+	}
+	
 	//Method to check if the enemy is being hit by a melee attack
 	void beingMeleeAttacked (Player _player){
 		
@@ -195,7 +227,8 @@ public class Enemy extends GameObject {
 				this.hitpoints=0;
 			}
 		}
-	}
+	}	
+	
 	//Method to check if the enemy is being hit by a ranged attack
 	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
 		
@@ -216,6 +249,11 @@ public class Enemy extends GameObject {
 			}
 		}
 	}
+	
+	public void AttackDamage(){
+		enemyDamage = (randDmg.nextFloat()*(this.MaxDamage-this.MinDamage))+this.MinDamage;
+	}
+
 	//Method to set the enemy's level
 	void SetEnemyLevel(){
 		this.EnemyLevel=randLvl.nextInt(5)+1;
@@ -236,4 +274,5 @@ public class Enemy extends GameObject {
 			_enemyList.remove(index);
 	
 	}
+	
 }

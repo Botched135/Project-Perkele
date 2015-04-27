@@ -12,6 +12,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
 public class Player extends GameObject{
 	
@@ -46,6 +47,10 @@ public class Player extends GameObject{
 	private Image playerTestSprite = null; 
 	private Image hpBar = null; 
 	
+	//Sounds =================================================
+	
+	private Sound meleeAttackSound = null;
+	
 	
 	DecimalFormat df = new DecimalFormat("#.##");
 	
@@ -73,10 +78,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		playerTestSprite = new Image("data/player.png");
 		hpBar = new Image("data/hpBar.png");
 		
+		meleeAttackSound = new Sound("data/meleeAttackSound1.ogg");
+		
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList){
+		
 		
 		isMeleeAttacking = false;
 		isRangedAttacking = false;
@@ -86,6 +94,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 
 		if(gc.getInput().isKeyPressed(Input.KEY_O)){
+			meleeAttackSound.play();
 			if(this.hitPoints <= 0){
 				this.hitPoints = 0;
 			}

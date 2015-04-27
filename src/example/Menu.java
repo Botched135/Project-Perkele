@@ -6,12 +6,14 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class Menu extends BasicGameState {
 
+	//Images
 	private Image menuBg = null;
 	private Image menuNewGameButton0 = null;
 	private Image menuNewGameButton1 = null;
@@ -19,6 +21,11 @@ public class Menu extends BasicGameState {
 	private Image menuLoadGameButton1 = null;
 	private Image menuExitButton0 = null;
 	private Image menuExitButton1 = null;
+	
+	//Sounds
+	
+	public static Sound menuTheme = null;
+	
 	protected static Vector2f menuMousePos;
 	private boolean leftMousePressed;
 	
@@ -32,12 +39,23 @@ public class Menu extends BasicGameState {
 		menuExitButton1 = new Image("data/menuExitButton1.png");	
 		menuBg = new Image("data/menuBg.png");
 		menuMousePos = new Vector2f(0,0);
+		
+		menuTheme = new Sound("data/bossBattleTheme.ogg");
+		
+		menuTheme.loop();
+		
 	}
 	
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
 		menuMousePos = new Vector2f((gc.getInput().getMouseX()), (gc.getInput().getMouseY()));
+		
+		if(gc.getInput().isKeyDown(Input.KEY_M)){
+			
+			menuTheme.stop();
+			
+		}
 		
 		if(!gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
 			leftMousePressed = false;

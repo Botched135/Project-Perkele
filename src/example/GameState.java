@@ -47,6 +47,13 @@ public class GameState extends BasicGameState {
 		
 		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
+		if(gc.getInput().isKeyDown(Input.KEY_M)){
+		
+			Menu.menuTheme.stop();
+			
+		}
+		
+
 		inventory.update(gc, sbg, delta);
 		
 		//PLAYER STUFF ====================================================================================================================================
@@ -137,6 +144,7 @@ public class GameState extends BasicGameState {
 		//======================================================================================================================================================
 		//BACK TO MAIN MENU (and clears the game container) - key input is "ESCAPE"
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+			Menu.menuTheme.play();
 			gc.reinit();	//Clears the the GameContainer
 			sbg.enterState(0);
 		}

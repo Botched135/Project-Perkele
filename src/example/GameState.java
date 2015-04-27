@@ -95,7 +95,6 @@ public class GameState extends BasicGameState {
 		inventoryList.get(1).init(gc, sbg);
 		//inventoryList.get(2).vector.set(600, 1000);
 		
-		System.out.println("X: " + inventoryList.get(0).vector.getX() + "    Y: " + inventoryList.get(0).vector.getY());
 		
 		//ENEMY STUFF =================================================================================================================================================	
 		//ENEMY!!!!!! - by using "E key" as input
@@ -156,8 +155,7 @@ public class GameState extends BasicGameState {
 		g.drawString("Number of loot: " + lootList.size(), 10, 65);
 		g.draw(playerToMouseTestLine);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
-		g.drawString("Press 'I'" + "" + " to toggle inventory", 10, 95);
-		g.drawString("Player Damage: "+player.PlayerDamage, 10, 140);
+		//g.drawString("Player Damage: "+player.PlayerDamage, 10, 140);
 		for(int i = enemyList.size()-1; i >= 0; i-- ){
 			if(GameState.mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX){
 
@@ -171,10 +169,6 @@ public class GameState extends BasicGameState {
 			}
 			
 		}
-		if(inventoryList.get(1)!=null)
-		g.drawString("Loot Level on equiped weapon: "+inventoryList.get(1).lootLevel, 10, 110);
-		if(enemyList.size()>0)
-			g.drawString("Enemy Level: "+enemyList.get(enemyList.size()-1).EnemyLevel, 10, 125);	
 		
 		/*
 		g.drawString("Hit Points:                " + player.hitPoints, 1000, 40);

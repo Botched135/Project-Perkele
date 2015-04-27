@@ -29,6 +29,7 @@ public class Player extends GameObject{
 	protected float speedMultiplier = 5.0f;
 	protected float AttackSpeed = 5.0f; //Attacks per second
 	protected float Armor = 0; //Damage reductions
+	protected float projectileSpeed = 15;
 	//=======================================================
 	
 	protected float isReady;
@@ -49,8 +50,11 @@ public class Player extends GameObject{
 	
 	//Sounds =================================================
 	
-	private Sound meleeAttackSound = null;
+	private Sound meleeAttackSound0 = null;
+	private Sound rangedAttackSound0 = null;
 	
+	
+	//Misc. ==================================================	
 	
 	DecimalFormat df = new DecimalFormat("#.##");
 	
@@ -61,7 +65,7 @@ public class Player extends GameObject{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 1;
-		
+	
 	}
 	
 	Player(Vector2f _vector) {
@@ -78,13 +82,18 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		playerTestSprite = new Image("data/player.png");
 		hpBar = new Image("data/hpBar.png");
 		
-		meleeAttackSound = new Sound("data/meleeAttackSound1.ogg");
+		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
+		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
 		
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList){
 		
+		//Keeping HP from exceeding max hp.
+		if(hitPoints > MaxHitPoints){
+			hitPoints = MaxHitPoints;
+		}
 		
 		isMeleeAttacking = false;
 		isRangedAttacking = false;
@@ -94,7 +103,6 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 
 		if(gc.getInput().isKeyPressed(Input.KEY_O)){
-			meleeAttackSound.play();
 			if(this.hitPoints <= 0){
 				this.hitPoints = 0;
 			}
@@ -111,7 +119,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
 			if(isAttackReady == true){
 				isRangedAttacking(GameState.mousePos);
-				_projectileList.add(new Arrow(this, GameState.mousePos, 10));
+				_projectileList.add(new Arrow(this, GameState.mousePos, projectileSpeed));
 			
 				Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
 				_projectileRenderList.add(tempCircle);
@@ -161,6 +169,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 378*(this.hitPoints/this.MaxHitPoints), 43);
 		//hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 1); // <----- Change the "1" to make the HP Bar resize according to remaining player health!
 		g.drawString(df.format(this.hitPoints), Inventory.xOrigin+628, Inventory.yOrigin+659);
+		
 	}
 	
 	
@@ -178,7 +187,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	public void isMeleeAttacking(Vector2f vector){
 		if(this.isAttackReady){	
-			//System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
+			
+			//Play players melee attack sound 
+			meleeAttackSound0.play();
+			
 			this.isMeleeAttacking = true;
 			isAttackReady=false;
 		}
@@ -188,7 +200,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	public void isRangedAttacking(Vector2f vector){
 		if(this.isAttackReady){	
-			//System.out.println("Debugging: X = " + vector.getX() + " & Y = " + vector.getX());
+			
+			//Play players ranged attack sound
+			rangedAttackSound0.play();
+			
 			this.isRangedAttacking = true;
 			isAttackReady=false;
 		}
@@ -220,7 +235,12 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 		else if(loot instanceof Armor){
 			this.Armor=loot.Armor;
+			if(hitPoints > baseHp + loot.hpBonus){
+				hitPoints = baseHp + loot.hpBonus;
+			}
+			else{
 			this.MaxHitPoints = baseHp + loot.hpBonus;
+			}
 		}
 	}
 	public void AttackDamage(){

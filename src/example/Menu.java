@@ -69,6 +69,8 @@ public class Menu extends BasicGameState {
 				menuMousePos.getY() < Window.HEIGHT/2 + 70 ){
 			
 			leftMousePressed = true;
+			menuTheme.stop();
+			GameState.mainTheme.loop();
 			sbg.enterState(1);
 		}
 		

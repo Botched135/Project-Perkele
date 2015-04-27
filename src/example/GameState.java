@@ -9,6 +9,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.geom.*;
@@ -33,11 +34,16 @@ public class GameState extends BasicGameState {
 
 			protected static Vector2f mousePos;
 			
+			//Sounds
+			
+			public static Sound mainTheme = null;
+			
 			//Misc.
 			DecimalFormat df = new DecimalFormat("#.##");
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
+		mainTheme = new Sound("data/mainTheme.ogg");
 		inventory.init(gc, sbg);
 		player.init(gc, sbg);
 		
@@ -143,10 +149,15 @@ public class GameState extends BasicGameState {
 		
 		//======================================================================================================================================================
 		//BACK TO MAIN MENU (and clears the game container) - key input is "ESCAPE"
-		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
-			Menu.menuTheme.play();
-			gc.reinit();	//Clears the the GameContainer
-			sbg.enterState(0);
+		
+			if(gc.getInput().isKeyDown(Input.KEY_ESCAPE)) {
+				mainTheme.stop();
+				Menu.menuTheme.loop();
+			}
+			
+			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+				gc.reinit();	//Clears the GameContainer
+				sbg.enterState(0);
 		}
 	}
 	

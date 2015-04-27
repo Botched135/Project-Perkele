@@ -49,13 +49,14 @@ public class Projectile extends GameObject {
 		//Destroy projectile if owned by a player and it hits an enemy
 		//if(owner.ID == 1 && isColliding(_enemyList) == true){
 					
-		for(int i = _enemyList.size()-1; i >= 0; i--){
-			if(_enemyList.size() > 0 && this.vector.distance(_enemyList.get(i).vector) < this.hitboxX + _enemyList.get(i).hitboxX-5){
+		/*for(int i = _enemyList.size()-1; i >= 0; i--){
+			if(_enemyList.size() > 0 && this.vector.distance(_enemyList.get(i).vector) < this.hitboxX + _enemyList.get(i).hitboxX){
 				destroy(index, _projectileList);
 			}
 			
 			//destroy(index, _projectileList);
 		}
+		*/
 				
 	}
 	
@@ -89,7 +90,7 @@ public class Projectile extends GameObject {
 		vector = vector.add(dir);
 
 	}
-	
+	/*
 	public boolean isColliding(ArrayList<Enemy> _enemyList){
 		
 		for(int i = 0; i < _enemyList.size()-1; i++){
@@ -102,8 +103,9 @@ public class Projectile extends GameObject {
 		}
 		return false;
 	}
+	*/
 		
-	void destroy(int index, ArrayList<Projectile> _projectileList){
+	public void destroy(int index, ArrayList<Projectile> _projectileList){
 		
 		if(_projectileList.size() > 0 && _projectileList.get(index) != null){
 			_projectileList.remove(index);

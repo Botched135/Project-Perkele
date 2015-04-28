@@ -10,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
 public class Enemy extends GameObject {
 	
@@ -23,9 +24,9 @@ public class Enemy extends GameObject {
 	protected boolean isAttackReady = false;
 	protected static Color enemyTestCol = new Color(255,0,0);
 	protected Random randLvl = new Random();
-	protected String[]EnemyNames = {"Dwarf","Dwarf Soldier","Dwarf Veteran","Dwarf Lord", "Dwarf Faggot"};
+	protected String[]EnemyNames = {"Dwarf","Dwarf Soldier","Dwarf Veteran","Dwarf Captain", "Dwarf Warchief"};
 	protected String EnemyName;
-	
+	protected boolean beingHit = false;
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
 	protected float MinDamage = 10;
@@ -34,8 +35,14 @@ public class Enemy extends GameObject {
 	protected Random randDmg = new Random();
 	protected float meleeRange = 90;
 	
-	//Sprites
+	//Images =================================================
+	
 	private Image enemyTestSprite = null; 
+	
+	//Sounds =================================================
+	
+	private Sound meleeHitSound = null;
+		
 	
 	//CONTRUCTERS ===========================================================================================================================================================
 	
@@ -59,20 +66,27 @@ public class Enemy extends GameObject {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 		enemyTestSprite = new Image("data/enemyTestSprite.png");
+		meleeHitSound = new Sound("data/meleeHitSound1.ogg");
+	
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
 	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException {
 		
+		beingHit = false;
 		stateManager(index, gc, sbg, _player, _enemyList, _projectileList, _lootList, _healthGlobeList);
 		
 	}
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
 	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g, Player _player) throws SlickException {
 		
-		enemyTestSprite.draw(vector.getX()-32, vector.getY()-32);
-		
+		if(beingHit == true){
+			enemyTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+		}
+		else{
+			enemyTestSprite.draw(vector.getX()-32, vector.getY()-32);
+		}
 	
 		g.setColor(new Color(255,0,0));
 		g.drawRect(vector.getX()-33, vector.getY()-60, 76.9f, 15);
@@ -201,6 +215,13 @@ public class Enemy extends GameObject {
 		
 		if(_player.isMeleeAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			_player.AttackDamage();
+			
+			//Play players melee attack sound
+			meleeHitSound.play();
+			
+			//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
+			beingHit = true;
+			
 			this.hitpoints -= _player.PlayerDamage;//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitpoints <0){
 				this.hitpoints=0;
@@ -213,10 +234,17 @@ public class Enemy extends GameObject {
 		
 		if(_projectileList.size() > 0){
 			for(int i = _projectileList.size()-1; i >= 0; i--){
-				if(_projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX+1){
+				if(_projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
 			
+					//Play players melee attack sound
+					meleeHitSound.play();
+					
+					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
+					beingHit = true;
+					
 					this.hitpoints -= _projectileList.get(i).damage;
 					_projectileList.get(i).disableDmg = true;
+					_projectileList.get(i).destroy(i, _projectileList);
 				}
 			}
 		}

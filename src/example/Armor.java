@@ -17,10 +17,8 @@ public class Armor extends Loot{
 		super();
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
-		//hpBonus = 100+(10*LootLevel);
 		ID = 3;
 		
-		//hpBonus;
 		Armor = 50;
 		hpBonus = 0;
 
@@ -31,6 +29,7 @@ public class Armor extends Loot{
 		hitboxY = 32.0f;
 		ID = 3;
 		this.lootLevel = _enemy.EnemyLevel;
+		this.Health = this.lootLevel;
 		this.Armor = _enemy.EnemyLevel*10;
 		this.hpBonus = _enemy.EnemyLevel*10;
 	}
@@ -42,7 +41,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
+	if(this.beingHit == true){
+		armorTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+	}
+	else{
 		armorTestSprite.draw(vector.getX()-32, vector.getY()-32);
+	}
+		
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			g.drawString("lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);

@@ -63,7 +63,7 @@ public class GameState extends BasicGameState {
 		inventory.update(gc, sbg, delta);
 		
 		//PLAYER STUFF ====================================================================================================================================
-		player.update(gc, sbg, projectileList, projectileRenderList, healthGlobeList);
+		player.update(gc, sbg, enemyList, projectileList, projectileRenderList, healthGlobeList);
 		
 		//UDATES PLAYER SPRITE
 		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);

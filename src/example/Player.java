@@ -88,7 +88,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
-	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList){
+	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList){
 		
 		//Keeping HP from exceeding max hp.
 		if(hitPoints > MaxHitPoints){
@@ -100,7 +100,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 
 		//UPDATE PLAYER ATTACK
 		setAttackReady();
-		
+		for(int i = _enemyList.size()-1; i >= 0; i --) {
+		beingMeleeAttacked(_enemyList.get(i));
+		}
+		// beingRangedAttacked(_projectileList);
 
 		if(gc.getInput().isKeyPressed(Input.KEY_O)){
 			if(this.hitPoints <= 0){
@@ -229,10 +232,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	void beingMeleeAttacked (Enemy _enemy){
 		
-		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.meleeRange + hitboxX){
+		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.meleeRange + _enemy.hitboxX){
 			_enemy.AttackDamage();
 			
-			this.hitPoints -= _enemy.enemyDamage;//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
+			
+			this.hitPoints -= _enemy.enemyDamage; //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){
 				this.hitPoints=0;
 			}
@@ -240,7 +244,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}	
 	
 	//Method to check if the enemy is being hit by a ranged attack
-	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
+	/*void beingRangedAttacked (ArrayList<Projectile> _projectileList){
 		
 		if(_projectileList.size() > 0){
 			for(int i = _projectileList.size()-1; i >= 0; i--){
@@ -251,7 +255,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				}
 			}
 		}
-	}
+	} */
 	
 	//Setting the weapon loot to the player
 	public void setLootEquipment(Loot loot){

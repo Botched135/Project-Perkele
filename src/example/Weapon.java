@@ -73,6 +73,10 @@ public String setName(){
 	else if(this.attackSpeed >= 2 ){
 		Name+="Speedy ";
 	}
+	if(this.wepMinDMG > (this.lootLevel*20+15) && this.wepMaxDMG >(this.lootLevel*20+50)){
+		Name="Andúril, Flame of the West";
+		return Name;
+	}
 	if(this.wepMinDMG < (this.lootLevel*20+10)){
 		Name+="Dagger ";
 	}

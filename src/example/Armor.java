@@ -32,6 +32,7 @@ public class Armor extends Loot{
 		this.Health = this.lootLevel;
 		this.Armor = _enemy.EnemyLevel*10;
 		this.hpBonus = _enemy.EnemyLevel*10;
+		this.Name = this.setName(ArmorNames);
 	}
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
@@ -61,6 +62,11 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 	
 	public void getInfo() {
 		
+	}
+	public String setName(String[] string){
+		String Name = string[this.lootLevel-1]; 
+		
+		return Name;
 	}
 
 }

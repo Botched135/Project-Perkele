@@ -42,6 +42,7 @@ public class Weapon extends Loot{
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(20);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(15);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
+		this.Name = this.setName();
 	}
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
@@ -63,6 +64,31 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 			g.drawString("lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
 		}
 	
+}
+public String setName(){
+	String Name = ""; 
+	if(this.attackSpeed <= 0.5){
+		Name += "Slow ";
+	}
+	else if(this.attackSpeed >= 2 ){
+		Name+="Speedy ";
+	}
+	if(this.wepMinDMG < (this.lootLevel*20+10)){
+		Name+="Dagger ";
+	}
+	else if(this.wepMinDMG >= (this.lootLevel*20+10) && this.wepMinDMG <= (this.lootLevel*20+15)){
+		Name+="Broad Sword ";
+	}
+	else if(this.wepMinDMG > (this.lootLevel*20+15)){
+		Name+="Zweihander ";
+	}
+	if(this.wepMaxDMG < (this.lootLevel*20+47)){
+		Name+="of the Weak";
+	}
+	else if(this.wepMaxDMG >(this.lootLevel*20+47)){
+		Name+="of the Bons";
+	}
+	return Name;
 }
 
 }

@@ -16,6 +16,7 @@ public class Loot extends GameObject {
 	
 	//VARIABLE DECLARATION ==============================================================================================================================================
 	
+	protected String[]ArmorNames = {"Leather Armor","Ringmail","Breast Plate","Full Plate","Dragonbone Armor"};
 	protected Random randDmg = new Random();
 	protected Random randSpeed = new Random();
 	protected static Color lootTestCol = new Color(255,255,0);
@@ -27,6 +28,8 @@ public class Loot extends GameObject {
 	protected float Armor;
 	protected boolean beingHit = false;
 	protected int Health=1;
+	protected String Name="";
+	protected float Average;
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
 	

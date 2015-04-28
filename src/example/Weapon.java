@@ -61,7 +61,7 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 	}
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
-			g.drawString("lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
+			g.drawString(this.Name+" "+"lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
 		}
 	
 }

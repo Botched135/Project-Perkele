@@ -18,7 +18,7 @@ public class Armor extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 3;
-		
+		Name = "Slighly used Loincloth";
 		Armor = 50;
 		hpBonus = 0;
 
@@ -29,8 +29,10 @@ public class Armor extends Loot{
 		hitboxY = 32.0f;
 		ID = 3;
 		this.lootLevel = _enemy.EnemyLevel;
+		this.Health = this.lootLevel;
 		this.Armor = _enemy.EnemyLevel*10;
 		this.hpBonus = _enemy.EnemyLevel*10;
+		this.Name = this.setName(ArmorNames);
 	}
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
@@ -40,10 +42,16 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
+	if(this.beingHit == true){
+		armorTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+	}
+	else{
 		armorTestSprite.draw(vector.getX()-32, vector.getY()-32);
+	}
+		
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
-			g.drawString("lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
+			g.drawString(this.Name+" lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
 		}
 	
 }
@@ -54,6 +62,11 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 	
 	public void getInfo() {
 		
+	}
+	public String setName(String[] string){
+		String Name = string[this.lootLevel-1]; 
+		
+		return Name;
 	}
 
 }

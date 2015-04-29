@@ -17,6 +17,7 @@ public class Loot extends GameObject {
 	
 	//VARIABLE DECLARATION ==============================================================================================================================================
 	
+	protected String[]ArmorNames = {"Leather Armor","Ringmail","Breast Plate","Full Plate","Dragonbone Armor"};
 	protected Random randDmg = new Random();
 	protected Random randSpeed = new Random();
 	protected static Color lootTestCol = new Color(255,255,0);
@@ -26,6 +27,10 @@ public class Loot extends GameObject {
 	protected float attackSpeed;
 	protected float hpBonus;
 	protected float Armor;
+	protected boolean beingHit = false;
+	protected int Health=1;
+	protected String Name="";
+	protected float Average;
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
 	
@@ -53,6 +58,12 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	public void update(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Loot> _inventoryList, Player _player){
 		
+		beingHit = false;
+		if(this.Health <= 0){
+			this.Health=0;
+			this.destroy(index,_lootList);
+		}
+		
 		if(!gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
 			leftMousePressed = false;
 		}
@@ -79,6 +90,9 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				
 				}
 			}
+		if(!gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
+			this.beingMeleeAttacked(_player);
+		}
 		
 		stateManager(index, _lootList);
 	}
@@ -227,7 +241,27 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 		}
 	}
 	
-	public void SetLootLevel(Enemy enemy){
-		this.lootLevel = enemy.EnemyLevel;
+	public void SetLootLevel(Enemy _enemy){
+		this.lootLevel = _enemy.EnemyLevel;
 	}
+	
+	public void beingMeleeAttacked(Player _player){
+		
+		if(_player.isMeleeAttacking && 
+				GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
+			
+			beingHit = true;
+			
+			this.Health -= 1;
+					
+			
+			if(this.Health <0){
+				this.Health=0;
+			}
+		}
+	}
+	void destroy(int index, ArrayList<Loot> _lootList){
+		_lootList.remove(index);
+
+}
 }

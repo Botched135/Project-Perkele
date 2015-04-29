@@ -18,7 +18,7 @@ public class Enemy extends GameObject {
 	public int EnemyLevel;
 	protected float hitpoints = 100;
 	protected float speedMultiplier = 0.5f;
-	protected float AttackSpeed = 0.0f;
+	protected float AttackSpeed = 0.5f;
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
 	protected boolean isAttackReady = false;
@@ -29,8 +29,8 @@ public class Enemy extends GameObject {
 	protected boolean beingHit = false;
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
-	protected float MinDamage = 20;
-	protected float MaxDamage = 40;
+	protected float MinDamage = 10;
+	protected float MaxDamage = 20;
 	protected float enemyDamage;
 	protected Random randDmg = new Random();
 	protected float meleeRange = 90;
@@ -178,14 +178,14 @@ public class Enemy extends GameObject {
 	}
 	//Method to set the enemy's attack to be ready according to its cooldowns
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
-		float AS =AttackSpeed;
+		float AS = AttackSpeed;
 		if(this.isAttackReady == false){ 
-		this.EndTime = System.currentTimeMillis();//StartTime should start from without
-		if(this.EndTime-this.StartTime >= 1000/AS){
-			this.isAttackReady=true;//set the isAttackReady to true
-			this.StartTime = this.EndTime;
-			this.EndTime = 0;
-		}
+			this.EndTime = System.currentTimeMillis();//StartTime should start from without
+			if(this.EndTime-this.StartTime >= 1000/AS){
+				this.isAttackReady=true;//set the isAttackReady to true
+				this.StartTime = this.EndTime;
+				this.EndTime = 0;
+			}
 		}
 		//isAttackReady = this.isAttackReady;
 		return isAttackReady;
@@ -194,7 +194,7 @@ public class Enemy extends GameObject {
 	public void isMeleeAttacking(){
 		if(this.isAttackReady){	
 			this.isMeleeAttacking = true;
-			System.out.println("hello");
+			
 			isAttackReady=false;
 		}
 		else
@@ -251,7 +251,7 @@ public class Enemy extends GameObject {
 	}
 	
 	public void AttackDamage(){
-		enemyDamage = (randDmg.nextFloat()*(this.MaxDamage-this.MinDamage))+this.MinDamage;
+		enemyDamage = (randDmg.nextFloat()*(this.MaxDamage-this.MinDamage))+this.MinDamage + (4*this.EnemyLevel);
 	}
 
 	//Method to set the enemy's level

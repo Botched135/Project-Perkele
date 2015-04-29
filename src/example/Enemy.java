@@ -117,8 +117,9 @@ public class Enemy extends GameObject {
 		beingRangedAttacked(_projectileList);
 		
 		separate(_enemyList);
-		
+		if(vector.distance(_player.vector) <  meleeRange + _player.hitboxX){
 		setAttackReady();
+		}
 		if(vector.distance(_player.vector) <  meleeRange + _player.hitboxX){
 			isMeleeAttacking();
 		}

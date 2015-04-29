@@ -11,6 +11,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
 public class Loot extends GameObject {
 	
@@ -28,6 +29,10 @@ public class Loot extends GameObject {
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
 	
+	//Sounds =============================================
+	
+	public static Sound lootPickupSound = null;
+	
 	//CONSTRUCTORS ======================================================================================================================================================
 	
 	Loot() {
@@ -38,6 +43,8 @@ public class Loot extends GameObject {
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {	
 	
+	lootPickupSound = new Sound("data/lootPickupSound.ogg");
+	System.out.println("hey");
 	leftMousePressed = false;
 		
 	}
@@ -50,12 +57,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			leftMousePressed = false;
 		}
 		
+		//Loot pickup
 		if(_lootList.size() >= 0) {
 			if(gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false){
 				leftMousePressed = true;
 						if(GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX) {
 							//either a method for picking up armor or a weapon
-							if(_lootList.get(index) instanceof Weapon){
+							if(_lootList.get(index) instanceof Weapon){							
 								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(1), _player);
 								//_inventoryList.remove(1);
 								//_inventoryList.add(1,_lootList.get(index));
@@ -119,7 +127,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 //This loot spawning method is to be removed later in inplementation as it spawns using spacebar	
-	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList) {
+	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList) throws SlickException {
 		
 		Random randLoot = new Random();
 		Random randDrop = new Random();
@@ -129,10 +137,12 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 			int lootType = randDrop.nextInt(2);
 			if(lootType == 1) {
-				_lootList.add(new Armor());	
+				_lootList.add(new Armor());
+				_lootList.get(_lootList.size()-1).init(gc, sbg);
 			}
 			else {
 				_lootList.add(new Weapon());
+				_lootList.get(_lootList.size()-1).init(gc, sbg);
 			}
 			
 			float tempRandX = randLoot.nextInt(lootDropDist);

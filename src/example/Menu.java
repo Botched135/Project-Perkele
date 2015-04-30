@@ -70,7 +70,10 @@ public class Menu extends BasicGameState {
 			
 			leftMousePressed = true;
 			menuTheme.stop();
-			GameState.mainTheme.loop();
+			
+			if(GameState.mainTheme.playing() == false){
+				GameState.mainTheme.loop();
+			}
 			sbg.enterState(1);
 		}
 		
@@ -92,7 +95,6 @@ public class Menu extends BasicGameState {
 				menuMousePos.getY() > Window.HEIGHT/2 + 200 &&
 				menuMousePos.getY() < Window.HEIGHT/2 + 270 ){
 			
-			System.out.println("heyeye");
 			leftMousePressed = true;
 			gc.exit();
 		}
@@ -103,7 +105,7 @@ public class Menu extends BasicGameState {
 		
 		//Alternative exit - Press escape to close application
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
-			gc.exit();
+			sbg.enterState(1);
 		}
 		
 	}

@@ -199,11 +199,6 @@ public class GameState extends BasicGameState {
 		//======================================================================================================================================================
 		//BACK TO MAIN MENU (and clears the game container) - key input is "ESCAPE"
 		
-			if(gc.getInput().isKeyDown(Input.KEY_ESCAPE)) {
-				mainTheme.stop();
-				Menu.menuTheme.loop();
-			}
-			
 			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
 				//gc.reinit();	//Clears the GameContainer
 				sbg.enterState(0);

@@ -85,20 +85,20 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				}
 			}
 		if(_lootList.size()>0){
-			for(int i = 0; i < _enemyList.size(); i++){
+			for(int i = 0; i < _enemyList.size() -1; i++){
 				
 				if(_lootList.get(index) instanceof Weapon){
-					    EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;
-						LootAverage =((_lootList.get(index).wepMinDMG+_lootList.get(index).wepMaxDMG)/2)*_lootList.get(index).attackSpeed;
+					    EnemyAverage = ((_enemyList.get(i).MinDamage + _enemyList.get(i).MaxDamage) * _enemyList.get(i).AttackSpeed)/2;
+						LootAverage =((_lootList.get(index).wepMinDMG + _lootList.get(index).wepMaxDMG)/2) * _lootList.get(index).attackSpeed;
 				}
 				else if(_lootList.get(index) instanceof Armor){
-					EnemyAverage= _enemyList.get(i).Armor;
+					EnemyAverage = _enemyList.get(i).Armor;
 					LootAverage = _lootList.get(index).Armor;
 				}
 				if(vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).meleeRange + _enemyList.get(i).hitboxX+this.hitboxX && EnemyAverage<LootAverage){
 					if(_lootList.get(index) instanceof Weapon){
-						_enemyList.get(i).MinDamage= _lootList.get(index).wepMinDMG;
-						_enemyList.get(i).MaxDamage= _lootList.get(index).wepMaxDMG;
+						_enemyList.get(i).MinDamage = _lootList.get(index).wepMinDMG;
+						_enemyList.get(i).MaxDamage = _lootList.get(index).wepMaxDMG;
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
 						_lootList.remove(index);
 					}

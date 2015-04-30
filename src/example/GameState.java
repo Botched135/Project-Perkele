@@ -316,7 +316,7 @@ public class GameState extends BasicGameState {
 							if(lootList.get(i) instanceof Weapon){
 								
 								g.setColor(new Color(255,255,255));
-								g.drawString(lootList.get(i).Name, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								g.drawString(lootList.get(i).Name+" lvl:"+lootList.get(i).lootLevel, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
 								g.drawRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-123, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame. 20 pixels pr. attribute!
 								g.setColor(new Color(100,100,100));
 								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-123, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
@@ -330,7 +330,7 @@ public class GameState extends BasicGameState {
 							if(lootList.get(i) instanceof Armor){
 								
 								g.setColor(new Color(255,255,255));
-								g.drawString(lootList.get(i).Name, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								g.drawString(lootList.get(i).Name+" lvl:"+lootList.get(i).lootLevel, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
 								g.drawRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-82, 180, 20); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
 								g.setColor(new Color(100,100,100));
 								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-82, 180, 20); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
@@ -355,7 +355,7 @@ public class GameState extends BasicGameState {
 								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
 								
 								g.setColor(new Color(255,255,255));
-								g.drawString(lootList.get(i).Name, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								g.drawString(lootList.get(i).Name+" lvl:"+lootList.get(i).lootLevel, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
 								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-40);
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
 								g.drawString("DPS: " + df.format(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2)*lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY());
@@ -364,7 +364,7 @@ public class GameState extends BasicGameState {
 							if(lootList.get(i) instanceof Armor){
 								
 								g.setColor(new Color(255,255,255));
-								g.drawString(lootList.get(i).Name, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								g.drawString(lootList.get(i).Name+" lvl:"+lootList.get(i).lootLevel, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
 								g.drawRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 20); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
 								g.setColor(new Color(100,100,100));
 								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 20); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame

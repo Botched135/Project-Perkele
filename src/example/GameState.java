@@ -35,10 +35,14 @@ public class GameState extends BasicGameState {
 			
 			//Enemy wave system
 			protected Random randPos = new Random();
-			protected int spawnPosVari = 65;
-			protected int wave = 1;
+			protected int spawnPosVari;
+			protected int wave;
 			protected float waveStartTimer;
-			protected float waveEndTimer;
+			protected float waveTimeDif;
+			protected boolean waveStart;
+			protected int waveDelay = 2000;
+			protected int enemyMeleeAmount = 2;
+			protected int randEnemyPos;
 			
 
 			protected static Vector2f mousePos;
@@ -62,6 +66,11 @@ public class GameState extends BasicGameState {
 		spawnPos.add(new Vector2f(0, 0));
 		spawnPos.add(new Vector2f(0, 0));
 		spawnPos.add(new Vector2f(0, 0));
+		
+		wave = 0;
+		waveStartTimer = 0;
+		waveTimeDif = 0;
+		waveStart = true;
 		
 	}
 	
@@ -127,12 +136,32 @@ public class GameState extends BasicGameState {
 		
 		//ENEMY STUFF =================================================================================================================================================	
 		//ENEMY!!!!!! - by using "E key" as input
-		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
-			enemyList.add(new Enemy(spawnPos.get(0)));
-			enemyList.get(enemyList.size()-1).init(gc, sbg);
-			enemyList.get(enemyList.size()-1).SetEnemyLevel();
+		if(waveStartTimer == 0 && enemyList.size() == 0) {
+			wave++;
+			waveStart = false;
+			waveStartTimer = System.currentTimeMillis();
+			
 		}
-		
+		else {
+			waveTimeDif = (System.currentTimeMillis() - waveStartTimer) / 1000000;
+			if(waveTimeDif > waveDelay) {
+				waveStart = true;
+				waveStartTimer = 0;
+				waveTimeDif = 0;
+			}
+		}
+		if(!waveStart && enemyList.size() == 0) {
+			while(!waveStart && enemyList.size() == 0) {
+				for(int i = 0; i < enemyMeleeAmount; i++) {
+					System.out.println("Hello");
+					randEnemyPos = randPos.nextInt(7);
+					enemyList.add(new Enemy(spawnPos.get(randEnemyPos)));
+					enemyList.get(enemyList.size()-1).init(gc, sbg);
+					enemyList.get(enemyList.size()-1).SetEnemyLevel();
+				}
+				enemyMeleeAmount += 2;
+			}
+		}
 		
 		//Update enemy spawn pos
 		spawnPosVari = randPos.nextInt(2);

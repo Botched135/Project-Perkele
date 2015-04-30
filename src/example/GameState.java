@@ -1,5 +1,6 @@
 package example;
 
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,6 +12,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.geom.*;
@@ -37,10 +39,11 @@ public class GameState extends BasicGameState {
 			protected Random randPos = new Random();
 			protected int spawnPosVari;
 			protected int wave;
-			protected float waveStartTimer;
-			protected float waveTimeDif;
+			protected int currentWave;
+			protected double waveStartTimer;
+			protected double waveTimeDif;
 			protected boolean waveStart;
-			protected int waveDelay = 2000;
+			protected int waveDelay = 5000; //Amount of miliseconds before the next wave start
 			protected int enemyMeleeAmount = 2;
 			protected int randEnemyPos;
 			
@@ -52,6 +55,9 @@ public class GameState extends BasicGameState {
 			
 			//Misc.
 			DecimalFormat df = new DecimalFormat("#.##");
+			protected float waveTextOpacity = 255;
+			private TrueTypeFont font;
+			private boolean antiAlias = true;
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
@@ -68,9 +74,13 @@ public class GameState extends BasicGameState {
 		spawnPos.add(new Vector2f(0, 0));
 		
 		wave = 0;
+		currentWave = 0;
 		waveStartTimer = 0;
 		waveTimeDif = 0;
 		waveStart = true;
+		
+		Font awtFont = new Font("Times New Roman", Font.BOLD, 30);
+		font = new TrueTypeFont(awtFont, antiAlias);
 		
 	}
 	
@@ -145,6 +155,11 @@ public class GameState extends BasicGameState {
 		spawnPos.set(6, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
 		spawnPos.set(7, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY()));
 		
+		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
+			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY())));
+			enemyList.get(enemyList.size()-1).init(gc, sbg);
+			enemyList.get(enemyList.size()-1).SetEnemyLevel();
+		}
 		//Enemy wave stuff
 		if(waveStartTimer == 0 && enemyList.size() == 0) {
 			wave++;
@@ -153,14 +168,14 @@ public class GameState extends BasicGameState {
 			
 		}
 		else {
-			waveTimeDif = (System.currentTimeMillis() - waveStartTimer) / 100000;
+			waveTimeDif = (System.currentTimeMillis() - waveStartTimer);
 			if(waveTimeDif > waveDelay) {
 				waveStart = true;
 				waveStartTimer = 0;
 				waveTimeDif = 0;
 			}
 		}
-		if(!waveStart && enemyList.size() == 0) { //Spawning of a wave
+		if(waveStart && enemyList.size() == 0) { //Spawning of a wave
 			for(int i = 0; i < enemyMeleeAmount; i++) {
 				randEnemyPos = randPos.nextInt(7);
 				spawnPosVari = randPos.nextInt(2);
@@ -170,8 +185,6 @@ public class GameState extends BasicGameState {
 			}
 			enemyMeleeAmount += 2;
 		}
-		
-
 		
 		
 		//UPDATING ENEMIES
@@ -376,7 +389,20 @@ public class GameState extends BasicGameState {
 				}
 			}
 		}
-	}
+		
+		if(currentWave < wave) {
+			waveTextOpacity = 2;
+			System.out.println("yo");
+			currentWave = wave;
+		}
+		
+		if(waveTextOpacity > 0){
+			System.out.println("o");
+			waveTextOpacity -= 0.01f;
+				g.setColor(new Color(255, 255, 255, waveTextOpacity));
+				font.drawString(Window.WIDTH/2  - 92, Window.HEIGHT/2 - 120, "- W A V E - " + wave);
+			}
+		}
 
 
 	public int getID() {

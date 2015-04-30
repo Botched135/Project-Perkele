@@ -136,7 +136,6 @@ public class GameState extends BasicGameState {
 		
 		//ENEMY STUFF =================================================================================================================================================	
 		//Update enemy spawn pos
-		spawnPosVari = randPos.nextInt(2);
 		spawnPos.set(0, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari),player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
 		spawnPos.set(1, new Vector2f(player.vector.getX(), player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
 		spawnPos.set(2, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari), player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
@@ -164,6 +163,7 @@ public class GameState extends BasicGameState {
 		if(!waveStart && enemyList.size() == 0) { //Spawning of a wave
 			for(int i = 0; i < enemyMeleeAmount; i++) {
 				randEnemyPos = randPos.nextInt(7);
+				spawnPosVari = randPos.nextInt(2);
 				enemyList.add(new Enemy(spawnPos.get(randEnemyPos)));
 				enemyList.get(enemyList.size()-1).init(gc, sbg);
 				enemyList.get(enemyList.size()-1).SetEnemyLevel();
@@ -171,7 +171,7 @@ public class GameState extends BasicGameState {
 			enemyMeleeAmount += 2;
 		}
 		
-		
+
 		
 		
 		//UPDATING ENEMIES

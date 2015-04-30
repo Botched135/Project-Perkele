@@ -31,6 +31,7 @@ public class Enemy extends GameObject {
 	protected boolean isRangedAttacking;
 	protected float MinDamage = 10;
 	protected float MaxDamage = 20;
+	protected float Armor = 10;
 	protected float enemyDamage;
 	protected Random randDmg = new Random();
 	protected float meleeRange = 90;
@@ -115,6 +116,7 @@ public class Enemy extends GameObject {
 		
 		beingMeleeAttacked(_player);
 		beingRangedAttacked(_projectileList);
+		
 		
 		separate(_enemyList);
 		if(vector.distance(_player.vector) <  meleeRange + _player.hitboxX){
@@ -254,12 +256,17 @@ public class Enemy extends GameObject {
 	public void AttackDamage(){
 		enemyDamage = (randDmg.nextFloat()*(this.MaxDamage-this.MinDamage))+this.MinDamage + (4*this.EnemyLevel);
 	}
+	
+	public void PickUpLoot(int index, ArrayList<Loot> _lootList){
+		
+	}
 
 	//Method to set the enemy's level
 	void SetEnemyLevel(){
 		this.EnemyLevel=randLvl.nextInt(5)+1;
 		this.hitpoints = 100*this.EnemyLevel;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
+		this.Armor = 10*this.EnemyLevel;
 	}
 	//Method to drop loot from the enemy
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{

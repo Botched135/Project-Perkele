@@ -100,7 +100,7 @@ public class GameState extends BasicGameState {
 		
 		if(lootList.size() > 0){
 			for(int i = lootList.size()-1; i >= 0; i--){
-				lootList.get(i).update(i, gc, sbg, lootList, inventoryList, player);
+				lootList.get(i).update(i, gc, sbg, lootList, inventoryList, enemyList, player);
 			}
 		}
 		
@@ -145,6 +145,13 @@ public class GameState extends BasicGameState {
 		spawnPos.set(6, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
 		spawnPos.set(7, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY()));
 		
+		
+		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
+						enemyList.add(new Enemy(new Vector2f(mousePos.getX(),  mousePos.getY())));
+						enemyList.get(enemyList.size()-1).init(gc, sbg);
+						enemyList.get(enemyList.size()-1).SetEnemyLevel();
+						
+						}
 		//Enemy wave stuff
 		if(waveStartTimer == 0 && enemyList.size() == 0) {
 			wave++;

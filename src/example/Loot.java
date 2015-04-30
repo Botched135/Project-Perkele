@@ -30,6 +30,8 @@ public class Loot extends GameObject {
 	protected int Health=1;
 	protected String Name="";
 	protected float Average;
+	protected float EnemyAverage;
+	protected float LootAverage;
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
 	
@@ -49,7 +51,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	//UPDATE FUNCTION/METHOD ============================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Loot> _inventoryList, Player _player){
+	public void update(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Loot> _inventoryList, ArrayList<Enemy> _enemyList, Player _player){
 		
 		beingHit = false;
 		if(this.Health <= 0){
@@ -82,6 +84,31 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				
 				}
 			}
+		if(_lootList.size()>0){
+			for(int i = 0; i<_enemyList.size();i++){
+				
+				if(_lootList.get(index) instanceof Weapon){
+					    EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;
+						LootAverage =((_lootList.get(index).wepMinDMG+_lootList.get(index).wepMaxDMG)/2)*_lootList.get(index).attackSpeed;
+				}
+				else if(_lootList.get(index) instanceof Armor){
+					EnemyAverage= _enemyList.get(i).Armor;
+					LootAverage = _lootList.get(index).Armor;
+				}
+				if(vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).meleeRange + _enemyList.get(i).hitboxX+this.hitboxX && EnemyAverage<LootAverage){
+					if(_lootList.get(index) instanceof Weapon){
+						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
+						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
+						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
+						_lootList.remove(index);
+					}
+					else if(_lootList.get(index) instanceof Armor){
+						_enemyList.get(i).Armor = _lootList.get(index).Armor;
+						_lootList.remove(index);
+					}
+				}
+			}
+		}
 		if(!gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			this.beingMeleeAttacked(_player);
 		}

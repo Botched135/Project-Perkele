@@ -156,7 +156,7 @@ public class GameState extends BasicGameState {
 			}
 			
 			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
-				gc.reinit();	//Clears the GameContainer
+				//gc.reinit();	//Clears the GameContainer
 				sbg.enterState(0);
 		}
 	}

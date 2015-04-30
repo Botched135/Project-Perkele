@@ -17,7 +17,7 @@ public class Enemy extends GameObject {
 	//VARIABLE DECLARATION ===========================================================================================================================================================
 	public int EnemyLevel;
 	protected float hitpoints = 100;
-	protected float speedMultiplier = 0.5f;
+	protected float speedMultiplier = 1.0f;
 	protected float AttackSpeed = 0.5f;
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
@@ -29,11 +29,12 @@ public class Enemy extends GameObject {
 	protected boolean beingHit = false;
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
-	protected float MinDamage = 10;
-	protected float MaxDamage = 20;
+	protected float MinDamage = 2;
+	protected float MaxDamage = 10;
 	protected float enemyDamage;
 	protected Random randDmg = new Random();
 	protected float meleeRange = 90;
+	protected float seekDistance = 500;
 	
 	//Images =================================================
 	
@@ -123,7 +124,7 @@ public class Enemy extends GameObject {
 			isMeleeAttacking();
 		}
 		
-		if(vector.distance(_player.vector) < 300){
+		if(vector.distance(_player.vector) < seekDistance){
 		
 		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
 		seekState(_player.vector);
@@ -251,7 +252,7 @@ public class Enemy extends GameObject {
 	}
 	
 	public void AttackDamage(){
-		enemyDamage = (randDmg.nextFloat()*(this.MaxDamage-this.MinDamage))+this.MinDamage + (4*this.EnemyLevel);
+		enemyDamage = ((randDmg.nextFloat()*(this.MaxDamage-this.MinDamage)+(this.EnemyLevel*2)));
 	}
 
 	//Method to set the enemy's level

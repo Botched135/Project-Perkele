@@ -2,6 +2,7 @@ package example;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
@@ -29,13 +30,24 @@ public class GameState extends BasicGameState {
 			private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
 			private ArrayList <healthGlobe> healthGlobeList = new ArrayList <healthGlobe>();
 			private ArrayList <Circle> projectileRenderList = new ArrayList <Circle>();
-			private ArrayList <Circle> enemyRenderList = new ArrayList <Circle>();
 			private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
+			private ArrayList <Vector2f> spawnPos = new ArrayList <Vector2f>();
+			
+			//Enemy wave system
+			protected Random randPos = new Random();
+			protected int spawnPosVari;
+			protected int wave;
+			protected float waveStartTimer;
+			protected float waveTimeDif;
+			protected boolean waveStart;
+			protected int waveDelay = 2000;
+			protected int enemyMeleeAmount = 2;
+			protected int randEnemyPos;
+			
 
 			protected static Vector2f mousePos;
 			
 			//Sounds
-			
 			public static Sound mainTheme = null;
 			
 			//Misc.
@@ -46,6 +58,19 @@ public class GameState extends BasicGameState {
 		mainTheme = new Sound("data/mainTheme.ogg");
 		inventory.init(gc, sbg);
 		player.init(gc, sbg);
+		spawnPos.add(new Vector2f(0, 0));
+		spawnPos.add(new Vector2f(0, 0));
+		spawnPos.add(new Vector2f(0, 0));
+		spawnPos.add(new Vector2f(0, 0));
+		spawnPos.add(new Vector2f(0, 0));
+		spawnPos.add(new Vector2f(0, 0));
+		spawnPos.add(new Vector2f(0, 0));
+		spawnPos.add(new Vector2f(0, 0));
+		
+		wave = 0;
+		waveStartTimer = 0;
+		waveTimeDif = 0;
+		waveStart = true;
 		
 	}
 	
@@ -110,27 +135,51 @@ public class GameState extends BasicGameState {
 		
 		
 		//ENEMY STUFF =================================================================================================================================================	
-		//ENEMY!!!!!! - by using "E key" as input
-		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
-			enemyList.add(new Enemy(new Vector2f(mousePos.getX(),  mousePos.getY())));
-			enemyList.get(enemyList.size()-1).init(gc, sbg);
-			enemyList.get(enemyList.size()-1).SetEnemyLevel();
-			for(int i = enemyList.size()-1; i < enemyList.size(); i++) {					
-				Circle tempCircle = new Circle(mousePos.getX(), Window.HEIGHT - mousePos.getY(), enemyList.get(i).hitboxX);
-				enemyRenderList.add(tempCircle);
+		//Update enemy spawn pos
+		spawnPosVari = randPos.nextInt(2);
+		spawnPos.set(0, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari),player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
+		spawnPos.set(1, new Vector2f(player.vector.getX(), player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
+		spawnPos.set(2, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari), player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
+		spawnPos.set(3, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari), player.vector.getY()));
+		spawnPos.set(4, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
+		spawnPos.set(5, new Vector2f(player.vector.getX(), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
+		spawnPos.set(6, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
+		spawnPos.set(7, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY()));
+		
+		//Enemy wave stuff
+		if(waveStartTimer == 0 && enemyList.size() == 0) {
+			wave++;
+			waveStart = false;
+			waveStartTimer = System.currentTimeMillis();
+			
+		}
+		else {
+			waveTimeDif = (System.currentTimeMillis() - waveStartTimer) / 100000;
+			if(waveTimeDif > waveDelay) {
+				waveStart = true;
+				waveStartTimer = 0;
+				waveTimeDif = 0;
 			}
 		}
+		if(!waveStart && enemyList.size() == 0) { //Spawning of a wave
+			for(int i = 0; i < enemyMeleeAmount; i++) {
+				randEnemyPos = randPos.nextInt(7);
+				enemyList.add(new Enemy(spawnPos.get(randEnemyPos)));
+				enemyList.get(enemyList.size()-1).init(gc, sbg);
+				enemyList.get(enemyList.size()-1).SetEnemyLevel();
+			}
+			enemyMeleeAmount += 2;
+		}
+		
+		
+		
+		
 		//UPDATING ENEMIES
 		if(enemyList.size() > 0){
 		
 			for(int i = enemyList.size()-1; i >= 0; i--) {
 				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList);
 				
-			}
-				
-			//UPDATES ENEMY SPRITES
-			for(int i = 0; i < enemyList.size(); i++) {
-				enemyRenderList.set(i, new Circle(enemyList.get(i).vector.getX(), enemyList.get(i).vector.getY(), enemyList.get(i).hitboxX));
 			}
 		}
 		

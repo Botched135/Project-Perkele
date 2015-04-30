@@ -18,7 +18,7 @@ public class Armor extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 3;
-		
+		Name = "Slighly used Loincloth";
 		Armor = 50;
 		hpBonus = 0;
 

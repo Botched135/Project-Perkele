@@ -19,7 +19,7 @@ public class Weapon extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 4;
-		
+		Name = "Smelly Stick";
 		wepMinDMG = 75;
 		wepMaxDMG = 125;
 		attackSpeed = 5;
@@ -72,6 +72,10 @@ public String setName(){
 	}
 	else if(this.attackSpeed >= 2 ){
 		Name+="Speedy ";
+	}
+	if(this.wepMinDMG > (this.lootLevel*20+15) && this.wepMaxDMG >(this.lootLevel*20+50)){
+		Name="Andúril, Flame of the West";
+		return Name;
 	}
 	if(this.wepMinDMG < (this.lootLevel*20+10)){
 		Name+="Dagger ";

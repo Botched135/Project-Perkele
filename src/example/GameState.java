@@ -135,34 +135,6 @@ public class GameState extends BasicGameState {
 		
 		
 		//ENEMY STUFF =================================================================================================================================================	
-		//ENEMY!!!!!! - by using "E key" as input
-		if(waveStartTimer == 0 && enemyList.size() == 0) {
-			wave++;
-			waveStart = false;
-			waveStartTimer = System.currentTimeMillis();
-			
-		}
-		else {
-			waveTimeDif = (System.currentTimeMillis() - waveStartTimer) / 1000000;
-			if(waveTimeDif > waveDelay) {
-				waveStart = true;
-				waveStartTimer = 0;
-				waveTimeDif = 0;
-			}
-		}
-		if(!waveStart && enemyList.size() == 0) {
-			while(!waveStart && enemyList.size() == 0) {
-				for(int i = 0; i < enemyMeleeAmount; i++) {
-					System.out.println("Hello");
-					randEnemyPos = randPos.nextInt(7);
-					enemyList.add(new Enemy(spawnPos.get(randEnemyPos)));
-					enemyList.get(enemyList.size()-1).init(gc, sbg);
-					enemyList.get(enemyList.size()-1).SetEnemyLevel();
-				}
-				enemyMeleeAmount += 2;
-			}
-		}
-		
 		//Update enemy spawn pos
 		spawnPosVari = randPos.nextInt(2);
 		spawnPos.set(0, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari),player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
@@ -173,6 +145,33 @@ public class GameState extends BasicGameState {
 		spawnPos.set(5, new Vector2f(player.vector.getX(), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
 		spawnPos.set(6, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
 		spawnPos.set(7, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY()));
+		
+		//Enemy wave stuff
+		if(waveStartTimer == 0 && enemyList.size() == 0) {
+			wave++;
+			waveStart = false;
+			waveStartTimer = System.currentTimeMillis();
+			
+		}
+		else {
+			waveTimeDif = (System.currentTimeMillis() - waveStartTimer) / 100000;
+			if(waveTimeDif > waveDelay) {
+				waveStart = true;
+				waveStartTimer = 0;
+				waveTimeDif = 0;
+			}
+		}
+		if(!waveStart && enemyList.size() == 0) { //Spawning of a wave
+			for(int i = 0; i < enemyMeleeAmount; i++) {
+				randEnemyPos = randPos.nextInt(7);
+				enemyList.add(new Enemy(spawnPos.get(randEnemyPos)));
+				enemyList.get(enemyList.size()-1).init(gc, sbg);
+				enemyList.get(enemyList.size()-1).SetEnemyLevel();
+			}
+			enemyMeleeAmount += 2;
+		}
+		
+		
 		
 		
 		//UPDATING ENEMIES

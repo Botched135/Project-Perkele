@@ -236,7 +236,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			_enemy.AttackDamage();
 			
 			
-			this.hitPoints -= (_enemy.enemyDamage / 100) * this.Armor; //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
+			this.hitPoints -= _enemy.enemyDamage - ((_enemy.enemyDamage / 100) * this.Armor); //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){
 				this.hitPoints=0;
 			}

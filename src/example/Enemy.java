@@ -111,7 +111,7 @@ public class Enemy extends GameObject {
 			
 		if(this.hitpoints <= 0){
 
-			this.hitpoints=0;
+			this.hitpoints = 0;
 			this.dropLoot(gc, sbg, _lootList, _healthGlobeList);
 			this.destroy(index, _enemyList);
 		}
@@ -131,21 +131,16 @@ public class Enemy extends GameObject {
 		if(vector.distance(_player.vector) < seekDistance){
 		
 		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
-		seekState(_player.vector);
+		moveTo(_player.vector);
 		_player.vector.set(temp.getX(), temp.getY()); 
 		}
 	}
 	
-	//fleeState makes the enemy seek out the player
-	void seekState(Vector2f _target){
-				
-		moveTo(_target);
-		
-	}
+
 	//Method to keep enemies separated from each other
-	void separate(ArrayList<Enemy> _enemyList){
+	void separate(ArrayList<Enemy > _enemyList){
 		
-		float desiredSeparation = hitboxX*2;
+		float desiredSeparation = hitboxX * 2;
 		Vector2f sum = new Vector2f(0.0f, 0.0f);
 		int count = 0;
 		
@@ -186,8 +181,8 @@ public class Enemy extends GameObject {
 		float AS = AttackSpeed;
 		if(this.isAttackReady == false){ 
 			this.EndTime = System.currentTimeMillis();//StartTime should start from without
-			if(this.EndTime-this.StartTime >= 1000/AS){
-				this.isAttackReady=true;//set the isAttackReady to true
+			if(this.EndTime - this.StartTime >= 1000/AS){
+				this.isAttackReady = true;//set the isAttackReady to true
 				this.StartTime = this.EndTime;
 				this.EndTime = 0;
 			}
@@ -200,7 +195,7 @@ public class Enemy extends GameObject {
 		if(this.isAttackReady){	
 			this.isMeleeAttacking = true;
 			
-			isAttackReady=false;
+			isAttackReady = false;
 		}
 		else
 			this.isMeleeAttacking = false;
@@ -209,7 +204,7 @@ public class Enemy extends GameObject {
 	public void isRangedAttacking(){
 		if(this.isAttackReady){	
 			this.isRangedAttacking = true;
-			isAttackReady=false;
+			isAttackReady = false;
 		}
 		else
 			this.isRangedAttacking = false;
@@ -229,7 +224,7 @@ public class Enemy extends GameObject {
 			
 			this.hitpoints -= _player.PlayerDamage;//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitpoints <0){
-				this.hitpoints=0;
+				this.hitpoints = 0;
 			}
 		}
 	}	
@@ -256,7 +251,7 @@ public class Enemy extends GameObject {
 	}
 	
 	public void AttackDamage(){
-		enemyDamage = ((randDmg.nextFloat()*(this.MaxDamage-this.MinDamage)+(this.EnemyLevel*2)));
+		enemyDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 	
 	public void PickUpLoot(int index, ArrayList<Loot> _lootList){
@@ -270,9 +265,9 @@ public class Enemy extends GameObject {
 			this.EnemyLevel = 1;
 		else if(this.EnemyLevel > 5)
 			this.EnemyLevel = 5;
-		this.hitpoints = 100*this.EnemyLevel;
+		this.hitpoints = 100 * this.EnemyLevel;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
-		this.Armor = 10*this.EnemyLevel;
+		this.Armor = 10 * this.EnemyLevel;
 	}
 	//Method to drop loot from the enemy
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{

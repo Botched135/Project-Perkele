@@ -59,7 +59,7 @@ public class GameState extends BasicGameState {
 			protected float waveTextOpacity = 255;
 			private TrueTypeFont font;
 			private boolean antiAlias = true;
-
+			
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		mainTheme = new Sound("data/mainTheme.ogg");
@@ -106,6 +106,7 @@ public class GameState extends BasicGameState {
 		playerMeleeRangeCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.meleeRange);
 		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		if(player.hitPoints<=0){
+			EndScreen.wave=currentWave;
 			sbg.enterState(2);
 		}
 			

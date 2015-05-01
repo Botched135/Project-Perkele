@@ -26,6 +26,8 @@ public class Enemy extends GameObject {
 	protected Random randLvl = new Random();
 	protected String[]EnemyNames = {"Dwarf","Dwarf Soldier","Dwarf Veteran","Dwarf Captain", "Dwarf Warchief"};
 	protected String EnemyName;
+	protected String WeaponName;
+	protected String ArmorName;
 	protected boolean beingHit = false;
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
@@ -103,7 +105,8 @@ public class Enemy extends GameObject {
 		
 		g.setColor(new Color(255,255,255));
 		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
-		g.drawString("Nr." + Integer.toString(index), vector.getX()-32, vector.getY()+32);
+		g.drawString("Wep: " + this.WeaponName, vector.getX()-50, vector.getY()+32);
+		g.drawString("Armor: "+this.ArmorName, vector.getX()-55, vector.getY()+47);
 		g.drawString("Lvl " + EnemyLevel, vector.getX()-20, vector.getY()-80);
 		
 		

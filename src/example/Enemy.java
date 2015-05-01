@@ -38,6 +38,11 @@ public class Enemy extends GameObject {
 	protected float meleeRange = 90;
 	protected float seekDistance = 500;
 	
+	protected long attackSTime;
+	protected long attackETime;
+	protected int moveWaitTime = 1000;
+	protected boolean detectMove = true;
+	
 	//Images =================================================
 	
 	private Image enemyTestSprite = null; 
@@ -127,6 +132,7 @@ public class Enemy extends GameObject {
 		if(vector.distance(_player.vector) <  meleeRange + _player.hitboxX){
 			isMeleeAttacking();
 		}
+		stopMove();
 		
 		if(vector.distance(_player.vector) < seekDistance){
 		
@@ -176,6 +182,21 @@ public class Enemy extends GameObject {
 		vector = vector.add(dir);
 
 	}
+	public void stopMove() {
+		if(attackSTime == 0 && detectMove == false){
+			this.speedMultiplier = 0.0f;
+			attackSTime = System.currentTimeMillis();
+		}
+		else {
+			attackETime = System.currentTimeMillis() - attackSTime;
+			if(attackETime > moveWaitTime){
+				this.speedMultiplier = 1.0f;
+				this.detectMove = true;
+				attackSTime = 0;
+				attackETime = 0;
+			}
+		}
+	}
 	//Method to set the enemy's attack to be ready according to its cooldowns
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		float AS = AttackSpeed;
@@ -194,6 +215,7 @@ public class Enemy extends GameObject {
 	public void isMeleeAttacking(){
 		if(this.isAttackReady){	
 			this.isMeleeAttacking = true;
+			this.detectMove = false;
 			
 			isAttackReady = false;
 		}
@@ -223,7 +245,7 @@ public class Enemy extends GameObject {
 			beingHit = true;
 			
 			this.hitpoints -= _player.PlayerDamage;//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
-			if(this.hitpoints <0){
+			if(this.hitpoints < 0){
 				this.hitpoints = 0;
 			}
 		}

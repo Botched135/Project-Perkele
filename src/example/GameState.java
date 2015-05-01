@@ -187,13 +187,10 @@ public class GameState extends BasicGameState {
 			enemyMeleeAmount += 2;
 		}
 		
-		
 		//UPDATING ENEMIES
 		if(enemyList.size() > 0){
-		
 			for(int i = enemyList.size()-1; i >= 0; i--) {
 				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList);
-				
 			}
 		}
 		

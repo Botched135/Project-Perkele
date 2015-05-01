@@ -15,16 +15,17 @@ import org.newdawn.slick.Sound;
 public class Enemy extends GameObject {
 	
 	//VARIABLE DECLARATION ===========================================================================================================================================================
+	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;
 	protected float hitpoints = 100;
 	protected float speedMultiplier = 1.0f;
+	protected float projectileSpeed;
 	protected float AttackSpeed = 0.5f;
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
 	protected boolean isAttackReady = false;
-	protected static Color enemyTestCol = new Color(255,0,0);
 	protected Random randLvl = new Random();
-	protected String[]EnemyNames = {"Dwarf","Dwarf Soldier","Dwarf Veteran","Dwarf Captain", "Dwarf Warchief"};
+	protected String[]EnemyNames = new String[5];
 	protected String EnemyName;
 	protected String WeaponName;
 	protected String ArmorName;
@@ -36,7 +37,12 @@ public class Enemy extends GameObject {
 	protected float MinDamage = 2;
 	protected float MaxDamage = 10;
 	protected float enemyDamage;
+	protected float rangedDamage;
 	protected Random randDmg = new Random();
+	
+	protected float range;
+	protected float minSeekDistance;
+	protected float maxSeekDistance;
 	protected float meleeRange = 90;
 	protected float seekDistance = 500;
 	
@@ -47,11 +53,16 @@ public class Enemy extends GameObject {
 	
 	//Images =================================================
 	
-	private Image enemyTestSprite = null; 
+	protected ArrayList<Image> sprite = new ArrayList<Image>(); 
 	
 	//Sounds =================================================
 	
-	private Sound meleeHitSound = null;
+	protected Sound meleeAttackSound0 = null;
+	protected Sound rangedAttackSound0 = null;
+	protected Sound meleeHitSound = null;
+	protected Sound rangedHitSound = null;
+	
+	
 		
 	
 	//CONTRUCTERS ===========================================================================================================================================================
@@ -59,43 +70,129 @@ public class Enemy extends GameObject {
 	Enemy(){
 		
 		super(); 
-		ID = 2;
+		//ID = 2;
 	}
 	
-	Enemy(Vector2f _vector) {
+	Enemy(Vector2f _vector, int _enemyType) {
 		 
 		super(_vector);
-	 
+		
+		enemyType = _enemyType;
 		hitboxX = 32.0f;
-		hitboxY = 32.0f;
-		ID = 2;
+		//hitboxY = 32.0f;
+		//ID = 2;
 		
 	}
 	
 	//INIT FUNCTION/METHOD ===============================================================================================================================================
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-		enemyTestSprite = new Image("data/enemyTestSprite.png");
+		//Setting variables if a melee enemy
+		if(enemyType == 0){
+			projectileSpeed = 0;
+			range = 90;
+			minSeekDistance = 0;
+			maxSeekDistance = 500;
+			
+			EnemyNames[0] = "Dwarf Grunt";
+			EnemyNames[1] = "Dwarf Soldier";
+			EnemyNames[2] = "Dwarf Veteran";
+			EnemyNames[3] = "Dwarf Captain";
+			EnemyNames[4] = "Dwarf Warchief";
+		}
+		
+		//Setting variables if a ranged enemy
+		if(enemyType == 1){
+			rangedDamage = 10;
+			projectileSpeed = 12;
+			range = 500;
+			minSeekDistance = 200;
+			maxSeekDistance = 500;
+			
+			EnemyNames[0] = "Elven Stakethrower";
+			EnemyNames[1] = "Elven Archer";
+			EnemyNames[2] = "Elven Marksmen";
+			EnemyNames[3] = "Elven Sharpshooter";
+			EnemyNames[4] = "Elven Trueshot";
+			
+		}
+		sprite.add(null);
+		sprite.add(null);
+		sprite.set(0, new Image("data/meleeEnemySprite.png"));
+		sprite.set(1, new Image("data/rangedEnemySprite.png"));
+		
+		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
+		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
 		meleeHitSound = new Sound("data/meleeHitSound1.ogg");
+		rangedHitSound = new Sound("data/meleeHitSound1.ogg");
 	
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException {
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList ,ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
+	
+		if(this.hitpoints <= 0){
+
+			this.hitpoints=0;
+			this.dropLoot(gc, sbg, _lootList, _healthGlobeList);
+			_enemyIndicatorList.get(index).destroy(index, _enemyIndicatorList);
+			this.destroy(index, _enemyList);
+		}
 		
 		beingHit = false;
-		stateManager(index, gc, sbg, _player, _enemyList, _projectileList, _lootList, _healthGlobeList);
 		
+		//Attacking if enemy is ranged
+		if(enemyType == 1){
+			if(vector.distance(_player.vector) <  range + _player.hitboxX){
+			
+				isRangedAttacking(gc, sbg, _player, _projectileList, _projectileRenderList);
+			}
+		}
+		
+		//Attacking if enemy is melee
+		if(enemyType == 0){
+			if(vector.distance(_player.vector) <  range + _player.hitboxX){
+				isMeleeAttacking();
+			}
+		}
+		
+		beingMeleeAttacked(_player);
+		beingRangedAttacked(_projectileList);
+		
+		separate(_enemyList);
+		
+		if(vector.distance(_player.vector) <  range + _player.hitboxX){
+		setAttackReady();
+		}
+		
+		//Move towards player if within the max seek distance
+		if(vector.distance(_player.vector) > minSeekDistance && vector.distance(_player.vector) < maxSeekDistance){
+		
+		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
+		moveTo(_player.vector);
+		_player.vector.set(temp.getX(), temp.getY()); 
+		}
+		
+		if(enemyType == 1){
+			//Move away from player if below the min seek distance
+			if(vector.distance(_player.vector) < minSeekDistance){
+			
+				Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
+				moveAwayFrom(_player.vector);
+				_player.vector.set(temp.getX(), temp.getY()); 
+			}
+		}
 	}
+	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
-	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g, Player _player) throws SlickException {
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		
 		if(beingHit == true){
-			enemyTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+			sprite.get(enemyType).drawFlash(vector.getX()-32, vector.getY()-32);
 		}
 		else{
-			enemyTestSprite.draw(vector.getX()-32, vector.getY()-32);
+			sprite.get(enemyType).draw(vector.getX()-32, vector.getY()-32);
 		}
 	
 		g.setColor(new Color(255,0,0));
@@ -109,43 +206,10 @@ public class Enemy extends GameObject {
 		g.drawString("Armor: "+this.ArmorName, vector.getX()-55, vector.getY()+47);
 		g.drawString("Lvl " + EnemyLevel, vector.getX()-20, vector.getY()-80);
 		
-		
-		
 	}
 	
 	//METHODS ===========================================================================================================================================================
-	//stateManager chooses the state of the Enemy based on certain criteria
-	void stateManager(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
-			
-		if(this.hitpoints <= 0){
-
-			this.hitpoints = 0;
-			this.dropLoot(gc, sbg, _lootList, _healthGlobeList);
-			this.destroy(index, _enemyList);
-		}
-		
-		beingMeleeAttacked(_player);
-		beingRangedAttacked(_projectileList);
-		
-		
-		separate(_enemyList);
-		if(vector.distance(_player.vector) <  meleeRange + _player.hitboxX){
-		setAttackReady();
-		}
-		if(vector.distance(_player.vector) <  meleeRange + _player.hitboxX){
-			isMeleeAttacking();
-		}
-		stopMove();
-		
-		if(vector.distance(_player.vector) < seekDistance){
-		
-		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
-		moveTo(_player.vector);
-		_player.vector.set(temp.getX(), temp.getY()); 
-		}
-	}
 	
-
 	//Method to keep enemies separated from each other
 	void separate(ArrayList<Enemy > _enemyList){
 		
@@ -171,7 +235,6 @@ public class Enemy extends GameObject {
 				sum.scale(speedMultiplier*1.5f);				
 				vector.add(sum);
 			}
-			
 		}
 	} 
 	//Method to move the enemy closer to a target - goes in a straight line
@@ -185,6 +248,20 @@ public class Enemy extends GameObject {
 		vector = vector.add(dir);
 
 	}
+	
+	//Method to move the enemy closer to a target - goes in a straight line
+		public void moveAwayFrom(Vector2f _target){
+			
+			
+			Vector2f dir = new Vector2f(0.0f, 0.0f);
+			
+			dir = _target.sub(vector);
+			dir.normalise();
+			dir = dir.scale(speedMultiplier);	
+			vector = vector.sub(dir);
+
+		}
+		
 	public void stopMove() {
 		if(attackSTime == 0 && detectMove == false){
 			this.speedMultiplier = 0.0f;
@@ -200,6 +277,7 @@ public class Enemy extends GameObject {
 			}
 		}
 	}
+	
 	//Method to set the enemy's attack to be ready according to its cooldowns
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		float AS = AttackSpeed;
@@ -215,41 +293,24 @@ public class Enemy extends GameObject {
 		return isAttackReady;
 	}
 	
-	public void isMeleeAttacking(){
-		if(this.isAttackReady){	
-			this.isMeleeAttacking = true;
-			this.detectMove = false;
-			
-			isAttackReady = false;
-		}
-		else
-			this.isMeleeAttacking = false;
-	}
-	
-	public void isRangedAttacking(){
-		if(this.isAttackReady){	
-			this.isRangedAttacking = true;
-			isAttackReady = false;
-		}
-		else
-			this.isRangedAttacking = false;
-	}
-	
 	//Method to check if the enemy is being hit by a melee attack
 	void beingMeleeAttacked (Player _player){
 		
 		if(_player.isMeleeAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			_player.AttackDamage();
 			
-			//Play players melee attack sound
+			//Play enemy's being melee hit sound
 			meleeHitSound.play();
 			
 			//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 			beingHit = true;
 			
-			this.hitpoints -= _player.PlayerDamage;//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
-			if(this.hitpoints < 0){
+			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
+			if(this.hitpoints - _player.PlayerDamage < 0){
 				this.hitpoints = 0;
+			}
+			else{
+				this.hitpoints -= _player.PlayerDamage;
 			}
 		}
 	}	
@@ -259,9 +320,9 @@ public class Enemy extends GameObject {
 		
 		if(_projectileList.size() > 0){
 			for(int i = _projectileList.size()-1; i >= 0; i--){
-				if(_projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
+				if(_projectileList.get(i).owner instanceof Player && _projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
 			
-					//Play players melee attack sound
+					//Play enemy's being ranged hit sound
 					meleeHitSound.play();
 					
 					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
@@ -274,6 +335,43 @@ public class Enemy extends GameObject {
 			}
 		}
 	}
+	
+	public void isMeleeAttacking(){
+		if(this.isAttackReady){	
+			
+			this.detectMove = false;
+			//Play meleeEnemy's melee attack sound 
+			meleeAttackSound0.play();
+			
+			this.isMeleeAttacking = true;
+			
+			isAttackReady=false;
+		}
+		else
+			this.isMeleeAttacking = false;
+	}
+	
+	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList) throws SlickException{
+		
+		if(isAttackReady == true){	
+			
+			//Play rangedEnemy's ranged attack sound
+			rangedAttackSound0.play();
+			
+			
+			this.isRangedAttacking = true;
+			isAttackReady=false;
+			
+			_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
+			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+			
+			Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
+			_projectileRenderList.add(tempCircle);
+		}
+		else
+			this.isRangedAttacking = false;
+	}
+	
 	
 	public void AttackDamage(){
 		enemyDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
@@ -306,6 +404,7 @@ public class Enemy extends GameObject {
 	//Method to "kill" destroy the enemy (remove it from the list of enemies)
 	void destroy(int index, ArrayList<Enemy> _enemyList){
 			_enemyList.remove(index);
+		
 	
 	}
 	

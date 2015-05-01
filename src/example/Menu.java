@@ -53,7 +53,7 @@ public class Menu extends BasicGameState {
 		
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
 			
-			menuTheme.stop();
+			//menuTheme.stop();
 			
 		}
 		

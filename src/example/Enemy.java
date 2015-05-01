@@ -292,7 +292,7 @@ public class Enemy extends GameObject {
 			this.EnemyLevel = 5;
 		this.hitpoints = 100 * this.EnemyLevel;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
-		this.Armor = 10 * this.EnemyLevel;
+		this.Armor = 5 * this.EnemyLevel; //Started out as ten. We might want to change that again
 	}
 	//Method to drop loot from the enemy
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{

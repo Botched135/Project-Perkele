@@ -236,7 +236,7 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 	}
 	public void enemyPickUp(int index, GameContainer gc, ArrayList<Enemy> _enemyList, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
 		if(_lootList.size()>0){
-			for(int i = 0; i<_enemyList.size();i++){
+			for(int i = 0; i<_enemyList.size()-1;i++){
 				
 				if(_lootList.get(index) instanceof Weapon){
 					    EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;
@@ -246,7 +246,7 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 					EnemyAverage= _enemyList.get(i).Armor;
 					LootAverage = _lootList.get(index).Armor;
 				}
-				if(vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).meleeRange + _enemyList.get(i).hitboxX+this.hitboxX && EnemyAverage<LootAverage){
+				if(vector.distance(_enemyList.get(i).vector)<  _enemyList.get(i).hitboxX+this.hitboxX && EnemyAverage<LootAverage){
 					if(_lootList.get(index) instanceof Weapon){
 						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;

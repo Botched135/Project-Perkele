@@ -26,6 +26,8 @@ public class Enemy extends GameObject {
 	protected Random randLvl = new Random();
 	protected String[]EnemyNames = {"Dwarf","Dwarf Soldier","Dwarf Veteran","Dwarf Captain", "Dwarf Warchief"};
 	protected String EnemyName;
+	protected String WeaponName;
+	protected String ArmorName;
 	protected boolean beingHit = false;
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
@@ -98,7 +100,8 @@ public class Enemy extends GameObject {
 		
 		g.setColor(new Color(255,255,255));
 		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
-		g.drawString("Nr." + Integer.toString(index), vector.getX()-32, vector.getY()+32);
+		g.drawString("Wep: " + this.WeaponName, vector.getX()-50, vector.getY()+32);
+		g.drawString("Armor: "+this.ArmorName, vector.getX()-55, vector.getY()+47);
 		g.drawString("Lvl " + EnemyLevel, vector.getX()-20, vector.getY()-80);
 		
 		
@@ -272,7 +275,7 @@ public class Enemy extends GameObject {
 			this.EnemyLevel = 5;
 		this.hitpoints = 100*this.EnemyLevel;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
-		this.Armor = 10*this.EnemyLevel;
+		this.Armor = 10*(this.EnemyLevel-1);
 	}
 	//Method to drop loot from the enemy
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -40,36 +42,35 @@ public class Projectile extends GameObject {
 		damage = _owner.rangedDamage;
 	}
 	
-	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
-		
-		stateManager(index, _projectileList, _enemyList);
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+
 	}
+	
+	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
+	public void update(Player _player, int index, GameContainer gc, StateBasedGame sbg, int delta, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
+		
+		stateManager(_player, index, _projectileList, _enemyList);
+	}
+	
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		
+	}	
 	
 	
 	//METHODS ===========================================================================================================================================================
-	void stateManager(int index, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
+	void stateManager(Player _player, int index, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
 		
 		//Moves towards a snapshotted vector position of the enemies target
+		
+		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
 		moveTo();
+		_player.vector.set(temp.getX(), temp.getY()); 
 				
 		//Destroys projectile when its duration runs out
 		if(((System.currentTimeMillis()) - startTime)/1000 >= duration){
 					
 			destroy(index, _projectileList);
 		}
-		//Destroy projectile if owned by a player and it hits an enemy
-		//if(owner.ID == 1 && isColliding(_enemyList) == true){
-					
-		/*for(int i = _enemyList.size()-1; i >= 0; i--){
-			if(_enemyList.size() > 0 && this.vector.distance(_enemyList.get(i).vector) < this.hitboxX + _enemyList.get(i).hitboxX){
-				destroy(index, _projectileList);
-			}
-			
-			//destroy(index, _projectileList);
-		}
-		*/
-				
 	}
 	
 	public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Player _owner, Vector2f _target){
@@ -114,20 +115,6 @@ public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Enemy _own
 		vector = vector.add(dir);
 
 	}
-	/*
-	public boolean isColliding(ArrayList<Enemy> _enemyList){
-		
-		for(int i = 0; i < _enemyList.size()-1; i++){
-			if(_enemyList.size() > 0 && this.vector.distance(_enemyList.get(i).vector) < this.hitboxX + _enemyList.get(i).hitboxX){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		return false;
-	}
-	*/
 		
 	public void destroy(int index, ArrayList<Projectile> _projectileList){
 		

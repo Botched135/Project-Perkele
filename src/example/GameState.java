@@ -1,5 +1,6 @@
 package example;
 
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,6 +12,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.geom.*;
@@ -27,6 +29,7 @@ public class GameState extends BasicGameState {
 			private Inventory inventory = new Inventory(player);
 			private ArrayList <Loot> lootList = new ArrayList <Loot>();
 			private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
+			private ArrayList <EnemyIndicator> enemyIndicatorList = new ArrayList <EnemyIndicator>();
 			private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
 			private ArrayList <healthGlobe> healthGlobeList = new ArrayList <healthGlobe>();
 			private ArrayList <Circle> projectileRenderList = new ArrayList <Circle>();
@@ -37,10 +40,11 @@ public class GameState extends BasicGameState {
 			protected Random randPos = new Random();
 			protected int spawnPosVari;
 			protected int wave;
-			protected float waveStartTimer;
-			protected float waveTimeDif;
+			protected int currentWave;
+			protected double waveStartTimer;
+			protected double waveTimeDif;
 			protected boolean waveStart;
-			protected int waveDelay = 2000;
+			protected int waveDelay = 5000; //Amount of miliseconds before the next wave start
 			protected int enemyMeleeAmount = 2;
 			protected int randEnemyPos;
 			
@@ -52,6 +56,9 @@ public class GameState extends BasicGameState {
 			
 			//Misc.
 			DecimalFormat df = new DecimalFormat("#.##");
+			protected float waveTextOpacity = 255;
+			private TrueTypeFont font;
+			private boolean antiAlias = true;
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
@@ -68,9 +75,13 @@ public class GameState extends BasicGameState {
 		spawnPos.add(new Vector2f(0, 0));
 		
 		wave = 0;
+		currentWave = 0;
 		waveStartTimer = 0;
 		waveTimeDif = 0;
 		waveStart = true;
+		
+		Font awtFont = new Font("Times New Roman", Font.BOLD, 30);
+		font = new TrueTypeFont(awtFont, antiAlias);
 		
 	}
 	
@@ -94,13 +105,16 @@ public class GameState extends BasicGameState {
 		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
 		playerMeleeRangeCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.meleeRange);
 		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
+		if(player.hitPoints<=0){
+			sbg.enterState(2);
+		}
 			
 		
 		//LOOT STUFF ======================================================================================================================================
 		
 		if(lootList.size() > 0){
 			for(int i = lootList.size()-1; i >= 0; i--){
-				lootList.get(i).update(i, gc, sbg, lootList, inventoryList, player);
+				lootList.get(i).update(i, gc, sbg, lootList, inventoryList, enemyList, player);
 			}
 		}
 		
@@ -145,6 +159,24 @@ public class GameState extends BasicGameState {
 		spawnPos.set(6, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
 		spawnPos.set(7, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY()));
 		
+		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
+			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY()),0));
+			enemyList.get(enemyList.size()-1).init(gc, sbg);
+			enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
+			
+			enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
+			enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
+		}
+		
+		if(gc.getInput().isKeyPressed(Input.KEY_R)) {
+			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY()),1));
+			enemyList.get(enemyList.size()-1).init(gc, sbg);
+			enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
+			
+			enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
+			enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
+		}
+
 		//Enemy wave stuff
 		if(waveStartTimer == 0 && enemyList.size() == 0) {
 			wave++;
@@ -153,34 +185,33 @@ public class GameState extends BasicGameState {
 			
 		}
 		else {
-			waveTimeDif = (System.currentTimeMillis() - waveStartTimer) / 100000;
+			waveTimeDif = (System.currentTimeMillis() - waveStartTimer);
 			if(waveTimeDif > waveDelay) {
 				waveStart = true;
 				waveStartTimer = 0;
 				waveTimeDif = 0;
 			}
 		}
-		if(!waveStart && enemyList.size() == 0) { //Spawning of a wave
+		if(waveStart && enemyList.size() == 0) { //Spawning of a wave
 			for(int i = 0; i < enemyMeleeAmount; i++) {
 				randEnemyPos = randPos.nextInt(7);
 				spawnPosVari = randPos.nextInt(2);
 				enemyList.add(new Enemy(spawnPos.get(randEnemyPos),1)); //<-- last argument is the type of enemy to spawn
 				enemyList.get(enemyList.size()-1).init(gc, sbg);
-				enemyList.get(enemyList.size()-1).SetEnemyLevel();
+				enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
+				
+				enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
+				enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
 			}
 			enemyMeleeAmount += 2;
 		}
 		
-
-		
-		
 		//UPDATING ENEMIES
 		if(enemyList.size() > 0){
-		
 			for(int i = enemyList.size()-1; i >= 0; i--) {
 		
-				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, projectileRenderList, lootList, healthGlobeList);
-				
+				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, projectileRenderList, lootList, healthGlobeList, enemyIndicatorList);
+
 			}
 		}
 		
@@ -189,7 +220,7 @@ public class GameState extends BasicGameState {
 				if(projectileList.size() > 0){
 					for(int i = projectileList.size()-1; i >= 0; i--){
 					
-						projectileList.get(i).stateManager(i, projectileList, enemyList);
+						projectileList.get(i).stateManager(player, i, projectileList, enemyList);
 					}
 					//UPDATES PROJECTILE SPRITES
 					for(int i = projectileList.size()-1; i >= 0; i--) {
@@ -197,6 +228,17 @@ public class GameState extends BasicGameState {
 					}
 				}
 		
+				
+		
+		//ENEMY INDICATOR UPDATE
+				
+				if(enemyIndicatorList.size() > 0){
+					for(int i = enemyIndicatorList.size()-1; i >= 0; i--) {
+						
+						enemyIndicatorList.get(i).update(player, enemyList.get(i).vector, gc, sbg, delta);
+
+					}
+				}
 		//======================================================================================================================================================
 		//BACK TO MAIN MENU (and clears the game container) - key input is "ESCAPE"
 		
@@ -243,13 +285,29 @@ public class GameState extends BasicGameState {
 		
 		//TRANSLATE (move "camera") ACCORDING TO PLAYER MOVEMENT ============================================================================================
 		
+		//ENEMY INDICATOR SPRITES
+		
+		if(enemyIndicatorList.size() > 0){
+			for(int i = enemyIndicatorList.size()-1; i >= 0; i--) {
+				if(		enemyList.get(i).vector.getX() > player.vector.getX() + Window.WIDTH/2 ||
+						enemyList.get(i).vector.getX() < player.vector.getX() - Window.WIDTH/2 ||
+						enemyList.get(i).vector.getY() < player.vector.getY() - Window.HEIGHT/2 ||
+						enemyList.get(i).vector.getY() > player.vector.getY() + Window.HEIGHT/2
+						)
+					
+					enemyIndicatorList.get(i).render(gc, sbg, g);
+
+			}
+		}
+		
 		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
 		
 		//RENDER PROJECTILE SPRITES
 		if(projectileList.size() > 0){
 			g.setColor(Arrow.arrowTestCol);
 			for(int i = projectileList.size()-1; i >= 0; i--) {
-				g.draw(projectileRenderList.get(i));
+				projectileList.get(i).render(gc, sbg, g);
+				//g.draw(projectileRenderList.get(i));
 			}
 		}
 		g.setColor(new Color(255,255,255));
@@ -258,7 +316,7 @@ public class GameState extends BasicGameState {
 		
 		if(enemyList.size() > 0){
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				enemyList.get(i).render(i, gc, sbg, g, player);
+				enemyList.get(i).render(gc, sbg, g);
 			}
 		}
 		
@@ -372,7 +430,17 @@ public class GameState extends BasicGameState {
 				}
 			}
 		}
-	}
+		
+		if(currentWave < wave) {
+			waveTextOpacity = 2;
+			currentWave = wave;
+		}
+		if(waveTextOpacity > 0){
+			waveTextOpacity -= 0.01f;
+				g.setColor(new Color(255, 255, 255, waveTextOpacity));
+				font.drawString(Window.WIDTH/2  - 92, Window.HEIGHT/2 - 120, "- W A V E - " + wave);
+			}
+		}
 
 
 	public int getID() {

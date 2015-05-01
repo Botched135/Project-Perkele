@@ -27,17 +27,29 @@ public class Enemy extends GameObject {
 	protected Random randLvl = new Random();
 	protected String[]EnemyNames = new String[5];
 	protected String EnemyName;
+	protected String WeaponName;
+	protected String ArmorName;
 	protected boolean beingHit = false;
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
+	protected float Armor = 10;
+
 	protected float MinDamage = 2;
 	protected float MaxDamage = 10;
 	protected float enemyDamage;
 	protected float rangedDamage;
 	protected Random randDmg = new Random();
+	
 	protected float range;
 	protected float minSeekDistance;
 	protected float maxSeekDistance;
+	protected float meleeRange = 90;
+	protected float seekDistance = 500;
+	
+	protected long attackSTime;
+	protected long attackETime;
+	protected int moveWaitTime = 1000;
+	protected boolean detectMove = true;
 	
 	//Images =================================================
 	
@@ -118,12 +130,13 @@ public class Enemy extends GameObject {
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList ,ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException {
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList ,ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
 	
 		if(this.hitpoints <= 0){
 
 			this.hitpoints=0;
 			this.dropLoot(gc, sbg, _lootList, _healthGlobeList);
+			_enemyIndicatorList.get(index).destroy(index, _enemyIndicatorList);
 			this.destroy(index, _enemyList);
 		}
 		
@@ -132,8 +145,8 @@ public class Enemy extends GameObject {
 		//Attacking if enemy is ranged
 		if(enemyType == 1){
 			if(vector.distance(_player.vector) <  range + _player.hitboxX){
-				System.out.println("within attack range!");
-				isRangedAttacking(_player, _projectileList, _projectileRenderList);
+			
+				isRangedAttacking(gc, sbg, _player, _projectileList, _projectileRenderList);
 			}
 		}
 		
@@ -173,7 +186,7 @@ public class Enemy extends GameObject {
 	}
 	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
-	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g, Player _player) throws SlickException {
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		
 		if(beingHit == true){
 			sprite.get(enemyType).drawFlash(vector.getX()-32, vector.getY()-32);
@@ -189,56 +202,18 @@ public class Enemy extends GameObject {
 		
 		g.setColor(new Color(255,255,255));
 		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
-		g.drawString("Nr." + Integer.toString(index), vector.getX()-32, vector.getY()+32);
+		g.drawString("Wep: " + this.WeaponName, vector.getX()-50, vector.getY()+32);
+		g.drawString("Armor: "+this.ArmorName, vector.getX()-55, vector.getY()+47);
 		g.drawString("Lvl " + EnemyLevel, vector.getX()-20, vector.getY()-80);
-		
-		
 		
 	}
 	
 	//METHODS ===========================================================================================================================================================
 	
-	//stateManager chooses the state of the Enemy based on certain criteria
-	
-	/*void stateManager(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
-			
-		if(this.hitpoints <= 0){
-
-			this.hitpoints=0;
-			this.dropLoot(gc, sbg, _lootList, _healthGlobeList);
-			this.destroy(index, _enemyList);
-		}
-		
-		beingMeleeAttacked(_player);
-		beingRangedAttacked(_projectileList);
-		
-		separate(_enemyList);
-		
-		if(vector.distance(_player.vector) <  range + _player.hitboxX){
-		setAttackReady();
-		}
-		
-		if(vector.distance(_player.vector) > minSeekDistance && vector.distance(_player.vector) < maxSeekDistance){
-		
-		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
-		moveTo(_player.vector);
-		_player.vector.set(temp.getX(), temp.getY()); 
-		}
-		
-		if(vector.distance(_player.vector) > minSeekDistance && vector.distance(_player.vector) < minSeekDistance){
-			
-			Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
-			moveAwayFrom(_player.vector);
-			_player.vector.set(temp.getX(), temp.getY()); 
-		}
-		
-		
-	}*/
-	
 	//Method to keep enemies separated from each other
-	void separate(ArrayList<Enemy> _enemyList){
+	void separate(ArrayList<Enemy > _enemyList){
 		
-		float desiredSeparation = hitboxX*2;
+		float desiredSeparation = hitboxX * 2;
 		Vector2f sum = new Vector2f(0.0f, 0.0f);
 		int count = 0;
 		
@@ -284,36 +259,40 @@ public class Enemy extends GameObject {
 			dir.normalise();
 			dir = dir.scale(speedMultiplier);	
 			vector = vector.sub(dir);
-			
-			
-			/*float dist = vector.distance(_target);
-			 * 
-			Vector2f tempVec1 = new Vector2f(_target.getX(), _target.getY());
-			Vector2f tempVec2 = new Vector2f(vector.getX(), vector.getY());
-			Vector2f diff = tempVec2.sub(tempVec1);
-			diff.normalise();
-			diff.scale(1/dist);
-			diff.scale(speedMultiplier*1.5f);				
-			vector.add(diff);
-			*/
 
 		}
+		
+	public void stopMove() {
+		if(attackSTime == 0 && detectMove == false){
+			this.speedMultiplier = 0.0f;
+			attackSTime = System.currentTimeMillis();
+		}
+		else {
+			attackETime = System.currentTimeMillis() - attackSTime;
+			if(attackETime > moveWaitTime){
+				this.speedMultiplier = 1.0f;
+				this.detectMove = true;
+				attackSTime = 0;
+				attackETime = 0;
+			}
+		}
+	}
+	
 	//Method to set the enemy's attack to be ready according to its cooldowns
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		float AS = AttackSpeed;
 		if(this.isAttackReady == false){ 
 			this.EndTime = System.currentTimeMillis();//StartTime should start from without
-			if(this.EndTime-this.StartTime >= 1000/AS){
-				this.isAttackReady=true;//set the isAttackReady to true
+			if(this.EndTime - this.StartTime >= 1000/AS){
+				this.isAttackReady = true;//set the isAttackReady to true
 				this.StartTime = this.EndTime;
 				this.EndTime = 0;
-				System.out.println("attack is ready!");
 			}
 		}
 		//isAttackReady = this.isAttackReady;
 		return isAttackReady;
 	}
-		
+	
 	//Method to check if the enemy is being hit by a melee attack
 	void beingMeleeAttacked (Player _player){
 		
@@ -360,6 +339,7 @@ public class Enemy extends GameObject {
 	public void isMeleeAttacking(){
 		if(this.isAttackReady){	
 			
+			this.detectMove = false;
 			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
 			
@@ -371,10 +351,9 @@ public class Enemy extends GameObject {
 			this.isMeleeAttacking = false;
 	}
 	
-	public void isRangedAttacking(Player _player, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList){
-		System.out.println("check if i should attack");
+	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList) throws SlickException{
+		
 		if(isAttackReady == true){	
-			System.out.println("lolo");
 			
 			//Play rangedEnemy's ranged attack sound
 			rangedAttackSound0.play();
@@ -384,6 +363,7 @@ public class Enemy extends GameObject {
 			isAttackReady=false;
 			
 			_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
+			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
 			
 			Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
 			_projectileRenderList.add(tempCircle);
@@ -394,14 +374,23 @@ public class Enemy extends GameObject {
 	
 	
 	public void AttackDamage(){
-		enemyDamage = ((randDmg.nextFloat()*(this.MaxDamage-this.MinDamage)+(this.EnemyLevel*2)));
+		enemyDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
+	}
+	
+	public void PickUpLoot(int index, ArrayList<Loot> _lootList){
+		
 	}
 
 	//Method to set the enemy's level
-	void SetEnemyLevel(){
-		this.EnemyLevel=randLvl.nextInt(5)+1;
-		this.hitpoints = 100*this.EnemyLevel;
+	void SetEnemyLevel(int _wave){
+		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/2);
+		if(this.EnemyLevel < 1)
+			this.EnemyLevel = 1;
+		else if(this.EnemyLevel > 5)
+			this.EnemyLevel = 5;
+		this.hitpoints = 100 * this.EnemyLevel;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
+		this.Armor = 10 * this.EnemyLevel;
 	}
 	//Method to drop loot from the enemy
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
@@ -415,6 +404,7 @@ public class Enemy extends GameObject {
 	//Method to "kill" destroy the enemy (remove it from the list of enemies)
 	void destroy(int index, ArrayList<Enemy> _enemyList){
 			_enemyList.remove(index);
+		
 	
 	}
 	

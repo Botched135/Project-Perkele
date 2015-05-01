@@ -53,7 +53,7 @@ public class Menu extends BasicGameState {
 		
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
 			
-			menuTheme.stop();
+			//menuTheme.stop();
 			
 		}
 		
@@ -75,6 +75,7 @@ public class Menu extends BasicGameState {
 				GameState.mainTheme.loop();
 			}
 			sbg.enterState(1);
+			gc.reinit();
 		}
 		
 		//Clicking on "load game" button

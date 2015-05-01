@@ -96,7 +96,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
-	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList){
+	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
 		
 		//Keeping HP from exceeding max hp.
 		if(hitPoints > MaxHitPoints){
@@ -119,7 +119,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				this.hitPoints = 0;
 			}
 			else{
-				this.hitPoints -= 1;
+				this.hitPoints -= 10;
 			}
 		}
 		
@@ -132,7 +132,8 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			if(isAttackReady == true){
 				isRangedAttacking(GameState.mousePos);
 				_projectileList.add(new Arrow(this, GameState.mousePos, projectileSpeed));
-			
+				_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+				
 				Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
 				_projectileRenderList.add(tempCircle);
 			}
@@ -245,7 +246,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			_enemy.AttackDamage();
 			
 			
-			this.hitPoints -= (_enemy.enemyDamage / 100) * this.Armor; //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
+			this.hitPoints -= _enemy.enemyDamage - ((_enemy.enemyDamage / 100) * this.Armor); //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){
 				this.hitPoints=0;
 			}

@@ -30,6 +30,8 @@ public class Loot extends GameObject {
 	protected int Health=1;
 	protected String Name="";
 	protected float Average;
+	protected float EnemyAverage;
+	protected float LootAverage;
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
 	
@@ -49,7 +51,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	//UPDATE FUNCTION/METHOD ============================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Loot> _inventoryList, Player _player){
+	public void update(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<Loot> _inventoryList, ArrayList<Enemy> _enemyList, Player _player){
 		
 		beingHit = false;
 		if(this.Health <= 0){
@@ -60,28 +62,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		if(!gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
 			leftMousePressed = false;
 		}
+		this.playerPickUp(index, gc, sbg, _player, _lootList, _inventoryList);
 		
-		if(_lootList.size() >= 0) {
-			if(gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false){
-				leftMousePressed = true;
-						if(GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX) {
-							//either a method for picking up armor or a weapon
-							if(_lootList.get(index) instanceof Weapon){
-								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(1), _player);
-								//_inventoryList.remove(1);
-								//_inventoryList.add(1,_lootList.get(index));
-								
-							}
-							else if(_lootList.get(index) instanceof Armor){
-								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(0), _player);
-								//_inventoryList.remove(0);
-								//_inventoryList.add(0,_lootList.get(index));
-							}
-								_lootList.remove(index);
-						}
-				
-				}
-			}
+		this.enemyPickUp(index, gc, sbg, _enemyList, _lootList, _inventoryList);
+		
+
 		if(!gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			this.beingMeleeAttacked(_player);
 		}
@@ -132,31 +117,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 	}
 	
-//This loot spawning method is to be removed later in inplementation as it spawns using spacebar	
-	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList) {
-		
-		Random randLoot = new Random();
-		Random randDrop = new Random();
-		int lootDropDist = 10;
-		int dropping = randDrop.nextInt(100);
-		if(dropping > 20) {
-			
-			int lootType = randDrop.nextInt(2);
-			if(lootType == 1) {
-				_lootList.add(new Armor());	
-			}
-			else {
-				_lootList.add(new Weapon());
-			}
-			
-			float tempRandX = randLoot.nextInt(lootDropDist);
-			float tempRandY = randLoot.nextInt(lootDropDist);
-			float tempX = GameState.mousePos.getX() + (tempRandX)-(lootDropDist/2);
-			float tempY = GameState.mousePos.getY() + (tempRandY)-(lootDropDist/2);
-			
-			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));		
-		}
-	}
+
 //spawnLoot method used for spawning loot at the enemys position regardless of where the mouse is.
 	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Enemy enemy) throws SlickException {
 		
@@ -247,6 +208,59 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 			
 			if(this.Health <0){
 				this.Health=0;
+			}
+		}
+	}
+	public void playerPickUp(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
+		if(_lootList.size() >= 0) {
+			if(gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false){
+				leftMousePressed = true;
+						if(GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX) {
+							//either a method for picking up armor or a weapon
+							if(_lootList.get(index) instanceof Weapon){
+								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(1), _player);
+								//_inventoryList.remove(1);
+								//_inventoryList.add(1,_lootList.get(index));
+								
+							}
+							else if(_lootList.get(index) instanceof Armor){
+								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(0), _player);
+								//_inventoryList.remove(0);
+								//_inventoryList.add(0,_lootList.get(index));
+							}
+								_lootList.remove(index);
+						}
+				}
+			}
+	}
+	public void enemyPickUp(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
+		if(_lootList.size()>=0){
+			for(int i = 0; i<=_enemyList.size()-1;i++){ 
+				System.out.println("Le dmg: "+_enemyList.get(i).MinDamage);
+				if(_lootList.get(index) instanceof Weapon){
+					    EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;
+						LootAverage =((_lootList.get(index).wepMinDMG+_lootList.get(index).wepMaxDMG)/2)*_lootList.get(index).attackSpeed;
+						System.out.println("WEAPON Enemy:"+EnemyAverage+"   Loot: "+LootAverage);
+				}
+				else if(_lootList.get(index) instanceof Armor){
+					EnemyAverage= _enemyList.get(i).Armor;
+					LootAverage = _lootList.get(index).Armor;
+					System.out.println("ARMOR Enemy:"+EnemyAverage+"   Loot: "+LootAverage);
+				}
+				if(vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).hitboxX+_lootList.get(index).hitboxX+10 && EnemyAverage<LootAverage){
+					if(_lootList.get(index) instanceof Weapon){
+						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
+						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
+						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
+						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
+						_lootList.remove(index);
+					}
+					else if(_lootList.get(index) instanceof Armor){
+						_enemyList.get(i).Armor = _lootList.get(index).Armor;
+						_enemyList.get(i).ArmorName = _lootList.get(index).Name;
+						_lootList.remove(index);
+					}
+				}
 			}
 		}
 	}

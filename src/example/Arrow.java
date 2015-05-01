@@ -14,7 +14,9 @@ public class Arrow extends Projectile {
 	protected static Color arrowTestCol = new Color(255,255,0);
 	
 	//Images 
-	private Image arrowSprite = null; 
+	private Image arrowSprite = null;
+	double spriteAngle;
+	
 	
 	//CONSTRUCTERS
 	Arrow(Enemy _owner, Vector2f _target, float _speedMultiplier){
@@ -26,6 +28,8 @@ public class Arrow extends Projectile {
 		speedMultiplier = _speedMultiplier;
 		hitboxX = 5;
 		disableDmg = false;
+		
+		
 		
 		vector.set(_owner.vector.getX(), _owner.vector.getY());
 	}
@@ -45,13 +49,22 @@ public class Arrow extends Projectile {
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-		//arrowSprite = new Image("data/arrow.png");
+		arrowSprite = new Image("data/arrowSprite.png");
+		
+		Vector2f dir = new Vector2f(0.0f, 0.0f);
+		Vector2f tempTarget = new Vector2f(target.getX(), target.getY());
+		
+		dir = tempTarget.sub(vector);
+		dir.normalise();
+		
+		spriteAngle = dir.getTheta()+90;
 		
 	}
 	
 public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 	
-		//arrowSprite.draw(vector.getX()-5, vector.getY()-5);
+		arrowSprite.setRotation((float) spriteAngle);
+		arrowSprite.draw(vector.getX()-16, vector.getY()-16);
 		
 	}
 

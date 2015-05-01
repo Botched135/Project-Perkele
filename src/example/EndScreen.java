@@ -15,6 +15,8 @@ public class EndScreen extends BasicGameState {
 	//sounds
 	public static Sound EndScreenTheme = null;
 	
+	//
+	
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		
@@ -36,7 +38,7 @@ public class EndScreen extends BasicGameState {
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)throws SlickException{
-		g.drawString("You dead", Window.WIDTH/2, Window.HEIGHT/2);
+		g.drawString("You died at Wave ", Window.WIDTH/2, Window.HEIGHT/2);
 		g.drawString("Press Enter or Mouse to return to main menu", Window.WIDTH/2,Window.HEIGHT/2+64);
 	}
 	public int getID(){

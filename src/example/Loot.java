@@ -66,6 +66,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		this.enemyPickUp(index, gc, _enemyList, _lootList, _inventoryList);
 		
+
 		if(!gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			this.beingMeleeAttacked(_player);
 		}
@@ -116,31 +117,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 	}
 	
-//This loot spawning method is to be removed later in inplementation as it spawns using spacebar	
-	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList) {
-		
-		Random randLoot = new Random();
-		Random randDrop = new Random();
-		int lootDropDist = 10;
-		int dropping = randDrop.nextInt(100);
-		if(dropping > 20) {
-			
-			int lootType = randDrop.nextInt(2);
-			if(lootType == 1) {
-				_lootList.add(new Armor());	
-			}
-			else {
-				_lootList.add(new Weapon());
-			}
-			
-			float tempRandX = randLoot.nextInt(lootDropDist);
-			float tempRandY = randLoot.nextInt(lootDropDist);
-			float tempX = GameState.mousePos.getX() + (tempRandX)-(lootDropDist/2);
-			float tempY = GameState.mousePos.getY() + (tempRandY)-(lootDropDist/2);
-			
-			_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));		
-		}
-	}
+
 //spawnLoot method used for spawning loot at the enemys position regardless of where the mouse is.
 	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Enemy enemy) throws SlickException {
 		

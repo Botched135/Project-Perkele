@@ -388,12 +388,9 @@ public class GameState extends BasicGameState {
 		
 		if(currentWave < wave) {
 			waveTextOpacity = 2;
-			System.out.println("yo");
 			currentWave = wave;
 		}
-		
 		if(waveTextOpacity > 0){
-			System.out.println("o");
 			waveTextOpacity -= 0.01f;
 				g.setColor(new Color(255, 255, 255, waveTextOpacity));
 				font.drawString(Window.WIDTH/2  - 92, Window.HEIGHT/2 - 120, "- W A V E - " + wave);

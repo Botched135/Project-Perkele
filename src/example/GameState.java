@@ -158,7 +158,7 @@ public class GameState extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY())));
 			enemyList.get(enemyList.size()-1).init(gc, sbg);
-			enemyList.get(enemyList.size()-1).SetEnemyLevel();
+			enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
 		}
 
 		//Enemy wave stuff
@@ -178,11 +178,11 @@ public class GameState extends BasicGameState {
 		}
 		if(waveStart && enemyList.size() == 0) { //Spawning of a wave
 			for(int i = 0; i < enemyMeleeAmount; i++) {
-				randEnemyPos = randPos.nextInt(7);
-				spawnPosVari = randPos.nextInt(2);
+				randEnemyPos = randPos.nextInt(8);
+				spawnPosVari = randPos.nextInt(3);
 				enemyList.add(new Enemy(spawnPos.get(randEnemyPos)));
 				enemyList.get(enemyList.size()-1).init(gc, sbg);
-				enemyList.get(enemyList.size()-1).SetEnemyLevel();
+				enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
 			}
 			enemyMeleeAmount += 2;
 		}

@@ -264,8 +264,12 @@ public class Enemy extends GameObject {
 	}
 
 	//Method to set the enemy's level
-	void SetEnemyLevel(){
-		this.EnemyLevel=randLvl.nextInt(5)+1;
+	void SetEnemyLevel(int _wave){
+		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/2);
+		if(this.EnemyLevel < 1)
+			this.EnemyLevel = 1;
+		else if(this.EnemyLevel > 5)
+			this.EnemyLevel = 5;
 		this.hitpoints = 100*this.EnemyLevel;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
 		this.Armor = 10*this.EnemyLevel;

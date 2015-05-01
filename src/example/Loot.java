@@ -236,7 +236,7 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 	}
 	public void enemyPickUp(int index, GameContainer gc, ArrayList<Enemy> _enemyList, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
 		if(_lootList.size()>0){
-			for(int i = 0; i<_enemyList.size()-1;i++){
+			for(int i = 0; i<_enemyList.size()-1 ;i++){
 				
 				if(_lootList.get(index) instanceof Weapon){
 					    EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;

@@ -110,7 +110,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				this.hitPoints = 0;
 			}
 			else{
-				this.hitPoints -= 1;
+				this.hitPoints -= 10;
 			}
 		}
 		

@@ -104,6 +104,9 @@ public class GameState extends BasicGameState {
 		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
 		playerMeleeRangeCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.meleeRange);
 		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
+		if(player.hitPoints<=0){
+			sbg.enterState(2);
+		}
 			
 		
 		//LOOT STUFF ======================================================================================================================================

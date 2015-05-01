@@ -75,6 +75,7 @@ public class Menu extends BasicGameState {
 				GameState.mainTheme.loop();
 			}
 			sbg.enterState(1);
+			gc.reinit();
 		}
 		
 		//Clicking on "load game" button

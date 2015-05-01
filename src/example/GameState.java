@@ -9,6 +9,7 @@ import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
@@ -51,6 +52,10 @@ public class GameState extends BasicGameState {
 
 			protected static Vector2f mousePos;
 			
+			//Images =================================================
+			
+			private Image playerDamageWarning = null; 
+			
 			//Sounds
 			public static Sound mainTheme = null;
 			
@@ -59,10 +64,15 @@ public class GameState extends BasicGameState {
 			protected float waveTextOpacity = 255;
 			private TrueTypeFont font;
 			private boolean antiAlias = true;
+			float playerDamageWarningOpacity = 0;
+			float PDWcounter = 0.01f;
 			
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		mainTheme = new Sound("data/mainTheme.ogg");
+		
+		playerDamageWarning = new Image("data/playerDamageWarning.png");
+		
 		inventory.init(gc, sbg);
 		player.init(gc, sbg);
 		spawnPos.add(new Vector2f(0, 0));
@@ -336,6 +346,28 @@ public class GameState extends BasicGameState {
 			}
 		}
 		
+		
+		//RENDER PLAYER DAMAGE WARNING =================================================================================================================
+		
+		if(player.hitPoints < player.MaxHitPoints*0.2){
+			
+			g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
+			
+			if(playerDamageWarningOpacity > 1){
+				PDWcounter = PDWcounter*(-1);
+			}
+			
+			if(playerDamageWarningOpacity < 0){
+				PDWcounter = PDWcounter*(-1);
+			}
+			playerDamageWarningOpacity += PDWcounter;
+			
+			playerDamageWarning.draw(0,0, new Color(255,255,255, 1 - playerDamageWarningOpacity));
+			System.out.println(playerDamageWarningOpacity);
+			
+			g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
+		}
+		
 		//RENDER INVENTORY ===========================================================================================================================
 		
 		inventory.render(gc, sbg, g);
@@ -351,9 +383,11 @@ public class GameState extends BasicGameState {
 		g.draw(playerMeleeRangeCircle);
 		
 		//RENDER Loot info on "shift" hovering ========================================================================================================
+		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
+		
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			
-			g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
+			//g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
 			
 			if(lootList.size() > 0){
 				for(int i = lootList.size()-1; i >= 0; i--) {
@@ -429,7 +463,7 @@ public class GameState extends BasicGameState {
 						}
 					}
 				}
-			}
+			}	
 		}
 		
 		if(currentWave < wave) {
@@ -439,7 +473,7 @@ public class GameState extends BasicGameState {
 		if(waveTextOpacity > 0){
 			waveTextOpacity -= 0.01f;
 				g.setColor(new Color(255, 255, 255, waveTextOpacity));
-				font.drawString(Window.WIDTH/2  - 92, Window.HEIGHT/2 - 120, "- W A V E - " + wave);
+				font.drawString(player.vector.getX()  - 92, player.vector.getY() - 120, "- W A V E - " + wave);
 			}
 		}
 

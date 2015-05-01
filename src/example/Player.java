@@ -26,10 +26,12 @@ public class Player extends GameObject{
 	protected float MaxDamage = 125;
 	protected float PlayerDamage;
 	protected float meleeRange = 100;
+	protected float rangedDamage;
 	protected float speedMultiplier = 5.0f;
 	protected float AttackSpeed = 5.0f; //Attacks per second
 	protected float Armor = 0; //Damage reductions
-	protected float projectileSpeed = 15;
+	protected float projectileSpeed = 12;
+	protected boolean beingHit = false;
 	//=======================================================
 	
 	protected float isReady;
@@ -52,6 +54,8 @@ public class Player extends GameObject{
 	
 	private Sound meleeAttackSound0 = null;
 	private Sound rangedAttackSound0 = null;
+	protected Sound meleeHitSound = null;
+	protected Sound rangedHitSound = null;
 	
 	
 	//Misc. ==================================================	
@@ -79,11 +83,15 @@ public class Player extends GameObject{
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
+		rangedDamage = 100;
+	
 		playerTestSprite = new Image("data/player.png");
 		hpBar = new Image("data/hpBar.png");
 		
 		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
+		meleeHitSound = new Sound("data/meleeHitSound1.ogg");
+		rangedHitSound = new Sound("data/meleeHitSound1.ogg");
 		
 	}
 	
@@ -103,7 +111,8 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		for(int i = _enemyList.size()-1; i >= 0; i --) {
 		beingMeleeAttacked(_enemyList.get(i));
 		}
-		// beingRangedAttacked(_projectileList);
+		
+		beingRangedAttacked(_projectileList);
 
 		if(gc.getInput().isKeyPressed(Input.KEY_O)){
 			if(this.hitPoints <= 0){
@@ -232,7 +241,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	void beingMeleeAttacked (Enemy _enemy){
 		
-		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.meleeRange + _enemy.hitboxX){
+		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.range + _enemy.hitboxX){
 			_enemy.AttackDamage();
 			
 			
@@ -241,21 +250,36 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				this.hitPoints=0;
 			}
 		}
-	}	
+	}
 	
-	//Method to check if the enemy is being hit by a ranged attack
-	/*void beingRangedAttacked (ArrayList<Projectile> _projectileList){
-		
-		if(_projectileList.size() > 0){
-			for(int i = _projectileList.size()-1; i >= 0; i--){
-				if(_projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX+1){
+	//Method to check if the player is being hit by a ranged attack
+		void beingRangedAttacked (ArrayList<Projectile> _projectileList){
 			
-					this.hitPoints -= _projectileList.get(i).damage;
-					_projectileList.get(i).disableDmg = true;
+			if(_projectileList.size() > 0){
+				for(int i = _projectileList.size()-1; i >= 0; i--){
+					if(_projectileList.get(i).owner instanceof Enemy && _projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
+				
+						//Play players being ranged hit sound
+						meleeHitSound.play();
+						
+						//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
+						beingHit = true;
+						
+						if(this.hitPoints - _projectileList.get(i).damage < 0){
+							this.hitPoints = 0;
+							_projectileList.get(i).disableDmg = true;
+							_projectileList.get(i).destroy(i, _projectileList);
+						}
+						else{
+						this.hitPoints -= _projectileList.get(i).damage;
+						_projectileList.get(i).disableDmg = true;
+						_projectileList.get(i).destroy(i, _projectileList);
+						}
+					}
 				}
 			}
 		}
-	} */
+		
 	
 	//Setting the weapon loot to the player
 	public void setLootEquipment(Loot loot){

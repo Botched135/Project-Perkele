@@ -164,7 +164,7 @@ public class GameState extends BasicGameState {
 			for(int i = 0; i < enemyMeleeAmount; i++) {
 				randEnemyPos = randPos.nextInt(7);
 				spawnPosVari = randPos.nextInt(2);
-				enemyList.add(new Enemy(spawnPos.get(randEnemyPos)));
+				enemyList.add(new Enemy(spawnPos.get(randEnemyPos),1)); //<-- last argument is the type of enemy to spawn
 				enemyList.get(enemyList.size()-1).init(gc, sbg);
 				enemyList.get(enemyList.size()-1).SetEnemyLevel();
 			}
@@ -178,7 +178,8 @@ public class GameState extends BasicGameState {
 		if(enemyList.size() > 0){
 		
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList);
+		
+				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, projectileRenderList, lootList, healthGlobeList);
 				
 			}
 		}

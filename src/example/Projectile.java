@@ -20,12 +20,24 @@ public class Projectile extends GameObject {
 	protected long startTime = System.currentTimeMillis();
 
 	//CONSTRUCTERS ===========================================================================================================================================================
-	Projectile(GameObject _owner, Vector2f _target){
+	Projectile(Enemy _owner, Vector2f _target){
 	
 		vector.set(_owner.vector.getX(), _owner.vector.getY());
 		Vector2f snapshotTargetVector = new Vector2f(_target);
 		dir = new Vector2f(0.0f, 0.0f);
 		dir = snapshotTargetVector.sub(vector);
+		
+		damage = _owner.rangedDamage;
+	}
+	
+	Projectile(Player _owner, Vector2f _target){
+		
+		vector.set(_owner.vector.getX(), _owner.vector.getY());
+		Vector2f snapshotTargetVector = new Vector2f(_target);
+		dir = new Vector2f(0.0f, 0.0f);
+		dir = snapshotTargetVector.sub(vector);
+		
+		damage = _owner.rangedDamage;
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
@@ -60,7 +72,19 @@ public class Projectile extends GameObject {
 				
 	}
 	
-	public void spawnSubProjectile(ArrayList<Projectile> _projectileList, GameObject _owner, Vector2f _target){
+	public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Player _owner, Vector2f _target){
+		
+		int maxRandDist = 10;
+		Random randLoot = new Random();
+		float tempRandX = randLoot.nextInt(maxRandDist);
+		float tempRandY = randLoot.nextInt(maxRandDist);
+		Projectile subProjectile = new Projectile(_owner, _target);
+		subProjectile.vector.set(subProjectile.vector.getX() + tempRandX - maxRandDist/2, subProjectile.vector.getY() + tempRandY + maxRandDist/2);
+		_projectileList.add(subProjectile);
+		
+	}
+	
+public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Enemy _owner, Vector2f _target){
 		
 		int maxRandDist = 10;
 		Random randLoot = new Random();

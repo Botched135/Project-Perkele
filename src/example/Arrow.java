@@ -17,12 +17,25 @@ public class Arrow extends Projectile {
 	private Image arrowSprite = null; 
 	
 	//CONSTRUCTERS
-	Arrow(GameObject _owner, Vector2f _target, float _speedMultiplier){
+	Arrow(Enemy _owner, Vector2f _target, float _speedMultiplier){
 		
 		super(_owner, _target);
 		owner = _owner;
 		target = _target;
-		damage = 100;
+		damage = _owner.rangedDamage;
+		speedMultiplier = _speedMultiplier;
+		hitboxX = 5;
+		disableDmg = false;
+		
+		vector.set(_owner.vector.getX(), _owner.vector.getY());
+	}
+	
+	Arrow(Player _owner, Vector2f _target, float _speedMultiplier){
+		
+		super(_owner, _target);
+		owner = _owner;
+		target = _target;
+		damage = _owner.rangedDamage;
 		speedMultiplier = _speedMultiplier;
 		hitboxX = 5;
 		disableDmg = false;

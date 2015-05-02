@@ -30,6 +30,7 @@ public class Player extends GameObject{
 	protected float speedMultiplier = 5.0f;
 	protected float AttackSpeed = 5.0f; //Attacks per second
 	protected float Armor = 0; //Damage reductions
+	protected float lifeRegen = 0.2f;
 	protected float projectileSpeed = 12;
 	protected boolean beingHit = false;
 	protected int armorID;
@@ -47,6 +48,11 @@ public class Player extends GameObject{
 	protected static Color playerTestCol = new Color(0,0,255);
 	
 	protected Random randDmg = new Random();
+	
+	//Variables for lifeRegen timer
+	protected long regSTimer = 0;
+	protected long regETimer = 0;
+	protected int regWTime = 1000;
 	
 	//Images =================================================
 	
@@ -105,6 +111,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		if(hitPoints > MaxHitPoints){
 			hitPoints = MaxHitPoints;
 		}
+		else if(hitPoints < MaxHitPoints){
+			regeneration();
+		}
+
 		
 		isMeleeAttacking = false;
 		isRangedAttacking = false;
@@ -177,7 +187,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		g.translate((vector.getX())-(Window.WIDTH/2), (vector.getY())-(Window.HEIGHT/2));
 		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 378*(this.hitPoints/this.MaxHitPoints), 43);
 		//hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 1); // <----- Change the "1" to make the HP Bar resize according to remaining player health!
-		g.drawString(df.format(this.hitPoints), Inventory.xOrigin+628, Inventory.yOrigin+659);
+		g.drawString(df.format((int)this.hitPoints), Inventory.xOrigin+628, Inventory.yOrigin+659);
 		
 	}
 	
@@ -242,7 +252,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 			//Play players being melee hit sound
 			meleeHitSound.play();
-			
+
 			this.hitPoints -= _enemy.enemyDamage - ((_enemy.enemyDamage / 100) * this.Armor); //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){
 				this.hitPoints=0;
@@ -251,33 +261,45 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	//Method to check if the player is being hit by a ranged attack
-		void beingRangedAttacked (ArrayList<Projectile> _projectileList){
-			
-			if(_projectileList.size() > 0){
-				for(int i = _projectileList.size()-1; i >= 0; i--){
-					if(_projectileList.get(i).owner instanceof Enemy && _projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
+	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
+		if(_projectileList.size() > 0){
+			for(int i = _projectileList.size()-1; i >= 0; i--){
+				if(_projectileList.get(i).owner instanceof Enemy && _projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
 				
-						//Play players being ranged hit sound
-						meleeHitSound.play();
+					//Play players being ranged hit sound
+					meleeHitSound.play();
 						
-						//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
-						beingHit = true;
+					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
+					beingHit = true;
 						
-						if(this.hitPoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor) < 0){
-							this.hitPoints = 0;
-							_projectileList.get(i).disableDmg = true;
-							_projectileList.get(i).destroy(i, _projectileList);
-						}
-						else{
-						this.hitPoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+					if(this.hitPoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor) < 0){
+						this.hitPoints = 0;
 						_projectileList.get(i).disableDmg = true;
 						_projectileList.get(i).destroy(i, _projectileList);
-						}
+					}
+					else{
+					this.hitPoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+					_projectileList.get(i).disableDmg = true;
+					_projectileList.get(i).destroy(i, _projectileList);
 					}
 				}
 			}
 		}
+	}
 		
+	public void regeneration(){
+		if(regSTimer == 0){
+			regSTimer = System.currentTimeMillis();
+		}
+		else {
+			regETimer = System.currentTimeMillis() - regSTimer;
+			if(regETimer >= 1000){
+				this.hitPoints += lifeRegen;
+				regSTimer = 0;
+				regETimer = 0;
+			}
+		}
+	}
 	
 	//Setting the weapon loot to the player
 	public void setLootEquipment(Loot loot){
@@ -288,7 +310,8 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		this.meleeWepID = loot.ID;
 		}
 		else if(loot instanceof Armor){
-			this.Armor=loot.Armor;
+			this.Armor = loot.Armor;
+			this.lifeRegen = loot.lifeRegen;
 			if(hitPoints > baseHp + loot.hpBonus){
 				hitPoints = baseHp + loot.hpBonus;
 			}

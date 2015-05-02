@@ -290,7 +290,8 @@ public class GameState extends BasicGameState {
 		g.drawString("Number of enemies: " + enemyList.size(), 10, 50);
 		g.drawString("Number of loot: " + lootList.size(), 10, 65);
 		g.draw(playerToMouseTestLine);
-		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
+		g.drawString("Melee Attack is Ready: "+player.setAttackReady(), 10, 80);
+		g.drawString("Ranged Attack is Ready: "+player.setRangedAttackReady(),10,95);
 		//g.drawString("Player Damage: "+player.PlayerDamage, 10, 140);
 		for(int i = enemyList.size()-1; i >= 0; i-- ){
 			if(GameState.mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX){

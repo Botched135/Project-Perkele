@@ -163,27 +163,21 @@ public class Enemy extends GameObject {
 		
 		separate(_enemyList);
 		
-		if(vector.distance(_player.vector) <  range + _player.hitboxX){
-		setAttackReady();
-		}
-		
 		//Move towards player if within the max seek distance
 		if(vector.distance(_player.vector) > minSeekDistance && vector.distance(_player.vector) < maxSeekDistance){
-		
-		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
-		moveTo(_player.vector);
-		_player.vector.set(temp.getX(), temp.getY()); 
+			moveTo(_player.vector);
 		}
 		
 		if(enemyType == 1){
 			//Move away from player if below the min seek distance
 			if(vector.distance(_player.vector) < minSeekDistance){
-			
-				Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
 				moveAwayFrom(_player.vector);
-				_player.vector.set(temp.getX(), temp.getY()); 
 			}
 		}
+		
+		if(vector.distance(_player.vector) <  range + _player.hitboxX){
+			setAttackReady();
+			}
 	}
 	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
@@ -233,35 +227,55 @@ public class Enemy extends GameObject {
 			if(count > 0){
 				sum.scale(1/count);
 				sum.normalise();
-				sum.scale(speedMultiplier*1.5f);				
-				vector.add(sum);
+				sum.scale(speedMultiplier*1.5f);
+				
+				Vector2f tempTarget = new Vector2f(sum.getX(), sum.getY());
+				if(	tempTarget.getX() > 0 &&
+					tempTarget.getX() < GameState.mapWidth &&
+					tempTarget.getY() > 0){
+					
+					vector.add(sum);
+				}
 			}
 		}
 	} 
 	//Method to move the enemy closer to a target - goes in a straight line
 	public void moveTo(Vector2f _target){
 		
+		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
 		Vector2f dir = new Vector2f(0.0f, 0.0f);
 	
-		dir = _target.sub(vector);
+		dir = tempTarget.sub(vector);
 		dir.normalise();
 		dir = dir.scale(speedMultiplier);
-		vector = vector.add(dir);
-
-	}
+		
+		if(	vector.getX() + dir.getX() > 0 &&
+			vector.getX() + dir.getX() < GameState.mapWidth &&
+			vector.getY() + dir.getY() > 0 &&
+			vector.getY() + dir.getY() < GameState.mapHeight){
+				
+				vector = vector.add(dir);
+		}
+}
 	
 	//Method to move the enemy closer to a target - goes in a straight line
-		public void moveAwayFrom(Vector2f _target){
+	public void moveAwayFrom(Vector2f _target){
 			
-			
-			Vector2f dir = new Vector2f(0.0f, 0.0f);
-			
-			dir = _target.sub(vector);
-			dir.normalise();
-			dir = dir.scale(speedMultiplier);	
-			vector = vector.sub(dir);
-
+		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
+		Vector2f dir = new Vector2f(0.0f, 0.0f);
+	
+		dir = tempTarget.sub(vector);
+		dir.normalise();
+		dir = dir.scale(speedMultiplier);
+				
+		if(	vector.getX() + dir.getX() > 0 &&
+			vector.getX() + dir.getX() < GameState.mapWidth &&
+			vector.getY() + dir.getY() > 0 &&
+			vector.getY() + dir.getY() < GameState.mapHeight){
+					
+				vector = vector.sub(dir);
 		}
+	}
 	
 	//Method to set the enemy's attack to be ready according to its cooldowns
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 

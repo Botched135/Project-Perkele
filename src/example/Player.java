@@ -101,6 +101,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
 		
+		//System.out.println("playerX: " + vector.getX() + "  playerY: " + vector.getY());
 		//Keeping HP from exceeding max hp.
 		if(hitPoints > MaxHitPoints){
 			hitPoints = MaxHitPoints;
@@ -154,16 +155,16 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		//PLAYER MOVEMENT INPUT
 		
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
-			MoveSelf(new Vector2f(-1.0f, 0f));
+			MoveSelf(new Vector2f(-1.0f, 0f),0);
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_W)) {
-			MoveSelf(new Vector2f(0f, -1.0f));
+			MoveSelf(new Vector2f(0f, -1.0f),1);
 			}
 		if(gc.getInput().isKeyDown(Input.KEY_D)) {
-			MoveSelf(new Vector2f(1.0f, 0f));
+			MoveSelf(new Vector2f(1.0f, 0f),2);
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_S)) {
-			MoveSelf(new Vector2f(0.0f, 1.0f));
+			MoveSelf(new Vector2f(0.0f, 1.0f),3);
 		}
 	}
 	
@@ -183,15 +184,56 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	
 	//METHODS ===========================================================================================================================================================
-	public void MoveSelf(Vector2f _target){
+	public void MoveSelf(Vector2f _target, int direction){
+		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
+		tempTarget = tempTarget.add(vector);
+		if(direction == 0){
+			if(	tempTarget.getX() > 0){
+				tempTarget = _target.add(vector);
 		
-		_target = _target.add(vector);
+				Vector2f dir = tempTarget.sub(vector);
 		
-		Vector2f dir = _target.sub(vector);
+				dir.normalise();
+				dir = dir.scale(speedMultiplier);	
+				vector = vector.add(dir); 
+			}
+		}
 		
-		dir.normalise();
-		dir = dir.scale(speedMultiplier);	
-		vector = vector.add(dir); 
+		if(direction == 1){
+			if(	tempTarget.getY() > 0){
+				tempTarget = _target.add(vector);
+		
+				Vector2f dir = tempTarget.sub(vector);
+		
+				dir.normalise();
+				dir = dir.scale(speedMultiplier);	
+				vector = vector.add(dir); 
+			}
+		}
+		
+		if(direction == 2){
+			if(	tempTarget.getX() < GameState.mapWidth){
+				tempTarget = _target.add(vector);
+		
+				Vector2f dir = tempTarget.sub(vector);
+		
+				dir.normalise();
+				dir = dir.scale(speedMultiplier);	
+				vector = vector.add(dir); 
+			}
+		}
+		
+		if(direction == 3){
+			if(	tempTarget.getY() < GameState.mapHeight){
+				tempTarget = _target.add(vector);
+		
+				Vector2f dir = tempTarget.sub(vector);
+		
+				dir.normalise();
+				dir = dir.scale(speedMultiplier);	
+				vector = vector.add(dir); 
+			}
+		}
 	}
 	
 	public void isMeleeAttacking(Vector2f vector){

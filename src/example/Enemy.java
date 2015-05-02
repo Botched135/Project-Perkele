@@ -46,6 +46,7 @@ public class Enemy extends GameObject {
 	protected float meleeRange = 90;
 	protected float seekDistance = 500;
 	
+	//variables used for stopping movement when attacking
 	protected long attackSTime;
 	protected long attackETime;
 	protected int moveWaitTime = 1000;
@@ -130,7 +131,7 @@ public class Enemy extends GameObject {
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList ,ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
 	
 		if(this.hitpoints <= 0){
 
@@ -146,7 +147,7 @@ public class Enemy extends GameObject {
 		if(enemyType == 1){
 			if(vector.distance(_player.vector) <  range + _player.hitboxX){
 			
-				isRangedAttacking(gc, sbg, _player, _projectileList, _projectileRenderList);
+				isRangedAttacking(gc, sbg, _player, _projectileList);
 			}
 		}
 		
@@ -161,7 +162,6 @@ public class Enemy extends GameObject {
 		beingRangedAttacked(_projectileList);
 		
 		separate(_enemyList);
-		stopMove();
 		
 		if(vector.distance(_player.vector) <  range + _player.hitboxX){
 		setAttackReady();
@@ -245,7 +245,7 @@ public class Enemy extends GameObject {
 	
 		dir = _target.sub(vector);
 		dir.normalise();
-		dir = dir.scale(speedMultiplier);	
+		dir = dir.scale(speedMultiplier);
 		vector = vector.add(dir);
 
 	}
@@ -262,22 +262,6 @@ public class Enemy extends GameObject {
 			vector = vector.sub(dir);
 
 		}
-		
-	public void stopMove() {
-		if(attackSTime == 0 && detectMove == false){
-			this.speedMultiplier = 0.0f;
-			attackSTime = System.currentTimeMillis();
-		}
-		else {
-			attackETime = System.currentTimeMillis() - attackSTime;
-			if(attackETime > moveWaitTime){
-				this.speedMultiplier = 1.0f;
-				this.detectMove = true;
-				attackSTime = 0;
-				attackETime = 0;
-			}
-		}
-	}
 	
 	//Method to set the enemy's attack to be ready according to its cooldowns
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
@@ -307,11 +291,11 @@ public class Enemy extends GameObject {
 			beingHit = true;
 			
 			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
-			if(this.hitpoints - _player.PlayerDamage < 0){
+			if(this.hitpoints - _player.PlayerDamage - ((_player.PlayerDamage / 100) * this.Armor) < 0){
 				this.hitpoints = 0;
 			}
 			else{
-				this.hitpoints -= _player.PlayerDamage;
+				this.hitpoints -= _player.PlayerDamage - ((_player.PlayerDamage / 100) * this.Armor);
 			}
 		}
 	}	
@@ -329,7 +313,7 @@ public class Enemy extends GameObject {
 					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 					beingHit = true;
 					
-					this.hitpoints -= _projectileList.get(i).damage;
+					this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
 					_projectileList.get(i).disableDmg = true;
 					_projectileList.get(i).destroy(i, _projectileList);
 				}
@@ -339,35 +323,58 @@ public class Enemy extends GameObject {
 	
 	public void isMeleeAttacking(){
 		if(this.isAttackReady){	
-			
 			this.detectMove = false;
-			//Play meleeEnemy's melee attack sound 
-			meleeAttackSound0.play();
 			
-			this.isMeleeAttacking = true;
-			
-			isAttackReady=false;
+			if(attackSTime == 0 && detectMove == false){
+				this.speedMultiplier = 0.0f;
+				attackSTime = System.currentTimeMillis();
+			}
+			else {
+				attackETime = System.currentTimeMillis() - attackSTime;
+				if(attackETime > moveWaitTime / this.AttackSpeed){
+					this.speedMultiplier = 1.0f;
+					this.detectMove = true;
+					attackSTime = 0;
+					attackETime = 0;
+					
+					//Play meleeEnemy's melee attack sound 
+					meleeAttackSound0.play();
+					this.isMeleeAttacking = true;
+					isAttackReady=false;
+				}
+			}
+
 		}
 		else
 			this.isMeleeAttacking = false;
 	}
 	
-	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList) throws SlickException{
-		
-		if(isAttackReady == true){	
+	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList) throws SlickException{
+		if(isAttackReady == true){
+			this.detectMove = false;
 			
-			//Play rangedEnemy's ranged attack sound
-			rangedAttackSound0.play();
-			
-			
-			this.isRangedAttacking = true;
-			isAttackReady=false;
-			
-			_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
-			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
-			
-			Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
-			_projectileRenderList.add(tempCircle);
+			if(attackSTime == 0 && detectMove == false){
+				this.speedMultiplier = 0.0f;
+				attackSTime = System.currentTimeMillis();
+			}
+			else {
+				attackETime = System.currentTimeMillis() - attackSTime;
+				if(attackETime > moveWaitTime / this.AttackSpeed){
+					this.speedMultiplier = 1.0f;
+					this.detectMove = true;
+					attackSTime = 0;
+					attackETime = 0;
+					
+					//Play rangedEnemy's ranged attack sound
+					rangedAttackSound0.play();
+					this.isRangedAttacking = true;
+					isAttackReady=false;
+					
+					_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
+					_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+				}
+			}
+
 		}
 		else
 			this.isRangedAttacking = false;

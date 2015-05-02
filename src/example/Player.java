@@ -99,7 +99,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
-	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
+	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
 		
 		//Keeping HP from exceeding max hp.
 		if(hitPoints > MaxHitPoints){
@@ -132,14 +132,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		//PLAYER SHOOTS ARROW TOWARDS "mousePos"
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
-			if(isAttackReady == true){
-				isRangedAttacking(GameState.mousePos);
-				_projectileList.add(new Arrow(this, GameState.mousePos, projectileSpeed));
-				_projectileList.get(_projectileList.size()-1).init(gc, sbg);
-				
-				Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
-				_projectileRenderList.add(tempCircle);
-			}
+				isRangedAttacking(gc, sbg, GameState.mousePos, _projectileList);
 		}
 		
 		//healthGlobe pickup by player
@@ -202,11 +195,9 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	public void isMeleeAttacking(Vector2f vector){
-		if(this.isAttackReady){	
-			
-			//Play players melee attack sound 
+		if(this.isAttackReady){			
+			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
-			
 			this.isMeleeAttacking = true;
 			isAttackReady=false;
 		}
@@ -214,14 +205,15 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			this.isMeleeAttacking = false;
 	}
 	
-	public void isRangedAttacking(Vector2f vector){
-		if(this.isAttackReady){	
-			
+	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Vector2f vector, ArrayList<Projectile> _projectileList) throws SlickException{
+		if(this.isAttackReady){			
 			//Play players ranged attack sound
 			rangedAttackSound0.play();
-			
 			this.isRangedAttacking = true;
 			isAttackReady=false;
+			
+			_projectileList.add(new Arrow(this, GameState.mousePos, projectileSpeed));
+			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
 		}
 		else
 			this.isRangedAttacking = false;
@@ -271,13 +263,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 						//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 						beingHit = true;
 						
-						if(this.hitPoints - _projectileList.get(i).damage < 0){
+						if(this.hitPoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor) < 0){
 							this.hitPoints = 0;
 							_projectileList.get(i).disableDmg = true;
 							_projectileList.get(i).destroy(i, _projectileList);
 						}
 						else{
-						this.hitPoints -= _projectileList.get(i).damage;
+						this.hitPoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
 						_projectileList.get(i).disableDmg = true;
 						_projectileList.get(i).destroy(i, _projectileList);
 						}

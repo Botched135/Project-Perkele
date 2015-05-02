@@ -57,7 +57,7 @@ public class GameState extends BasicGameState {
 			private Image playerDamageWarning = null; 
 			
 			//Sounds
-			public static Sound mainTheme = null;
+			//public static Sound mainTheme = null;
 			
 			//Misc.
 			DecimalFormat df = new DecimalFormat("#.##");
@@ -69,7 +69,7 @@ public class GameState extends BasicGameState {
 			
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
-		mainTheme = new Sound("data/mainTheme.ogg");
+		//mainTheme = new Sound("data/mainTheme.ogg");
 		
 		playerDamageWarning = new Image("data/playerDamageWarning.png");
 		
@@ -101,7 +101,7 @@ public class GameState extends BasicGameState {
 		
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
 		
-			Menu.menuTheme.stop();
+			//Menu.menuTheme.stop();
 			
 		}
 		
@@ -363,7 +363,6 @@ public class GameState extends BasicGameState {
 			playerDamageWarningOpacity += PDWcounter;
 			
 			playerDamageWarning.draw(0,0, new Color(255,255,255, 1 - playerDamageWarningOpacity));
-			System.out.println(playerDamageWarningOpacity);
 			
 			g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
 		}

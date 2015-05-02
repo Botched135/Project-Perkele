@@ -24,7 +24,7 @@ public class Menu extends BasicGameState {
 	
 	//Sounds
 	
-	public static Sound menuTheme = null;
+	//public static Sound menuTheme = null;
 	
 	protected static Vector2f menuMousePos;
 	private boolean leftMousePressed;
@@ -40,9 +40,9 @@ public class Menu extends BasicGameState {
 		menuBg = new Image("data/menuBg.png");
 		menuMousePos = new Vector2f(0,0);
 		
-		menuTheme = new Sound("data/bossBattleTheme.ogg");
+		//menuTheme = new Sound("data/bossBattleTheme.ogg");
 		
-		menuTheme.loop();
+		//menuTheme.loop();
 		
 	}
 	
@@ -69,13 +69,14 @@ public class Menu extends BasicGameState {
 				menuMousePos.getY() < Window.HEIGHT/2 + 70 ){
 			
 			leftMousePressed = true;
-			menuTheme.stop();
+			//menuTheme.stop();
 			
-			if(GameState.mainTheme.playing() == false){
-				GameState.mainTheme.loop();
-			}
+			//if(GameState.mainTheme.playing() == false){
+			//	GameState.mainTheme.loop();
+			//}
+			
 			sbg.enterState(1);
-			gc.reinit();
+			//gc.reinit();
 		}
 		
 		//Clicking on "load game" button

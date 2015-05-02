@@ -54,6 +54,10 @@ public class Player extends GameObject{
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
 	
+	protected boolean isRangedReady = false;
+	protected long rangeStartTime = System.currentTimeMillis();
+	protected long rangeEndTime = 0;
+	
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
 	protected static Color playerTestCol = new Color(0,0,255);
@@ -122,6 +126,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 
 		//UPDATE PLAYER ATTACK
 		setAttackReady();
+		setRangedAttackReady();
 		for(int i = _enemyList.size()-1; i >= 0; i --) {
 		beingMeleeAttacked(_enemyList.get(i));
 		}
@@ -206,7 +211,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	public void isMeleeAttacking(Vector2f vector){
-		if(this.isAttackReady){			
+		if(this.isAttackReady && this.isRangedReady){			
 			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
 			this.isMeleeAttacking = true;
@@ -217,11 +222,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Vector2f vector, ArrayList<Projectile> _projectileList) throws SlickException{
-		if(this.isAttackReady){			
+		if(this.isRangedReady && this.isAttackReady){			
 			//Play players ranged attack sound
 			rangedAttackSound0.play();
 			this.isRangedAttacking = true;
-			isAttackReady=false;
+			isRangedReady=false;
 			
 			_projectileList.add(new Arrow(this, GameState.mousePos, projectileSpeed));
 			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
@@ -242,8 +247,21 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		else if(this.isAttackReady){
 			StartTime = System.currentTimeMillis();
 		}
-
 		return isAttackReady;
+
+	}
+	public boolean setRangedAttackReady(){
+		if(this.isRangedReady == false){
+			this.rangeEndTime = System.currentTimeMillis();
+			if((this.rangeEndTime-this.rangeStartTime)>= 1000/playerRangedAttackSpeed){
+				this.rangeStartTime=this.rangeEndTime;
+				this.isRangedReady = true;
+			}
+		}
+		else if(this.isRangedReady){
+			rangeStartTime = System.currentTimeMillis();
+		}
+		return isRangedReady;
 	}
 	
 	void beingMeleeAttacked (Enemy _enemy){

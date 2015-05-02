@@ -18,6 +18,8 @@ public class Enemy extends GameObject {
 	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;
 	protected float hitpoints = 100;
+	protected float maxHitpoints;
+	protected Random randEnemyHP = new Random();
 	protected float speedMultiplier = 1.0f;
 	protected float projectileSpeed;
 	protected float AttackSpeed = 0.5f;
@@ -30,8 +32,8 @@ public class Enemy extends GameObject {
 	protected String WeaponName;
 	protected String ArmorName;
 	protected boolean beingHit = false;
-	protected boolean isMeleeAttacking;
-	protected boolean isRangedAttacking;
+	protected boolean isMeleeAttacking = false;
+	protected boolean isRangedAttacking = false;
 	protected float Armor = 10;
 
 	protected float MinDamage = 2;
@@ -146,10 +148,9 @@ public class Enemy extends GameObject {
 		//Attacking if enemy is ranged
 		if(enemyType == 1){
 			if(vector.distance(_player.vector) <  range + _player.hitboxX){
-			
 				isRangedAttacking(gc, sbg, _player, _projectileList);
 			}
-		}
+		} 
 		
 		//Attacking if enemy is melee
 		if(enemyType == 0){
@@ -192,8 +193,8 @@ public class Enemy extends GameObject {
 	
 		g.setColor(new Color(255,0,0));
 		g.drawRect(vector.getX()-33, vector.getY()-60, 76.9f, 15);
-		g.fillRect(vector.getX()-33, vector.getY()-60,(this.hitpoints/this.EnemyLevel)/1.3f, 15);
-		g.drawRect(vector.getX()-33, vector.getY()-60,(this.hitpoints/this.EnemyLevel)/1.3f, 15);
+		g.fillRect(vector.getX()-33, vector.getY()-60,76.9f*this.hitpoints/this.maxHitpoints, 15);
+		g.drawRect(vector.getX()-33, vector.getY()-60,76.9f*this.hitpoints/this.maxHitpoints, 15);
 		
 		g.setColor(new Color(255,255,255));
 		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
@@ -305,11 +306,11 @@ public class Enemy extends GameObject {
 			beingHit = true;
 			
 			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
-			if(this.hitpoints - _player.PlayerDamage - ((_player.PlayerDamage / 100) * this.Armor) < 0){
+			if(this.hitpoints - _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor) < 0){
 				this.hitpoints = 0;
 			}
 			else{
-				this.hitpoints -= _player.PlayerDamage - ((_player.PlayerDamage / 100) * this.Armor);
+				this.hitpoints -= _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor);
 			}
 		}
 	}	
@@ -327,7 +328,12 @@ public class Enemy extends GameObject {
 					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 					beingHit = true;
 					
-					this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+					if(this.hitpoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor)<0){
+						this.hitpoints=0;
+					}
+					else{
+						this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+					}
 					_projectileList.get(i).disableDmg = true;
 					_projectileList.get(i).destroy(i, _projectileList);
 				}
@@ -339,56 +345,55 @@ public class Enemy extends GameObject {
 		if(this.isAttackReady){	
 			this.detectMove = false;
 			
-			if(attackSTime == 0 && detectMove == false){
+			if(this.attackSTime == 0 && this.detectMove == false){
 				this.speedMultiplier = 0.0f;
-				attackSTime = System.currentTimeMillis();
+				this.attackSTime = System.currentTimeMillis();
 			}
 			else {
-				attackETime = System.currentTimeMillis() - attackSTime;
-				if(attackETime > moveWaitTime / this.AttackSpeed){
+				this.attackETime = System.currentTimeMillis() - this.attackSTime;
+				if(this.attackETime > this.moveWaitTime / this.AttackSpeed){
 					this.speedMultiplier = 1.0f;
 					this.detectMove = true;
-					attackSTime = 0;
-					attackETime = 0;
-					
+					this.attackSTime = 0;
+					this.attackETime = 0;
+
 					//Play meleeEnemy's melee attack sound 
 					meleeAttackSound0.play();
 					this.isMeleeAttacking = true;
-					isAttackReady=false;
+					this.isAttackReady=false;
 				}
 			}
-
 		}
-		else
+		else{
 			this.isMeleeAttacking = false;
+		}		
 	}
 	
 	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList) throws SlickException{
-		if(isAttackReady == true){
+		if(this.isAttackReady == true){
 			this.detectMove = false;
 			
-			if(attackSTime == 0 && detectMove == false){
+			if(this.attackSTime == 0 && this.detectMove == false){
 				this.speedMultiplier = 0.0f;
-				attackSTime = System.currentTimeMillis();
+				this.attackSTime = System.currentTimeMillis();
 			}
 			else {
-				attackETime = System.currentTimeMillis() - attackSTime;
+				this.attackETime = System.currentTimeMillis() - this.attackSTime;
 				if(attackETime > moveWaitTime / this.AttackSpeed){
 					this.speedMultiplier = 1.0f;
 					this.detectMove = true;
-					attackSTime = 0;
-					attackETime = 0;
+					this.attackSTime = 0;
+					this.attackETime = 0;
 					
 					//Play rangedEnemy's ranged attack sound
 					rangedAttackSound0.play();
 					this.isRangedAttacking = true;
-					isAttackReady=false;
+					this.isAttackReady=false;
 					
 					_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
 					_projectileList.get(_projectileList.size()-1).init(gc, sbg);
 				}
 			}
-
 		}
 		else
 			this.isRangedAttacking = false;
@@ -399,8 +404,8 @@ public class Enemy extends GameObject {
 		enemyDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 	
-	public void PickUpLoot(int index, ArrayList<Loot> _lootList){
-		
+	public void RangedDamage(){
+		rangedDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 
 	//Method to set the enemy's level
@@ -410,7 +415,8 @@ public class Enemy extends GameObject {
 			this.EnemyLevel = 1;
 		else if(this.EnemyLevel > 5)
 			this.EnemyLevel = 5;
-		this.hitpoints = 100 * this.EnemyLevel;
+		this.hitpoints = (100 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+		this.maxHitpoints=this.hitpoints;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
 		this.Armor = 5 * this.EnemyLevel; //Started out as ten. We might want to change that again
 	}

@@ -18,6 +18,7 @@ public class Enemy extends GameObject {
 	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;
 	protected float hitpoints = 100;
+	protected Random randEnemyHP = new Random();
 	protected float speedMultiplier = 1.0f;
 	protected float projectileSpeed;
 	protected float AttackSpeed = 0.5f;
@@ -399,7 +400,7 @@ public class Enemy extends GameObject {
 			this.EnemyLevel = 1;
 		else if(this.EnemyLevel > 5)
 			this.EnemyLevel = 5;
-		this.hitpoints = 100 * this.EnemyLevel;
+		this.hitpoints = (100 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
 		this.Armor = 5 * this.EnemyLevel; //Started out as ten. We might want to change that again
 	}

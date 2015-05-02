@@ -20,6 +20,8 @@ public class Loot extends GameObject {
 	protected String[]ArmorNames = {"Leather Armor","Ringmail","Breast Plate","Full Plate","Dragonbone Armor"};
 	protected Random randDmg = new Random();
 	protected Random randSpeed = new Random();
+	protected Random randArmor = new Random();
+	protected Random randlifeRegen = new Random();
 	protected static Color lootTestCol = new Color(255,255,0);
 	protected float speedMultiplier = 5.0f; 
 	protected float wepMinDMG;

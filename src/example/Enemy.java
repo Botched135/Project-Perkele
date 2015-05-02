@@ -161,6 +161,7 @@ public class Enemy extends GameObject {
 		beingRangedAttacked(_projectileList);
 		
 		separate(_enemyList);
+		stopMove();
 		
 		if(vector.distance(_player.vector) <  range + _player.hitboxX){
 		setAttackReady();

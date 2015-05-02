@@ -32,7 +32,7 @@ public class Armor extends Loot{
 		this.Health = this.lootLevel;
 		this.Armor = _enemy.EnemyLevel*10;
 		this.hpBonus = _enemy.EnemyLevel*10;
-		this.lifeRegen = _enemy.EnemyLevel/5;
+		this.lifeRegen = (float)_enemy.EnemyLevel/5;
 		this.Name = this.setName(ArmorNames);
 	}
 	

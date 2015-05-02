@@ -146,7 +146,6 @@ public class Enemy extends GameObject {
 		//Attacking if enemy is ranged
 		if(enemyType == 1){
 			if(vector.distance(_player.vector) <  range + _player.hitboxX){
-			
 				isRangedAttacking(gc, sbg, _player, _projectileList);
 			}
 		}
@@ -291,11 +290,11 @@ public class Enemy extends GameObject {
 			beingHit = true;
 			
 			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
-			if(this.hitpoints - _player.PlayerDamage - ((_player.PlayerDamage / 100) * this.Armor) < 0){
+			if(this.hitpoints - _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor) < 0){
 				this.hitpoints = 0;
 			}
 			else{
-				this.hitpoints -= _player.PlayerDamage - ((_player.PlayerDamage / 100) * this.Armor);
+				this.hitpoints -= _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor);
 			}
 		}
 	}	
@@ -313,7 +312,12 @@ public class Enemy extends GameObject {
 					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 					beingHit = true;
 					
-					this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+					if(this.hitpoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor)<0){
+						this.hitpoints=0;
+					}
+					else{
+						this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+					}
 					_projectileList.get(i).disableDmg = true;
 					_projectileList.get(i).destroy(i, _projectileList);
 				}
@@ -385,8 +389,8 @@ public class Enemy extends GameObject {
 		enemyDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 	
-	public void PickUpLoot(int index, ArrayList<Loot> _lootList){
-		
+	public void RangedDamage(){
+		rangedDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 
 	//Method to set the enemy's level

@@ -339,9 +339,10 @@ public class Enemy extends GameObject {
 	public void isMeleeAttacking(){
 		if(this.isAttackReady){	
 			
-			this.detectMove = false;
 			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
+			
+			this.detectMove = false;
 			
 			this.isMeleeAttacking = true;
 			
@@ -357,7 +358,6 @@ public class Enemy extends GameObject {
 			
 			//Play rangedEnemy's ranged attack sound
 			rangedAttackSound0.play();
-			
 			
 			this.isRangedAttacking = true;
 			isAttackReady=false;

@@ -245,6 +245,9 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.range + _enemy.hitboxX){
 			_enemy.AttackDamage();
 			
+			//Play players being melee hit sound
+			meleeHitSound.play();
+			
 			
 			this.hitPoints -= _enemy.enemyDamage - ((_enemy.enemyDamage / 100) * this.Armor); //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){

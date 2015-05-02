@@ -68,7 +68,7 @@ public class GameState extends BasicGameState {
 			float PDWcounter = 0.01f;
 			
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		
+	
 		mainTheme = new Sound("data/mainTheme.ogg");
 		
 		playerDamageWarning = new Image("data/playerDamageWarning.png");
@@ -116,7 +116,7 @@ public class GameState extends BasicGameState {
 		playerMeleeRangeCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.meleeRange);
 		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		if(player.hitPoints<=0){
-			EndScreen.wave=currentWave;
+			EndScreen.wave = currentWave;
 			sbg.enterState(2);
 		}
 			
@@ -270,7 +270,6 @@ public class GameState extends BasicGameState {
 		g.setColor(new Color(255,255,255));
 		g.drawString("Number of enemies: " + enemyList.size(), 10, 50);
 		g.drawString("Number of loot: " + lootList.size(), 10, 65);
-		g.draw(playerToMouseTestLine);
 		g.drawString("Attack is Ready: "+player.setAttackReady(), 10, 80);
 		//g.drawString("Player Damage: "+player.PlayerDamage, 10, 140);
 		for(int i = enemyList.size()-1; i >= 0; i-- ){
@@ -378,9 +377,10 @@ public class GameState extends BasicGameState {
 		
 		player.render(gc, sbg, g);
 		g.setColor(new Color(0,255,255));
-		g.draw(playerTestCircle);
+		//g.draw(playerTestCircle);
 		g.setColor(new Color(255,255,0,80));
-		g.draw(playerMeleeRangeCircle);
+		//g.draw(playerMeleeRangeCircle);
+		//g.draw(playerToMouseTestLine);
 		
 		//RENDER Loot info on "shift" hovering ========================================================================================================
 		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));

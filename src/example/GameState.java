@@ -55,6 +55,8 @@ public class GameState extends BasicGameState {
 			//Images =================================================
 			
 			private Image playerDamageWarning = null; 
+			private Image guiButtomEquipmentUnderlay = null;
+			private ArrayList <Image> equippedLootList = new ArrayList <Image>();
 			
 			//Sounds
 			//public static Sound mainTheme = null;
@@ -72,6 +74,10 @@ public class GameState extends BasicGameState {
 		//mainTheme = new Sound("data/mainTheme.ogg");
 		
 		playerDamageWarning = new Image("data/playerDamageWarning.png");
+		guiButtomEquipmentUnderlay = new Image("data/guiButtomEquipmentUnderlay.png");
+		equippedLootList.add(new Image("data/armorTestSprite.png"));
+		equippedLootList.add(new Image("data/meleeWeaponTestSprite.png"));
+		equippedLootList.add(new Image("data/rangedWeaponTestSprite.png"));
 		
 		inventory.init(gc, sbg);
 		player.init(gc, sbg);
@@ -471,10 +477,25 @@ public class GameState extends BasicGameState {
 		}
 		if(waveTextOpacity > 0){
 			waveTextOpacity -= 0.01f;
-				g.setColor(new Color(255, 255, 255, waveTextOpacity));
-				font.drawString(player.vector.getX()  - 92, player.vector.getY() - 120, "- W A V E - " + wave);
-			}
+			g.setColor(new Color(255, 255, 255, waveTextOpacity));
+			font.drawString(player.vector.getX()  - 92, player.vector.getY() - 120, "- W A V E - " + wave);
 		}
+		
+		g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
+		if(player.meleeWepID == 4){
+			equippedLootList.get(2).draw(48, 640);
+		}
+		
+		guiButtomEquipmentUnderlay.draw(18, 618);
+		
+		if(player.meleeWepID == 4){
+			equippedLootList.get(1).draw(18, 618);
+		}
+		if(player.armorID == 3){
+			equippedLootList.get(0).draw(1200, 617);
+		}
+		
+	}
 
 
 	public int getID() {

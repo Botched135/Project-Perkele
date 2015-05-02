@@ -32,6 +32,9 @@ public class Player extends GameObject{
 	protected float Armor = 0; //Damage reductions
 	protected float projectileSpeed = 12;
 	protected boolean beingHit = false;
+	protected int armorID;
+	protected int meleeWepID;
+	protected int rangedWepID;
 	//=======================================================
 	
 	protected float isReady;
@@ -245,6 +248,8 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.range + _enemy.hitboxX){
 			_enemy.AttackDamage();
 			
+			//Play players being melee hit sound
+			meleeHitSound.play();
 			
 			this.hitPoints -= _enemy.enemyDamage - ((_enemy.enemyDamage / 100) * this.Armor); //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){
@@ -288,6 +293,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		this.MinDamage = loot.wepMinDMG;
 		this.MaxDamage = loot.wepMaxDMG;
 		this.AttackSpeed = loot.attackSpeed;
+		this.meleeWepID = loot.ID;
 		}
 		else if(loot instanceof Armor){
 			this.Armor=loot.Armor;
@@ -297,6 +303,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			else{
 			this.MaxHitPoints = baseHp + loot.hpBonus;
 			}
+			this.armorID = loot.ID;
 		}
 	}
 	public void AttackDamage(){

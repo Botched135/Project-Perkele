@@ -295,7 +295,6 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 				if(index < _lootList.size()-1 && _lootList.get(index) instanceof Weapon){
 					    EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;
 						LootAverage =((_lootList.get(index).wepMinDMG+_lootList.get(index).wepMaxDMG)/2)*_lootList.get(index).attackSpeed;
-						System.out.println("WEAPON Enemy:"+EnemyAverage+"   Loot: "+LootAverage);
 				}
 				else if(index < _lootList.size()-1 && _lootList.get(index) instanceof Armor){ 
 					EnemyAverage= _enemyList.get(i).Armor;

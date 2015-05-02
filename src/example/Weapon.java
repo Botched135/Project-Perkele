@@ -9,7 +9,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Weapon extends Loot{
 	
-	private Image weaponTestSprite = null;
+	private Image meleeWeaponTestSprite = null;
 	//protected int wepDMG = (randDmg.nextInt(100))*LootLevel;
 	//protected float attackSpeed = (randSpeed.nextFloat())*2*LootLevel;
 	
@@ -47,17 +47,17 @@ public class Weapon extends Loot{
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-		weaponTestSprite = new Image("data/weaponTestSprite.png");
+		meleeWeaponTestSprite = new Image("data/meleeWeaponTestSprite.png");
 	}
 	
 public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 	
 	if(beingHit == true){
-		weaponTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+		meleeWeaponTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
 	}
 	else{
-		weaponTestSprite.draw(vector.getX()-32, vector.getY()-32);
+		meleeWeaponTestSprite.draw(vector.getX()-32, vector.getY()-32);
 	}
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){

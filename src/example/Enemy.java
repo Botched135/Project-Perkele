@@ -30,8 +30,8 @@ public class Enemy extends GameObject {
 	protected String WeaponName;
 	protected String ArmorName;
 	protected boolean beingHit = false;
-	protected boolean isMeleeAttacking;
-	protected boolean isRangedAttacking;
+	protected boolean isMeleeAttacking = false;
+	protected boolean isRangedAttacking = false;
 	protected float Armor = 10;
 
 	protected float MinDamage = 2;
@@ -148,7 +148,7 @@ public class Enemy extends GameObject {
 			if(vector.distance(_player.vector) <  range + _player.hitboxX){
 				isRangedAttacking(gc, sbg, _player, _projectileList);
 			}
-		}
+		} 
 		
 		//Attacking if enemy is melee
 		if(enemyType == 0){
@@ -329,56 +329,55 @@ public class Enemy extends GameObject {
 		if(this.isAttackReady){	
 			this.detectMove = false;
 			
-			if(attackSTime == 0 && detectMove == false){
+			if(this.attackSTime == 0 && this.detectMove == false){
 				this.speedMultiplier = 0.0f;
-				attackSTime = System.currentTimeMillis();
+				this.attackSTime = System.currentTimeMillis();
 			}
 			else {
-				attackETime = System.currentTimeMillis() - attackSTime;
-				if(attackETime > moveWaitTime / this.AttackSpeed){
+				this.attackETime = System.currentTimeMillis() - this.attackSTime;
+				if(this.attackETime > this.moveWaitTime / this.AttackSpeed){
 					this.speedMultiplier = 1.0f;
 					this.detectMove = true;
-					attackSTime = 0;
-					attackETime = 0;
-					
+					this.attackSTime = 0;
+					this.attackETime = 0;
+
 					//Play meleeEnemy's melee attack sound 
 					meleeAttackSound0.play();
 					this.isMeleeAttacking = true;
-					isAttackReady=false;
+					this.isAttackReady=false;
 				}
 			}
-
 		}
-		else
+		else{
 			this.isMeleeAttacking = false;
+		}		
 	}
 	
 	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList) throws SlickException{
-		if(isAttackReady == true){
+		if(this.isAttackReady == true){
 			this.detectMove = false;
 			
-			if(attackSTime == 0 && detectMove == false){
+			if(this.attackSTime == 0 && this.detectMove == false){
 				this.speedMultiplier = 0.0f;
-				attackSTime = System.currentTimeMillis();
+				this.attackSTime = System.currentTimeMillis();
 			}
 			else {
-				attackETime = System.currentTimeMillis() - attackSTime;
+				this.attackETime = System.currentTimeMillis() - this.attackSTime;
 				if(attackETime > moveWaitTime / this.AttackSpeed){
 					this.speedMultiplier = 1.0f;
 					this.detectMove = true;
-					attackSTime = 0;
-					attackETime = 0;
+					this.attackSTime = 0;
+					this.attackETime = 0;
 					
 					//Play rangedEnemy's ranged attack sound
 					rangedAttackSound0.play();
 					this.isRangedAttacking = true;
-					isAttackReady=false;
+					this.isAttackReady=false;
 					
 					_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
 					_projectileList.get(_projectileList.size()-1).init(gc, sbg);
 				}
 			}
-
 		}
 		else
 			this.isRangedAttacking = false;

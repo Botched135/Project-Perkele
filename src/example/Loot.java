@@ -27,6 +27,7 @@ public class Loot extends GameObject {
 	protected float attackSpeed;
 	protected float hpBonus;
 	protected float Armor;
+	protected float lifeRegen;
 	protected boolean beingHit = false;
 	protected int Health=1;
 	protected String Name="";
@@ -35,6 +36,7 @@ public class Loot extends GameObject {
 	protected float LootAverage;
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
+	
 	
 	//Sounds =============================================
 	

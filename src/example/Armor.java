@@ -21,7 +21,7 @@ public class Armor extends Loot{
 		Name = "Slighly used Loincloth";
 		Armor = 50;
 		hpBonus = 0;
-
+		lifeRegen = 0.2f;
 	}
 	
 	Armor(Enemy _enemy) {
@@ -32,6 +32,7 @@ public class Armor extends Loot{
 		this.Health = this.lootLevel;
 		this.Armor = _enemy.EnemyLevel*10;
 		this.hpBonus = _enemy.EnemyLevel*10;
+		this.lifeRegen = _enemy.EnemyLevel/5;
 		this.Name = this.setName(ArmorNames);
 	}
 	

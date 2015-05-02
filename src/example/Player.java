@@ -258,13 +258,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 						//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 						beingHit = true;
 						
-						if(this.hitPoints - _projectileList.get(i).damage < 0){
+						if(this.hitPoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor) < 0){
 							this.hitPoints = 0;
 							_projectileList.get(i).disableDmg = true;
 							_projectileList.get(i).destroy(i, _projectileList);
 						}
 						else{
-						this.hitPoints -= _projectileList.get(i).damage;
+						this.hitPoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
 						_projectileList.get(i).disableDmg = true;
 						_projectileList.get(i).destroy(i, _projectileList);
 						}

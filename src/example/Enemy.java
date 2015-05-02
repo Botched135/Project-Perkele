@@ -291,11 +291,11 @@ public class Enemy extends GameObject {
 			beingHit = true;
 			
 			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
-			if(this.hitpoints - _player.PlayerDamage < 0){
+			if(this.hitpoints - _player.PlayerDamage - ((_player.PlayerDamage / 100) * this.Armor) < 0){
 				this.hitpoints = 0;
 			}
 			else{
-				this.hitpoints -= _player.PlayerDamage;
+				this.hitpoints -= _player.PlayerDamage - ((_player.PlayerDamage / 100) * this.Armor);
 			}
 		}
 	}	
@@ -313,7 +313,7 @@ public class Enemy extends GameObject {
 					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 					beingHit = true;
 					
-					this.hitpoints -= _projectileList.get(i).damage;
+					this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
 					_projectileList.get(i).disableDmg = true;
 					_projectileList.get(i).destroy(i, _projectileList);
 				}

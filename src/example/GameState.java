@@ -33,7 +33,6 @@ public class GameState extends BasicGameState {
 			private ArrayList <EnemyIndicator> enemyIndicatorList = new ArrayList <EnemyIndicator>();
 			private ArrayList <Projectile> projectileList = new ArrayList <Projectile>();
 			private ArrayList <healthGlobe> healthGlobeList = new ArrayList <healthGlobe>();
-			private ArrayList <Circle> projectileRenderList = new ArrayList <Circle>();
 			private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
 			private ArrayList <Vector2f> spawnPos = new ArrayList <Vector2f>();
 			
@@ -47,6 +46,7 @@ public class GameState extends BasicGameState {
 			protected boolean waveStart;
 			protected int waveDelay = 5000; //Amount of miliseconds before the next wave start
 			protected int enemyMeleeAmount = 2;
+			protected int enemyRangedAmount = 1;
 			protected int randEnemyPos;
 			
 
@@ -109,7 +109,7 @@ public class GameState extends BasicGameState {
 		inventory.update(gc, sbg, delta);
 		
 		//PLAYER STUFF ====================================================================================================================================
-		player.update(gc, sbg, enemyList, projectileList, projectileRenderList, healthGlobeList);
+		player.update(gc, sbg, enemyList, projectileList, healthGlobeList);
 		
 		//UDATES PLAYER SPRITE
 		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
@@ -161,14 +161,14 @@ public class GameState extends BasicGameState {
 		
 		//ENEMY STUFF =================================================================================================================================================	
 		//Update enemy spawn pos
-		spawnPos.set(0, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari),player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
-		spawnPos.set(1, new Vector2f(player.vector.getX(), player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
-		spawnPos.set(2, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari), player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari)));
-		spawnPos.set(3, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari), player.vector.getY()));
-		spawnPos.set(4, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
-		spawnPos.set(5, new Vector2f(player.vector.getX(), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
-		spawnPos.set(6, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari)));
-		spawnPos.set(7, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari), player.vector.getY()));
+		spawnPos.set(0, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari -2),player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari -1)));
+		spawnPos.set(1, new Vector2f(player.vector.getX() + spawnPosVari -2, player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari -1)));
+		spawnPos.set(2, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari -2), player.vector.getY() - Window.HEIGHT/2 - (63 + spawnPosVari -1)));
+		spawnPos.set(3, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari -2), player.vector.getY() + spawnPosVari -2));
+		spawnPos.set(4, new Vector2f(player.vector.getX() + Window.WIDTH/2 + (63 + spawnPosVari -2), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari -1)));
+		spawnPos.set(5, new Vector2f(player.vector.getX() + spawnPosVari -2, player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari -1)));
+		spawnPos.set(6, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari -2), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari -1)));
+		spawnPos.set(7, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari -2), player.vector.getY() + spawnPosVari -2));
 		
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY()),0));
@@ -204,9 +204,21 @@ public class GameState extends BasicGameState {
 			}
 		}
 		if(waveStart && enemyList.size() == 0) { //Spawning of a wave
+			//for loop for spawning melee enemies
 			for(int i = 0; i < enemyMeleeAmount; i++) {
-				randEnemyPos = randPos.nextInt(7);
-				spawnPosVari = randPos.nextInt(2);
+				randEnemyPos = randPos.nextInt(8);
+				spawnPosVari = randPos.nextInt(5);
+				enemyList.add(new Enemy(spawnPos.get(randEnemyPos),0)); //<-- last argument is the type of enemy to spawn
+				enemyList.get(enemyList.size()-1).init(gc, sbg);
+				enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
+				
+				enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
+				enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
+			}
+			//for loop for spawning ranged enemies
+			for(int i = 0; i < enemyRangedAmount; i++) {
+				randEnemyPos = randPos.nextInt(8);
+				spawnPosVari = randPos.nextInt(5);
 				enemyList.add(new Enemy(spawnPos.get(randEnemyPos),1)); //<-- last argument is the type of enemy to spawn
 				enemyList.get(enemyList.size()-1).init(gc, sbg);
 				enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
@@ -215,13 +227,14 @@ public class GameState extends BasicGameState {
 				enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
 			}
 			enemyMeleeAmount += 2;
+			enemyRangedAmount++;
 		}
 		
 		//UPDATING ENEMIES
 		if(enemyList.size() > 0){
 			for(int i = enemyList.size()-1; i >= 0; i--) {
 		
-				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, projectileRenderList, lootList, healthGlobeList, enemyIndicatorList);
+				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList, enemyIndicatorList);
 
 			}
 		}
@@ -232,10 +245,6 @@ public class GameState extends BasicGameState {
 					for(int i = projectileList.size()-1; i >= 0; i--){
 					
 						projectileList.get(i).stateManager(player, i, projectileList, enemyList);
-					}
-					//UPDATES PROJECTILE SPRITES
-					for(int i = projectileList.size()-1; i >= 0; i--) {
-						projectileRenderList.set(i, new Circle(projectileList.get(i).vector.getX(), projectileList.get(i).vector.getY(), projectileList.get(i).hitboxX));
 					}
 				}
 		

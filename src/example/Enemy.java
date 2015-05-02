@@ -46,6 +46,7 @@ public class Enemy extends GameObject {
 	protected float meleeRange = 90;
 	protected float seekDistance = 500;
 	
+	//variables used for stopping movement when attacking
 	protected long attackSTime;
 	protected long attackETime;
 	protected int moveWaitTime = 1000;
@@ -130,7 +131,7 @@ public class Enemy extends GameObject {
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList ,ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
 	
 		if(this.hitpoints <= 0){
 
@@ -146,7 +147,7 @@ public class Enemy extends GameObject {
 		if(enemyType == 1){
 			if(vector.distance(_player.vector) <  range + _player.hitboxX){
 			
-				isRangedAttacking(gc, sbg, _player, _projectileList, _projectileRenderList);
+				isRangedAttacking(gc, sbg, _player, _projectileList);
 			}
 		}
 		
@@ -244,7 +245,7 @@ public class Enemy extends GameObject {
 	
 		dir = _target.sub(vector);
 		dir.normalise();
-		dir = dir.scale(speedMultiplier);	
+		dir = dir.scale(speedMultiplier);
 		vector = vector.add(dir);
 
 	}
@@ -348,7 +349,7 @@ public class Enemy extends GameObject {
 			this.isMeleeAttacking = false;
 	}
 	
-	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList) throws SlickException{
+	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList) throws SlickException{
 		if(isAttackReady == true){
 			this.detectMove = false;
 			
@@ -358,7 +359,7 @@ public class Enemy extends GameObject {
 			}
 			else {
 				attackETime = System.currentTimeMillis() - attackSTime;
-				if(attackETime > moveWaitTime){
+				if(attackETime > moveWaitTime / this.AttackSpeed){
 					this.speedMultiplier = 1.0f;
 					this.detectMove = true;
 					attackSTime = 0;
@@ -371,9 +372,6 @@ public class Enemy extends GameObject {
 					
 					_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
 					_projectileList.get(_projectileList.size()-1).init(gc, sbg);
-					
-					Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
-					_projectileRenderList.add(tempCircle);
 				}
 			}
 

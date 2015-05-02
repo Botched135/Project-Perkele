@@ -18,6 +18,7 @@ public class Enemy extends GameObject {
 	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;
 	protected float hitpoints = 100;
+	protected float maxHitpoints;
 	protected Random randEnemyHP = new Random();
 	protected float speedMultiplier = 1.0f;
 	protected float projectileSpeed;
@@ -198,8 +199,8 @@ public class Enemy extends GameObject {
 	
 		g.setColor(new Color(255,0,0));
 		g.drawRect(vector.getX()-33, vector.getY()-60, 76.9f, 15);
-		g.fillRect(vector.getX()-33, vector.getY()-60,(this.hitpoints/this.EnemyLevel)/1.3f, 15);
-		g.drawRect(vector.getX()-33, vector.getY()-60,(this.hitpoints/this.EnemyLevel)/1.3f, 15);
+		g.fillRect(vector.getX()-33, vector.getY()-60,76.9f*this.hitpoints/this.maxHitpoints, 15);
+		g.drawRect(vector.getX()-33, vector.getY()-60,76.9f*this.hitpoints/this.maxHitpoints, 15);
 		
 		g.setColor(new Color(255,255,255));
 		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
@@ -401,6 +402,7 @@ public class Enemy extends GameObject {
 		else if(this.EnemyLevel > 5)
 			this.EnemyLevel = 5;
 		this.hitpoints = (100 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+		this.maxHitpoints=this.hitpoints;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
 		this.Armor = 5 * this.EnemyLevel; //Started out as ten. We might want to change that again
 	}

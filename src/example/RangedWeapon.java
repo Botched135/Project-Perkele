@@ -15,13 +15,12 @@ public class RangedWeapon extends Loot {
 		hitboxY = 32.0f;
 		ID = 5;
 		Name = "Bow-ner";
-		wepMinDMG = 20;
-		wepMaxDMG = 40;
-		attackSpeed = 0.5f;
+		wepMinDMG = 80;
+		wepMaxDMG = 120;
+		attackSpeed = 5f;
 		
 	}
 	RangedWeapon(Enemy _enemy){
-		super();
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 5;
@@ -36,17 +35,18 @@ public class RangedWeapon extends Loot {
 	}
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-		//rangedWeaponSprite = new Image("data/weaponTestSprite.png");
+		rangedWeaponSprite = new Image("data/rangedWeaponTestSprite.png");
 	}
 	
 public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 	
 	if(beingHit == true){
-		//rangedWeaponSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+		rangedWeaponSprite.drawFlash(vector.getX()-32, vector.getY()-32);
 	}
+	
 	else{
-		//rangedWeaponSprite.draw(vector.getX()-32, vector.getY()-32);
+		rangedWeaponSprite.draw(vector.getX()-32, vector.getY()-32);
 	}
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
@@ -56,6 +56,27 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 }
 	public String setName(){
 		String Name="";
+		if(this.attackSpeed <= 0.5){
+			Name += "Rusty ";
+		}
+		else if(this.attackSpeed >= 2 ){
+			Name+="Automated ";
+		}
+		if(this.wepMinDMG < (this.lootLevel*20+10)){
+			Name+="Shortbow ";
+		}
+		else if(this.wepMinDMG >= (this.lootLevel*20+10) && this.wepMinDMG <= (this.lootLevel*20+15)){
+			Name+="Longbow ";
+		}
+		else if(this.wepMinDMG > (this.lootLevel*20+15)){
+			Name+="Crossbow ";
+		}
+		if(this.wepMaxDMG < (this.lootLevel*20+47)){
+			Name+="made of Cotton";
+		}
+		else if(this.wepMaxDMG >(this.lootLevel*20+47)){
+			Name+="blessed by Holmen";
+		}
 		return Name;
 	}
 }

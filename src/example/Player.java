@@ -21,23 +21,34 @@ public class Player extends GameObject{
 	protected float hitPoints = 100;
 	protected float baseHp = 100;
 	protected float MaxHitPoints = 100;
-	protected float damage = 100;
-	protected float MinDamage = 75;
-	protected float MaxDamage = 125;
-	protected float PlayerDamage;
-	protected float meleeRange = 100;
-	protected float rangedDamage;
+	
 	protected float speedMultiplier = 5.0f;
+	
+	//Melee
+	protected float playerMeleeMinDamage;
+	protected float playerMeleeMaxDamage ;
+	protected float playerMeleeDamage;
+	protected float meleeRange = 100;
 	protected float AttackSpeed = 5.0f; //Attacks per second
-	protected float Armor = 0; //Damage reductions
 	protected float lifeRegen = 0.2f;
-	protected float projectileSpeed = 12;
-	protected boolean beingHit = false;
-	protected int armorID;
+	protected float playerMeleeAttackSpeed = 5.0f; //Attacks per second
 	protected int meleeWepID;
+	
+	//Ranged
+	protected float playerRangedMinDamage;
+	protected float playerRangedMaxDamage;
+	protected float playerRangedAttackSpeed;
+	protected float rangedDamage;
 	protected int rangedWepID;
+	protected float projectileSpeed = 12;
+	
+	//Armor
+	protected float Armor = 0; //Damage reductions
+	protected int armorID;
+	
 	//=======================================================
 	
+	protected boolean beingHit = false;
 	protected float isReady;
 	protected boolean isAttackReady = false;
 	protected long StartTime = System.currentTimeMillis();
@@ -92,7 +103,6 @@ public class Player extends GameObject{
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-		rangedDamage = 100;
 	
 		playerTestSprite = new Image("data/player.png");
 		hpBar = new Image("data/hpBar.png");
@@ -232,7 +242,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		if(this.isAttackReady == false){ 
 			this.EndTime = System.currentTimeMillis();//StartTime should start from without
-			if((this.EndTime-this.StartTime) >= 1000/AttackSpeed){
+			if((this.EndTime-this.StartTime) >= 1000/playerMeleeAttackSpeed){
 				this.StartTime = this.EndTime;
 				this.isAttackReady=true;//set the isAttackReady to true
 				//this.EndTime = 0;
@@ -304,10 +314,16 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	//Setting the weapon loot to the player
 	public void setLootEquipment(Loot loot){
 		if(loot instanceof Weapon){
-		this.MinDamage = loot.wepMinDMG;
-		this.MaxDamage = loot.wepMaxDMG;
-		this.AttackSpeed = loot.attackSpeed;
+		this.playerMeleeMinDamage = loot.wepMinDMG;
+		this.playerMeleeMaxDamage = loot.wepMaxDMG;
+		this.playerMeleeAttackSpeed = loot.attackSpeed;
 		this.meleeWepID = loot.ID;
+		}
+		else if(loot instanceof RangedWeapon){
+			this.playerRangedMinDamage = loot.wepMinDMG;
+			this.playerRangedMaxDamage= loot.wepMaxDMG;
+			this.playerRangedAttackSpeed = loot.attackSpeed;
+			this.rangedWepID = loot.ID;
 		}
 		else if(loot instanceof Armor){
 			this.Armor = loot.Armor;
@@ -322,6 +338,9 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 	}
 	public void AttackDamage(){
-		PlayerDamage = (randDmg.nextFloat()*(this.MaxDamage-this.MinDamage))+this.MinDamage;
+		playerMeleeDamage = (randDmg.nextFloat()*(this.playerMeleeMaxDamage-this.playerMeleeMinDamage))+this.playerMeleeMinDamage;
+	}
+	public void RangedAttackDamage(){
+		rangedDamage = (randDmg.nextFloat()*(this.playerRangedMaxDamage-this.playerRangedMinDamage))+this.playerRangedMinDamage;
 	}
 }

@@ -335,7 +335,7 @@ public class Enemy extends GameObject {
 			}
 			else {
 				this.attackETime = System.currentTimeMillis() - this.attackSTime;
-				if(this.attackETime > this.moveWaitTime / this.AttackSpeed && this.isAttackReady && !this.detectMove){
+				if(this.attackETime > this.moveWaitTime / this.AttackSpeed){
 					this.speedMultiplier = 1.0f;
 					this.detectMove = true;
 					this.attackSTime = 0;

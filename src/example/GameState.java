@@ -532,11 +532,9 @@ public class GameState extends BasicGameState {
 		}
 		if(player.armorID == 3){
 			equippedLootList.get(0).draw(1200, 617);
-		}
+		} 
 		
 	}
-
-
 	public int getID() {
 		return 1;			// The ID of this state
 	}

@@ -30,9 +30,9 @@ public class Armor extends Loot{
 		ID = 3;
 		this.lootLevel = _enemy.EnemyLevel;
 		this.Health = this.lootLevel;
-		this.Armor = _enemy.EnemyLevel*10 + (randArmor.nextInt(6)-5);
-		this.hpBonus = _enemy.EnemyLevel*10 ;
-		this.lifeRegen = (float)_enemy.EnemyLevel/5 + (((float)randlifeRegen.nextInt(3)-1)/10);
+		this.Armor = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
+		this.hpBonus = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
+		this.lifeRegen = ((float)_enemy.EnemyLevel / 5) + (((float)randlifeRegen.nextInt(3)-1)/10);
 		this.Name = this.setName(ArmorNames);
 	}
 	

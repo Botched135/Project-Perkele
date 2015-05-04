@@ -28,7 +28,7 @@ public class Projectile extends GameObject {
 		Vector2f snapshotTargetVector = new Vector2f(_target);
 		dir = new Vector2f(0.0f, 0.0f);
 		dir = snapshotTargetVector.sub(vector);
-		
+		_owner.RangedDamage();
 		damage = _owner.rangedDamage;
 	}
 	
@@ -38,7 +38,7 @@ public class Projectile extends GameObject {
 		Vector2f snapshotTargetVector = new Vector2f(_target);
 		dir = new Vector2f(0.0f, 0.0f);
 		dir = snapshotTargetVector.sub(vector);
-		
+		_owner.RangedAttackDamage();
 		damage = _owner.rangedDamage;
 	}
 	

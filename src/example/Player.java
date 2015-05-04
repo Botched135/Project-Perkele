@@ -21,29 +21,53 @@ public class Player extends GameObject{
 	protected float hitPoints = 100;
 	protected float baseHp = 100;
 	protected float MaxHitPoints = 100;
-	protected float damage = 100;
-	protected float MinDamage = 75;
-	protected float MaxDamage = 125;
-	protected float PlayerDamage;
-	protected float meleeRange = 100;
-	protected float rangedDamage;
+	
 	protected float speedMultiplier = 5.0f;
+	
+	//Melee
+	protected float playerMeleeMinDamage;
+	protected float playerMeleeMaxDamage ;
+	protected float playerMeleeDamage;
+	protected float meleeRange = 100;
 	protected float AttackSpeed = 5.0f; //Attacks per second
-	protected float Armor = 0; //Damage reductions
+	protected float lifeRegen = 0.2f;
+	protected float playerMeleeAttackSpeed = 5.0f; //Attacks per second
+	protected int meleeWepID;
+	
+	//Ranged
+	protected float playerRangedMinDamage;
+	protected float playerRangedMaxDamage;
+	protected float playerRangedAttackSpeed;
+	protected float rangedDamage;
+	protected int rangedWepID;
 	protected float projectileSpeed = 12;
-	protected boolean beingHit = false;
+	
+	//Armor
+	protected float Armor = 0; //Damage reductions
+	protected int armorID;
+	
 	//=======================================================
 	
+	protected boolean beingHit = false;
 	protected float isReady;
 	protected boolean isAttackReady = false;
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
+	
+	protected boolean isRangedReady = false;
+	protected long rangeStartTime = System.currentTimeMillis();
+	protected long rangeEndTime = 0;
 	
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
 	protected static Color playerTestCol = new Color(0,0,255);
 	
 	protected Random randDmg = new Random();
+	
+	//Variables for lifeRegen timer
+	protected long regSTimer = 0;
+	protected long regETimer = 0;
+	protected int regWTime = 1000;
 	
 	//Images =================================================
 	
@@ -83,7 +107,6 @@ public class Player extends GameObject{
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-		rangedDamage = 100;
 	
 		playerTestSprite = new Image("data/player.png");
 		hpBar = new Image("data/hpBar.png");
@@ -96,18 +119,24 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
-	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
+	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
 		
+		//System.out.println("playerX: " + vector.getX() + "  playerY: " + vector.getY());
 		//Keeping HP from exceeding max hp.
 		if(hitPoints > MaxHitPoints){
 			hitPoints = MaxHitPoints;
 		}
+		else if(hitPoints < MaxHitPoints){
+			regeneration();
+		}
+
 		
 		isMeleeAttacking = false;
 		isRangedAttacking = false;
 
 		//UPDATE PLAYER ATTACK
 		setAttackReady();
+		setRangedAttackReady();
 		for(int i = _enemyList.size()-1; i >= 0; i --) {
 		beingMeleeAttacked(_enemyList.get(i));
 		}
@@ -129,14 +158,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		//PLAYER SHOOTS ARROW TOWARDS "mousePos"
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
-			if(isAttackReady == true){
-				isRangedAttacking(GameState.mousePos);
-				_projectileList.add(new Arrow(this, GameState.mousePos, projectileSpeed));
-				_projectileList.get(_projectileList.size()-1).init(gc, sbg);
-				
-				Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
-				_projectileRenderList.add(tempCircle);
-			}
+				isRangedAttacking(gc, sbg, GameState.mousePos, _projectileList);
 		}
 		
 		//healthGlobe pickup by player
@@ -158,16 +180,16 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		//PLAYER MOVEMENT INPUT
 		
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
-			MoveSelf(new Vector2f(-1.0f, 0f));
+			MoveSelf(new Vector2f(-1.0f, 0f),0);
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_W)) {
-			MoveSelf(new Vector2f(0f, -1.0f));
+			MoveSelf(new Vector2f(0f, -1.0f),1);
 			}
 		if(gc.getInput().isKeyDown(Input.KEY_D)) {
-			MoveSelf(new Vector2f(1.0f, 0f));
+			MoveSelf(new Vector2f(1.0f, 0f),2);
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_S)) {
-			MoveSelf(new Vector2f(0.0f, 1.0f));
+			MoveSelf(new Vector2f(0.0f, 1.0f),3);
 		}
 	}
 	
@@ -181,29 +203,68 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		g.translate((vector.getX())-(Window.WIDTH/2), (vector.getY())-(Window.HEIGHT/2));
 		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 378*(this.hitPoints/this.MaxHitPoints), 43);
 		//hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 1); // <----- Change the "1" to make the HP Bar resize according to remaining player health!
-		g.drawString(df.format(this.hitPoints), Inventory.xOrigin+628, Inventory.yOrigin+659);
+		g.drawString(df.format((int)this.hitPoints), Inventory.xOrigin+628, Inventory.yOrigin+659);
 		
 	}
 	
 	
 	//METHODS ===========================================================================================================================================================
-	public void MoveSelf(Vector2f _target){
+	public void MoveSelf(Vector2f _target, int direction){
+		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
+		tempTarget = tempTarget.add(vector);
+		if(direction == 0){
+			if(	tempTarget.getX() > 0){
+				tempTarget = _target.add(vector);
 		
-		_target = _target.add(vector);
+				Vector2f dir = tempTarget.sub(vector);
 		
-		Vector2f dir = _target.sub(vector);
+				dir.normalise();
+				dir = dir.scale(speedMultiplier);	
+				vector = vector.add(dir); 
+			}
+		}
 		
-		dir.normalise();
-		dir = dir.scale(speedMultiplier);	
-		vector = vector.add(dir); 
+		if(direction == 1){
+			if(	tempTarget.getY() > 0){
+				tempTarget = _target.add(vector);
+		
+				Vector2f dir = tempTarget.sub(vector);
+		
+				dir.normalise();
+				dir = dir.scale(speedMultiplier);	
+				vector = vector.add(dir); 
+			}
+		}
+		
+		if(direction == 2){
+			if(	tempTarget.getX() < GameState.mapWidth){
+				tempTarget = _target.add(vector);
+		
+				Vector2f dir = tempTarget.sub(vector);
+		
+				dir.normalise();
+				dir = dir.scale(speedMultiplier);	
+				vector = vector.add(dir); 
+			}
+		}
+		
+		if(direction == 3){
+			if(	tempTarget.getY() < GameState.mapHeight){
+				tempTarget = _target.add(vector);
+		
+				Vector2f dir = tempTarget.sub(vector);
+		
+				dir.normalise();
+				dir = dir.scale(speedMultiplier);	
+				vector = vector.add(dir); 
+			}
+		}
 	}
 	
 	public void isMeleeAttacking(Vector2f vector){
-		if(this.isAttackReady){	
-			
-			//Play players melee attack sound 
+		if(this.isAttackReady && this.isRangedReady){			
+			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
-			
 			this.isMeleeAttacking = true;
 			isAttackReady=false;
 		}
@@ -211,14 +272,15 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			this.isMeleeAttacking = false;
 	}
 	
-	public void isRangedAttacking(Vector2f vector){
-		if(this.isAttackReady){	
-			
+	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Vector2f vector, ArrayList<Projectile> _projectileList) throws SlickException{
+		if(this.isRangedReady && this.isAttackReady){			
 			//Play players ranged attack sound
 			rangedAttackSound0.play();
-			
 			this.isRangedAttacking = true;
-			isAttackReady=false;
+			isRangedReady=false;
+			
+			_projectileList.add(new Arrow(this, GameState.mousePos, projectileSpeed));
+			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
 		}
 		else
 			this.isRangedAttacking = false;
@@ -227,7 +289,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		if(this.isAttackReady == false){ 
 			this.EndTime = System.currentTimeMillis();//StartTime should start from without
-			if((this.EndTime-this.StartTime) >= 1000/AttackSpeed){
+			if((this.EndTime-this.StartTime) >= 1000/playerMeleeAttackSpeed){
 				this.StartTime = this.EndTime;
 				this.isAttackReady=true;//set the isAttackReady to true
 				//this.EndTime = 0;
@@ -236,18 +298,31 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		else if(this.isAttackReady){
 			StartTime = System.currentTimeMillis();
 		}
-
 		return isAttackReady;
+
+	}
+	public boolean setRangedAttackReady(){
+		if(this.isRangedReady == false){
+			this.rangeEndTime = System.currentTimeMillis();
+			if((this.rangeEndTime-this.rangeStartTime)>= 1000/playerRangedAttackSpeed){
+				this.rangeStartTime=this.rangeEndTime;
+				this.isRangedReady = true;
+			}
+		}
+		else if(this.isRangedReady){
+			rangeStartTime = System.currentTimeMillis();
+		}
+		return isRangedReady;
 	}
 	
 	void beingMeleeAttacked (Enemy _enemy){
 		
 		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.range + _enemy.hitboxX){
+			_enemy.isMeleeAttacking = false;
 			_enemy.AttackDamage();
 			
 			//Play players being melee hit sound
 			meleeHitSound.play();
-			
 			
 			this.hitPoints -= _enemy.enemyDamage - ((_enemy.enemyDamage / 100) * this.Armor); //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){
@@ -257,52 +332,76 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 	//Method to check if the player is being hit by a ranged attack
-		void beingRangedAttacked (ArrayList<Projectile> _projectileList){
-			
-			if(_projectileList.size() > 0){
-				for(int i = _projectileList.size()-1; i >= 0; i--){
-					if(_projectileList.get(i).owner instanceof Enemy && _projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
+	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
+		if(_projectileList.size() > 0){
+			for(int i = _projectileList.size()-1; i >= 0; i--){
+				if(_projectileList.get(i).owner instanceof Enemy && _projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
 				
-						//Play players being ranged hit sound
-						meleeHitSound.play();
+					//Play players being ranged hit sound
+					meleeHitSound.play();
 						
-						//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
-						beingHit = true;
+					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
+					beingHit = true;
 						
-						if(this.hitPoints - _projectileList.get(i).damage < 0){
-							this.hitPoints = 0;
-							_projectileList.get(i).disableDmg = true;
-							_projectileList.get(i).destroy(i, _projectileList);
-						}
-						else{
-						this.hitPoints -= _projectileList.get(i).damage;
+					if(this.hitPoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor) < 0){
+						this.hitPoints = 0;
 						_projectileList.get(i).disableDmg = true;
 						_projectileList.get(i).destroy(i, _projectileList);
-						}
+					}
+					else{
+					this.hitPoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+					_projectileList.get(i).disableDmg = true;
+					_projectileList.get(i).destroy(i, _projectileList);
 					}
 				}
 			}
 		}
+	}
 		
+	public void regeneration(){
+		if(regSTimer == 0){
+			regSTimer = System.currentTimeMillis();
+		}
+		else {
+			regETimer = System.currentTimeMillis() - regSTimer;
+			if(regETimer >= 1000){
+				this.hitPoints += lifeRegen;
+				regSTimer = 0;
+				regETimer = 0;
+			}
+		}
+	}
 	
 	//Setting the weapon loot to the player
 	public void setLootEquipment(Loot loot){
 		if(loot instanceof Weapon){
-		this.MinDamage = loot.wepMinDMG;
-		this.MaxDamage = loot.wepMaxDMG;
-		this.AttackSpeed = loot.attackSpeed;
+		this.playerMeleeMinDamage = loot.wepMinDMG;
+		this.playerMeleeMaxDamage = loot.wepMaxDMG;
+		this.playerMeleeAttackSpeed = loot.attackSpeed;
+		this.meleeWepID = loot.ID;
+		}
+		else if(loot instanceof RangedWeapon){
+			this.playerRangedMinDamage = loot.wepMinDMG;
+			this.playerRangedMaxDamage= loot.wepMaxDMG;
+			this.playerRangedAttackSpeed = loot.attackSpeed;
+			this.rangedWepID = loot.ID;
 		}
 		else if(loot instanceof Armor){
-			this.Armor=loot.Armor;
+			this.Armor = loot.Armor;
+			this.lifeRegen = loot.lifeRegen;
 			if(hitPoints > baseHp + loot.hpBonus){
 				hitPoints = baseHp + loot.hpBonus;
 			}
 			else{
 			this.MaxHitPoints = baseHp + loot.hpBonus;
 			}
+			this.armorID = loot.ID;
 		}
 	}
 	public void AttackDamage(){
-		PlayerDamage = (randDmg.nextFloat()*(this.MaxDamage-this.MinDamage))+this.MinDamage;
+		playerMeleeDamage = (randDmg.nextFloat()*(this.playerMeleeMaxDamage-this.playerMeleeMinDamage))+this.playerMeleeMinDamage;
+	}
+	public void RangedAttackDamage(){
+		rangedDamage = (randDmg.nextFloat()*(this.playerRangedMaxDamage-this.playerRangedMinDamage))+this.playerRangedMinDamage;
 	}
 }

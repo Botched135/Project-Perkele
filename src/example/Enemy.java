@@ -18,6 +18,8 @@ public class Enemy extends GameObject {
 	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;
 	protected float hitpoints = 100;
+	protected float maxHitpoints;
+	protected Random randEnemyHP = new Random();
 	protected float speedMultiplier = 1.0f;
 	protected float projectileSpeed;
 	protected float AttackSpeed = 0.5f;
@@ -30,8 +32,8 @@ public class Enemy extends GameObject {
 	protected String WeaponName;
 	protected String ArmorName;
 	protected boolean beingHit = false;
-	protected boolean isMeleeAttacking;
-	protected boolean isRangedAttacking;
+	protected boolean isMeleeAttacking = false;
+	protected boolean isRangedAttacking = false;
 	protected float Armor = 10;
 
 	protected float MinDamage = 2;
@@ -46,6 +48,7 @@ public class Enemy extends GameObject {
 	protected float meleeRange = 90;
 	protected float seekDistance = 500;
 	
+	//variables used for stopping movement when attacking
 	protected long attackSTime;
 	protected long attackETime;
 	protected int moveWaitTime = 1000;
@@ -130,7 +133,7 @@ public class Enemy extends GameObject {
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList ,ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
 	
 		if(this.hitpoints <= 0){
 
@@ -145,10 +148,9 @@ public class Enemy extends GameObject {
 		//Attacking if enemy is ranged
 		if(enemyType == 1){
 			if(vector.distance(_player.vector) <  range + _player.hitboxX){
-			
-				isRangedAttacking(gc, sbg, _player, _projectileList, _projectileRenderList);
+				isRangedAttacking(gc, sbg, _player, _projectileList);
 			}
-		}
+		} 
 		
 		//Attacking if enemy is melee
 		if(enemyType == 0){
@@ -162,27 +164,21 @@ public class Enemy extends GameObject {
 		
 		separate(_enemyList);
 		
-		if(vector.distance(_player.vector) <  range + _player.hitboxX){
-		setAttackReady();
-		}
-		
 		//Move towards player if within the max seek distance
 		if(vector.distance(_player.vector) > minSeekDistance && vector.distance(_player.vector) < maxSeekDistance){
-		
-		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
-		moveTo(_player.vector);
-		_player.vector.set(temp.getX(), temp.getY()); 
+			moveTo(_player.vector);
 		}
 		
 		if(enemyType == 1){
 			//Move away from player if below the min seek distance
 			if(vector.distance(_player.vector) < minSeekDistance){
-			
-				Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
 				moveAwayFrom(_player.vector);
-				_player.vector.set(temp.getX(), temp.getY()); 
 			}
 		}
+		
+		if(vector.distance(_player.vector) <  range + _player.hitboxX){
+			setAttackReady();
+			}
 	}
 	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
@@ -197,8 +193,8 @@ public class Enemy extends GameObject {
 	
 		g.setColor(new Color(255,0,0));
 		g.drawRect(vector.getX()-33, vector.getY()-60, 76.9f, 15);
-		g.fillRect(vector.getX()-33, vector.getY()-60,(this.hitpoints/this.EnemyLevel)/1.3f, 15);
-		g.drawRect(vector.getX()-33, vector.getY()-60,(this.hitpoints/this.EnemyLevel)/1.3f, 15);
+		g.fillRect(vector.getX()-33, vector.getY()-60,76.9f*this.hitpoints/this.maxHitpoints, 15);
+		g.drawRect(vector.getX()-33, vector.getY()-60,76.9f*this.hitpoints/this.maxHitpoints, 15);
 		
 		g.setColor(new Color(255,255,255));
 		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
@@ -232,49 +228,53 @@ public class Enemy extends GameObject {
 			if(count > 0){
 				sum.scale(1/count);
 				sum.normalise();
-				sum.scale(speedMultiplier*1.5f);				
-				vector.add(sum);
+				sum.scale(speedMultiplier*1.5f);
+				
+				Vector2f tempTarget = new Vector2f(sum.getX(), sum.getY());
+				if(	tempTarget.getX() > 0 &&
+					tempTarget.getX() < GameState.mapWidth &&
+					tempTarget.getY() > 0){
+					
+					vector.add(sum);
+				}
 			}
 		}
 	} 
 	//Method to move the enemy closer to a target - goes in a straight line
 	public void moveTo(Vector2f _target){
 		
+		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
 		Vector2f dir = new Vector2f(0.0f, 0.0f);
 	
-		dir = _target.sub(vector);
+		dir = tempTarget.sub(vector);
 		dir.normalise();
-		dir = dir.scale(speedMultiplier);	
-		vector = vector.add(dir);
-
-	}
+		dir = dir.scale(speedMultiplier);
+		
+		if(	vector.getX() + dir.getX() > 0 &&
+			vector.getX() + dir.getX() < GameState.mapWidth &&
+			vector.getY() + dir.getY() > 0 &&
+			vector.getY() + dir.getY() < GameState.mapHeight){
+				
+				vector = vector.add(dir);
+		}
+}
 	
 	//Method to move the enemy closer to a target - goes in a straight line
-		public void moveAwayFrom(Vector2f _target){
+	public void moveAwayFrom(Vector2f _target){
 			
-			
-			Vector2f dir = new Vector2f(0.0f, 0.0f);
-			
-			dir = _target.sub(vector);
-			dir.normalise();
-			dir = dir.scale(speedMultiplier);	
-			vector = vector.sub(dir);
-
-		}
-		
-	public void stopMove() {
-		if(attackSTime == 0 && detectMove == false){
-			this.speedMultiplier = 0.0f;
-			attackSTime = System.currentTimeMillis();
-		}
-		else {
-			attackETime = System.currentTimeMillis() - attackSTime;
-			if(attackETime > moveWaitTime){
-				this.speedMultiplier = 1.0f;
-				this.detectMove = true;
-				attackSTime = 0;
-				attackETime = 0;
-			}
+		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
+		Vector2f dir = new Vector2f(0.0f, 0.0f);
+	
+		dir = tempTarget.sub(vector);
+		dir.normalise();
+		dir = dir.scale(speedMultiplier);
+				
+		if(	vector.getX() + dir.getX() > 0 &&
+			vector.getX() + dir.getX() < GameState.mapWidth &&
+			vector.getY() + dir.getY() > 0 &&
+			vector.getY() + dir.getY() < GameState.mapHeight){
+					
+				vector = vector.sub(dir);
 		}
 	}
 	
@@ -306,11 +306,11 @@ public class Enemy extends GameObject {
 			beingHit = true;
 			
 			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
-			if(this.hitpoints - _player.PlayerDamage < 0){
+			if(this.hitpoints - _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor) < 0){
 				this.hitpoints = 0;
 			}
 			else{
-				this.hitpoints -= _player.PlayerDamage;
+				this.hitpoints -= _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor);
 			}
 		}
 	}	
@@ -328,7 +328,12 @@ public class Enemy extends GameObject {
 					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 					beingHit = true;
 					
-					this.hitpoints -= _projectileList.get(i).damage;
+					if(this.hitpoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor)<0){
+						this.hitpoints=0;
+					}
+					else{
+						this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+					}
 					_projectileList.get(i).disableDmg = true;
 					_projectileList.get(i).destroy(i, _projectileList);
 				}
@@ -338,35 +343,61 @@ public class Enemy extends GameObject {
 	
 	public void isMeleeAttacking(){
 		if(this.isAttackReady){	
-			
+
 			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
-			
+
 			this.detectMove = false;
 			
-			this.isMeleeAttacking = true;
-			
-			isAttackReady=false;
+			if(this.attackSTime == 0 && this.detectMove == false){
+				this.speedMultiplier = 0.0f;
+				this.attackSTime = System.currentTimeMillis();
+			}
+			else {
+				this.attackETime = System.currentTimeMillis() - this.attackSTime;
+				if(this.attackETime > this.moveWaitTime / this.AttackSpeed){
+					this.speedMultiplier = 1.0f;
+					this.detectMove = true;
+					this.attackSTime = 0;
+					this.attackETime = 0;
+
+					//Play meleeEnemy's melee attack sound 
+					meleeAttackSound0.play();
+					this.isMeleeAttacking = true;
+					this.isAttackReady=false;
+				}
+			}
 		}
-		else
+		else{
 			this.isMeleeAttacking = false;
+		}		
 	}
 	
-	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList, ArrayList<Circle> _projectileRenderList) throws SlickException{
-		
-		if(isAttackReady == true){	
+	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList) throws SlickException{
+		if(this.isAttackReady == true){
+			this.detectMove = false;
 			
-			//Play rangedEnemy's ranged attack sound
-			rangedAttackSound0.play();
-			
-			this.isRangedAttacking = true;
-			isAttackReady=false;
-			
-			_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
-			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
-			
-			Circle tempCircle = new Circle(_projectileList.get(_projectileList.size()-1).vector.getX(), _projectileList.get(_projectileList.size()-1).vector.getY(), _projectileList.get(_projectileList.size()-1).hitboxX);
-			_projectileRenderList.add(tempCircle);
+			if(this.attackSTime == 0 && this.detectMove == false){
+				this.speedMultiplier = 0.0f;
+				this.attackSTime = System.currentTimeMillis();
+			}
+			else {
+				this.attackETime = System.currentTimeMillis() - this.attackSTime;
+				if(attackETime > moveWaitTime / this.AttackSpeed){
+					this.speedMultiplier = 1.0f;
+					this.detectMove = true;
+					this.attackSTime = 0;
+					this.attackETime = 0;
+					
+					//Play rangedEnemy's ranged attack sound
+					rangedAttackSound0.play();
+					this.isRangedAttacking = true;
+					this.isAttackReady=false;
+					
+					_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
+					_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+				}
+			}
 		}
 		else
 			this.isRangedAttacking = false;
@@ -377,8 +408,8 @@ public class Enemy extends GameObject {
 		enemyDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 	
-	public void PickUpLoot(int index, ArrayList<Loot> _lootList){
-		
+	public void RangedDamage(){
+		rangedDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 
 	//Method to set the enemy's level
@@ -388,7 +419,8 @@ public class Enemy extends GameObject {
 			this.EnemyLevel = 1;
 		else if(this.EnemyLevel > 5)
 			this.EnemyLevel = 5;
-		this.hitpoints = 100 * this.EnemyLevel;
+		this.hitpoints = (100 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+		this.maxHitpoints=this.hitpoints;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
 		this.Armor = 5 * this.EnemyLevel; //Started out as ten. We might want to change that again
 	}

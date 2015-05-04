@@ -54,9 +54,9 @@ public class Inventory {
 			
 			
 			g.setColor(new Color(255,255,255));
-			g.drawString(df.format(player.MinDamage)+"-"+df.format(player.MaxDamage), xOrigin+250, yOrigin+621);
-			g.drawString(df.format(player.AttackSpeed), xOrigin+250, yOrigin+642);
-			g.drawString(df.format(((player.MinDamage+player.MaxDamage)/2)*player.AttackSpeed), xOrigin+250, yOrigin+663);
+			g.drawString(df.format(player.playerMeleeMinDamage)+"-"+df.format(player.playerMeleeMaxDamage), xOrigin+250, yOrigin+621);
+			g.drawString(df.format(player.playerMeleeAttackSpeed), xOrigin+250, yOrigin+642);
+			g.drawString(df.format(((player.playerMeleeMinDamage+player.playerMeleeMaxDamage)/2)*player.playerMeleeAttackSpeed), xOrigin+250, yOrigin+663);
 			g.drawString(df.format(player.MaxHitPoints), xOrigin+960, yOrigin+621);
 			g.drawString(df.format(player.Armor), xOrigin+960, yOrigin+642);
 		

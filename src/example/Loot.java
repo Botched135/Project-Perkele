@@ -270,7 +270,7 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 					LootAverage = _lootList.get(index).Armor;
 					System.out.println("ARMOR Enemy:"+EnemyAverage+"   Loot: "+LootAverage);
 				}
-				if(vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).hitboxX+_lootList.get(index).hitboxX+10 && EnemyAverage<LootAverage){
+				if(vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).hitboxX+_lootList.get(index).hitboxX+10 && EnemyAverage<LootAverage && index < _lootList.size()-1){
 					if(index < _lootList.size()-1 && _lootList.get(index) instanceof Weapon && _enemyList.get(i).enemyType ==0){
 						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;

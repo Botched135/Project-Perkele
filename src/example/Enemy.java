@@ -232,7 +232,7 @@ public class Enemy extends GameObject {
 				
 				Vector2f tempTarget = new Vector2f(sum.getX(), sum.getY());
 				if(	tempTarget.getX() > 0 &&
-					tempTarget.getX() < GameState.mapWidth &&
+					tempTarget.getX() < GameState.mapBoundWidth &&
 					tempTarget.getY() > 0){
 					
 					vector.add(sum);
@@ -251,9 +251,9 @@ public class Enemy extends GameObject {
 		dir = dir.scale(speedMultiplier);
 		
 		if(	vector.getX() + dir.getX() > 0 &&
-			vector.getX() + dir.getX() < GameState.mapWidth &&
+			vector.getX() + dir.getX() < GameState.mapBoundWidth &&
 			vector.getY() + dir.getY() > 0 &&
-			vector.getY() + dir.getY() < GameState.mapHeight){
+			vector.getY() + dir.getY() < GameState.mapBoundHeight){
 				
 				vector = vector.add(dir);
 		}
@@ -270,9 +270,9 @@ public class Enemy extends GameObject {
 		dir = dir.scale(speedMultiplier);
 				
 		if(	vector.getX() + dir.getX() > 0 &&
-			vector.getX() + dir.getX() < GameState.mapWidth &&
+			vector.getX() + dir.getX() < GameState.mapBoundWidth &&
 			vector.getY() + dir.getY() > 0 &&
-			vector.getY() + dir.getY() < GameState.mapHeight){
+			vector.getY() + dir.getY() < GameState.mapBoundHeight){
 					
 				vector = vector.sub(dir);
 		}

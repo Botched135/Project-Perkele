@@ -26,6 +26,9 @@ public class Menu extends BasicGameState {
 	
 	//public static Sound menuTheme = null;
 	
+	public static boolean playerDead = true;
+	public static boolean resetGame = true;
+	
 	protected static Vector2f menuMousePos;
 	private boolean leftMousePressed;
 	
@@ -74,7 +77,9 @@ public class Menu extends BasicGameState {
 			//if(GameState.mainTheme.playing() == false){
 			//	GameState.mainTheme.loop();
 			//}
-			
+			if(playerDead == true){
+				resetGame = true;
+			}
 			sbg.enterState(1);
 			//gc.reinit();
 		}

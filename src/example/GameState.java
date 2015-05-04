@@ -60,6 +60,7 @@ public class GameState extends BasicGameState {
 			private Image guiButtomEquipmentUnderlay = null;
 			private ArrayList <Image> equippedLootList = new ArrayList <Image>();
 			
+			
 			//Sounds
 			//public static Sound mainTheme = null;
 			
@@ -341,7 +342,7 @@ public class GameState extends BasicGameState {
 		g.setColor(new Color(255,255,255));
 		g.drawString("Number of enemies: " + enemyList.size(), 10, 50);
 		g.drawString("Number of loot: " + lootList.size(), 10, 65);
-		g.draw(playerToMouseTestLine);
+		//g.draw(playerToMouseTestLine);
 		g.drawString("Melee Attack is Ready: "+player.setAttackReady(), 10, 80);
 		g.drawString("Ranged Attack is Ready: "+player.setRangedAttackReady(),10,95);
 		//g.drawString("Player Damage: "+player.PlayerDamage, 10, 140);
@@ -399,7 +400,7 @@ public class GameState extends BasicGameState {
 		
 		if(enemyList.size() > 0){
 			for(int i = enemyList.size()-1; i >= 0; i--) {
-				enemyList.get(i).render(gc, sbg, g);
+				enemyList.get(i).render(gc, sbg, g, player);
 			}
 		}
 		
@@ -450,9 +451,9 @@ public class GameState extends BasicGameState {
 		
 		player.render(gc, sbg, g);
 		g.setColor(new Color(0,255,255));
-		g.draw(playerTestCircle);
+		//g.draw(playerTestCircle);
 		g.setColor(new Color(255,255,0,80));
-		g.draw(playerMeleeRangeCircle);
+		//g.draw(playerMeleeRangeCircle);
 		
 		//RENDER Loot info on "shift" hovering ========================================================================================================
 		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));

@@ -22,7 +22,6 @@ public class Enemy extends GameObject {
 	protected Random randEnemyHP = new Random();
 	protected float speedMultiplier = 1.0f;
 	protected float projectileSpeed;
-	protected float AttackSpeed = 0.5f;
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
 	protected boolean isAttackReady = false;
@@ -31,11 +30,13 @@ public class Enemy extends GameObject {
 	protected String EnemyName;
 	protected String WeaponName;
 	protected String ArmorName;
+	protected int wepRenderId;
 	protected boolean beingHit = false;
 	protected boolean isMeleeAttacking = false;
 	protected boolean isRangedAttacking = false;
 	protected float Armor = 10;
 
+	protected float AttackSpeed = 0.5f;
 	protected float MinDamage = 2;
 	protected float MaxDamage = 10;
 	protected float enemyDamage;
@@ -54,9 +55,18 @@ public class Enemy extends GameObject {
 	protected long attackETime;
 	protected int moveWaitTime = 1000;
 	
+	//Variables for animations of weapons
+	boolean vectorSnapshotted = false;
+	float moveY = 0;
+	float maxMoveY = 32;
+	float moveYIncrement = 2*maxMoveY/(AttackSpeed);
+	float spriteAngle = 0;
+	
 	//Images =================================================
 	
-	protected ArrayList<Image> sprite = new ArrayList<Image>(); 
+	protected ArrayList<Image> sprite = new ArrayList<Image>();
+	private ArrayList <Image> enemyEquippedLootList = new ArrayList <Image>();
+	private Image arrow = null;;
 	
 	//Sounds =================================================
 	
@@ -92,6 +102,7 @@ public class Enemy extends GameObject {
 		
 		//Setting variables if a melee enemy
 		if(enemyType == 0){
+			AttackSpeed = 1;
 			projectileSpeed = 0;
 			minRange = 0;
 			maxRange = 90;
@@ -107,6 +118,7 @@ public class Enemy extends GameObject {
 		
 		//Setting variables if a ranged enemy
 		if(enemyType == 1){
+			AttackSpeed = 1;
 			rangedDamage = 10;
 			projectileSpeed = 12;
 			maxRange = 400;
@@ -121,10 +133,16 @@ public class Enemy extends GameObject {
 			EnemyNames[4] = "Elven Trueshot";
 			
 		}
+		
+		wepRenderId = enemyType;
+		
 		sprite.add(null);
 		sprite.add(null);
 		sprite.set(0, new Image("data/meleeEnemySprite.png"));
 		sprite.set(1, new Image("data/rangedEnemySprite.png"));
+		arrow = new Image("data/arrowSprite.png");
+		enemyEquippedLootList.add(new Image("data/meleeWepEquip1.png"));
+		enemyEquippedLootList.add(new Image("data/rangedWepEquip1.png"));
 		
 		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
@@ -144,7 +162,6 @@ public class Enemy extends GameObject {
 			_enemyIndicatorList.get(index).destroy(index, _enemyIndicatorList);
 			this.destroy(index, _enemyList);
 		}
-		System.out.println(speedMultiplier);
 		beingHit = false;
 		
 		//Attacking if enemy is ranged
@@ -165,7 +182,7 @@ public class Enemy extends GameObject {
 		separate(_enemyList);
 		
 		//Move towards player if within the max seek distance
-		if(vector.distance(_player.vector) > minSeekDistance && vector.distance(_player.vector) < maxSeekDistance){
+		if(vector.distance(_player.vector) > minSeekDistance + _player.hitboxX + hitboxX && vector.distance(_player.vector) < maxSeekDistance + _player.hitboxX + hitboxX){
 			moveTo(_player.vector, _enemyList);
 		}
 		
@@ -182,7 +199,7 @@ public class Enemy extends GameObject {
 	}
 	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g, Player player) throws SlickException{
 		
 		if(beingHit == true){
 			sprite.get(enemyType).drawFlash(vector.getX()-32, vector.getY()-32);
@@ -191,6 +208,74 @@ public class Enemy extends GameObject {
 			sprite.get(enemyType).draw(vector.getX()-32, vector.getY()-32);
 		}
 	
+		//RENDER EQUIPPED WEAPON IN GAME SPACE ====================================================
+				System.out.println(vectorSnapshotted);
+				Vector2f dir = new Vector2f(0.0f, 0.0f);
+				if(stopMoving == true && vectorSnapshotted == false){
+					vectorSnapshotted = true;
+					Vector2f tempTarget = new Vector2f(player.vector.getX(), player.vector.getY());
+					dir = tempTarget.sub(vector);
+					dir.normalise();
+					spriteAngle = (float)dir.getTheta()+90;
+					
+				}
+				else if(stopMoving == false){
+					vectorSnapshotted = false;
+					Vector2f tempTarget = new Vector2f(player.vector.getX(), player.vector.getY());
+					dir = tempTarget.sub(vector);
+					dir.normalise();
+					spriteAngle = (float)dir.getTheta()+90;
+				}
+				
+				enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
+				enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
+				
+				if(enemyType == 0 && stopMoving == false){
+					moveY = 0;
+					maxMoveY = 64;
+					moveYIncrement = 3;
+				}
+				if(enemyType == 0 && stopMoving == true){
+					moveY = moveY + moveYIncrement;
+					
+					if(moveY >= maxMoveY){
+						moveYIncrement *= -1;
+					}
+					if(moveY < -(maxMoveY/3)){
+						moveYIncrement *= -1;
+					}
+					
+					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
+					if(player.vector.getX() < vector.getX()){
+						enemyEquippedLootList.get(wepRenderId).setRotation((spriteAngle-(maxMoveY/2)) + moveY );
+					}
+					else{
+						enemyEquippedLootList.get(wepRenderId).setRotation((spriteAngle+(maxMoveY/2)) - moveY );
+					}
+					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+					
+				}
+				else{
+					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
+					enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
+					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+				}
+				
+				if(enemyType == 1){
+					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
+					enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
+					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+				}
+				
+				if(enemyType == 1 && stopMoving == false){
+					
+					arrow.setCenterOfRotation(16,64);
+					arrow.setRotation(spriteAngle);
+					arrow.draw(vector.getX()-16, vector.getY()-64);
+				}
+				
+		//=========================================================================================
+		
 		g.setColor(new Color(255,0,0));
 		g.drawRect(vector.getX()-33, vector.getY()-60, 76.9f, 15);
 		g.fillRect(vector.getX()-33, vector.getY()-60,76.9f*this.hitpoints/this.maxHitpoints, 15);
@@ -234,7 +319,6 @@ public class Enemy extends GameObject {
 				if(	tempTarget.getX() > 0 &&
 					tempTarget.getX() < GameState.mapBoundWidth &&
 					tempTarget.getY() > 0){
-					System.out.println("heu");
 					//vector.add(tempTarget);
 					return tempTarget;
 				}

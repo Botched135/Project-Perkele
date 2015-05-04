@@ -24,7 +24,7 @@ import org.newdawn.slick.geom.*;
 public class GameState extends BasicGameState {
 	
 	//VARIABLE DECLARATION
-			Player player = new Player(new Vector2f(Window.WIDTH/2, Window.HEIGHT/2));
+			Player player = new Player(new Vector2f(mapBoundWidth/2, mapBoundHeight/2));
 			private Circle playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
 			private Circle playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), 150);
 			private Line playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Mouse.getY());
@@ -117,7 +117,7 @@ public class GameState extends BasicGameState {
 		if(Menu.resetGame == true){
 			
 			player = null;
-			player = new Player(new Vector2f(Window.WIDTH/2, Window.HEIGHT/2));
+			player = new Player(new Vector2f(mapBoundWidth/2, mapBoundHeight/2));
 			inventory = null;
 			inventory = new Inventory(player);
 			lootList = null;
@@ -172,7 +172,6 @@ public class GameState extends BasicGameState {
 		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		if(player.hitPoints<=0){
 			EndScreen.wave=currentWave;
-			Menu.playerDead = true;
 			sbg.enterState(2);
 		}
 			
@@ -498,7 +497,7 @@ public class GameState extends BasicGameState {
 									g.setColor(new Color(255,0,0));
 								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-103);
-								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > (player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2 * player.AttackSpeed){
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > ((player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2)* player.AttackSpeed){
 									g.setColor(new Color(0,255,0));
 								}
 								else{
@@ -601,7 +600,7 @@ public class GameState extends BasicGameState {
 									g.setColor(new Color(255,0,0));
 								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
-								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > (player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2 * player.AttackSpeed){
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > ((player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2) * player.AttackSpeed){
 									g.setColor(new Color(0,255,0));
 								}
 								else{

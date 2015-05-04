@@ -111,7 +111,7 @@ public class Menu extends BasicGameState {
 		}
 		
 		//Alternative exit - Press escape to close application
-		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && playerDead == true) {
 			sbg.enterState(1);
 		}
 		

@@ -23,6 +23,11 @@ public class EndScreen extends BasicGameState {
 		
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
+		
+		if(Menu.playerDead == false){
+			Menu.playerDead = true;
+		}
+		
 		if(!gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
 			leftMousePressed = false;
 		}

@@ -317,7 +317,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	void beingMeleeAttacked (Enemy _enemy){
 		
-		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.range + _enemy.hitboxX){
+		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.maxRange + _enemy.hitboxX && vector.distance(_enemy.vector) > _enemy.minRange){
 			_enemy.isMeleeAttacking = false;
 			_enemy.AttackDamage();
 			

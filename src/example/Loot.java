@@ -55,7 +55,6 @@ public class Loot extends GameObject {
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {	
 	
 	lootPickupSound = new Sound("data/lootPickupSound.ogg");
-	System.out.println("hey");
 	leftMousePressed = false;
 		
 	}
@@ -268,7 +267,6 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 				else if(index < _lootList.size()-1 && _lootList.get(index) instanceof Armor){ 
 					EnemyAverage= _enemyList.get(i).Armor;
 					LootAverage = _lootList.get(index).Armor;
-					System.out.println("ARMOR Enemy:"+EnemyAverage+"   Loot: "+LootAverage);
 				}
 				if(vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).hitboxX+_lootList.get(index).hitboxX+10 && EnemyAverage<LootAverage && index < _lootList.size()-1){
 					if(index < _lootList.size()-1 && _lootList.get(index) instanceof Weapon && _enemyList.get(i).enemyType ==0){

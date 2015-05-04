@@ -16,6 +16,7 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.geom.*;
 
 
@@ -54,6 +55,7 @@ public class GameState extends BasicGameState {
 			
 			//Images =================================================
 			
+			public static TiledMap bgMap = null;
 			private Image playerDamageWarning = null; 
 			private Image guiButtomEquipmentUnderlay = null;
 			private ArrayList <Image> equippedLootList = new ArrayList <Image>();
@@ -68,11 +70,15 @@ public class GameState extends BasicGameState {
 			private boolean antiAlias = true;
 			float playerDamageWarningOpacity = 0;
 			float PDWcounter = 0.01f;
+			public static int mapWidth = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
+			public static int mapHeight = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps height
+			public static int collisionLayer;
 			
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		//mainTheme = new Sound("data/mainTheme.ogg");
 		
+		bgMap = new TiledMap("data/map.tmx");
 		playerDamageWarning = new Image("data/playerDamageWarning.png");
 		guiButtomEquipmentUnderlay = new Image("data/guiButtomEquipmentUnderlay.png");
 		equippedLootList.add(new Image("data/armorTestSprite.png"));
@@ -102,6 +108,8 @@ public class GameState extends BasicGameState {
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		
+		collisionLayer = bgMap.getLayerIndex("Collision");
 		
 		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
@@ -281,7 +289,10 @@ public class GameState extends BasicGameState {
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
-	
+		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
+		bgMap.render(0,0);
+		g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
+		
 		//inventory.render(gc, sbg, g);
 
 		

@@ -78,7 +78,10 @@ public class GameState extends BasicGameState {
 			
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
+		Menu.resetGame = false;
+		
 		//mainTheme = new Sound("data/mainTheme.ogg");
+		
 		
 		bgMap = new TiledMap("data/map.tmx");
 		playerDamageWarning = new Image("data/playerDamageWarning.png");
@@ -108,8 +111,44 @@ public class GameState extends BasicGameState {
 		font = new TrueTypeFont(awtFont, antiAlias);
 		
 	}
-	
+	//UPDATE FUNCTIONS ==================================================================================================================================
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		
+		if(Menu.resetGame == true){
+			
+			player = null;
+			player = new Player(new Vector2f(Window.WIDTH/2, Window.HEIGHT/2));
+			inventory = null;
+			inventory = new Inventory(player);
+			lootList = null;
+			lootList = new ArrayList <Loot>();
+			enemyList = null;
+			enemyList = new ArrayList <Enemy>();
+			enemyIndicatorList = null;
+			enemyIndicatorList = new ArrayList <EnemyIndicator>();
+			projectileList = null;
+			projectileList = new ArrayList <Projectile>();
+			healthGlobeList = null;
+			healthGlobeList = new ArrayList <healthGlobe>();
+			inventoryList = null;
+			inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon			
+			
+			equippedLootList.add(new Image("data/armorTestSprite.png"));
+			equippedLootList.add(new Image("data/meleeWeaponTestSprite.png"));
+			equippedLootList.add(new Image("data/rangedWeaponTestSprite.png"));
+			
+			inventory.init(gc, sbg);
+			player.init(gc, sbg);
+			
+			wave = 0;
+			currentWave = 0;
+			waveStartTimer = 0;
+			waveTimeDif = 0;
+			waveStart = true;
+			
+			Menu.resetGame = false;
+		}
+		
 		
 		collisionLayer = bgMap.getLayerIndex("Collision");
 		
@@ -133,6 +172,7 @@ public class GameState extends BasicGameState {
 		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		if(player.hitPoints<=0){
 			EndScreen.wave=currentWave;
+			Menu.playerDead = true;
 			sbg.enterState(2);
 		}
 			

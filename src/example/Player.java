@@ -73,6 +73,7 @@ public class Player extends GameObject{
 	
 	private Image playerTestSprite = null; 
 	private Image hpBar = null; 
+	private ArrayList <Image> playerEquippedLootList = new ArrayList <Image>();
 	
 	//Sounds =================================================
 	
@@ -110,6 +111,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 		playerTestSprite = new Image("data/player.png");
 		hpBar = new Image("data/hpBar.png");
+		playerEquippedLootList.add(new Image("data/meleeWepEquip1.png"));
 		
 		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
@@ -200,6 +202,21 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		playerTestSprite.draw(vector.getX()-32, vector.getY()-32);
 		
+		//RENDER EQUIPPED WEAPON IN GAME SPACE ==========================
+		
+		Vector2f dir = new Vector2f(0.0f, 0.0f);
+		Vector2f tempTarget = new Vector2f(GameState.mousePos.getX(), GameState.mousePos.getY());
+		
+		dir = tempTarget.sub(vector);
+		dir.normalise();
+		
+		float spriteAngle = (float)dir.getTheta()+90;
+		
+		playerEquippedLootList.get(0).setCenterOfRotation(32,96);
+		playerEquippedLootList.get(0).setRotation(spriteAngle);
+		playerEquippedLootList.get(0).draw(vector.getX()-32, vector.getY()-96);
+		//=========================
+		
 		g.translate((vector.getX())-(Window.WIDTH/2), (vector.getY())-(Window.HEIGHT/2));
 		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 378*(this.hitPoints/this.MaxHitPoints), 43);
 		//hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 1); // <----- Change the "1" to make the HP Bar resize according to remaining player health!
@@ -237,7 +254,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 		
 		if(direction == 2){
-			if(	tempTarget.getX() < GameState.mapWidth){
+			if(	tempTarget.getX() < GameState.mapBoundWidth){
 				tempTarget = _target.add(vector);
 		
 				Vector2f dir = tempTarget.sub(vector);
@@ -249,7 +266,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 		
 		if(direction == 3){
-			if(	tempTarget.getY() < GameState.mapHeight){
+			if(	tempTarget.getY() < GameState.mapBoundHeight){
 				tempTarget = _target.add(vector);
 		
 				Vector2f dir = tempTarget.sub(vector);
@@ -317,7 +334,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	void beingMeleeAttacked (Enemy _enemy){
 		
-		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.range + _enemy.hitboxX){
+		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.maxRange + _enemy.hitboxX && vector.distance(_enemy.vector) > _enemy.minRange){
 			_enemy.isMeleeAttacking = false;
 			_enemy.AttackDamage();
 			

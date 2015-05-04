@@ -354,7 +354,6 @@ public class GameState extends BasicGameState {
 				g.drawRect(Window.WIDTH/2 - 110, 30, 230.7f, 15);
 				g.fillRect(Window.WIDTH/2 - 110, 30,230.7f*(enemyList.get(i).hitpoints/enemyList.get(i).maxHitpoints), 15);
 				g.drawRect(Window.WIDTH/2 - 110, 30,230.7f*(enemyList.get(i).hitpoints/enemyList.get(i).maxHitpoints), 15);
-				System.out.println(enemyList.get(i).hitpoints/enemyList.get(i).maxHitpoints);
 				g.setColor(new Color(255,255,255));
 				break;
 			}

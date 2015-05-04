@@ -257,8 +257,8 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 		if(_lootList.size()>=0){
 			for(int i = _enemyList.size()-1; i>=0;i--){ 
 				if(index < _lootList.size()-1 && _lootList.get(index) instanceof Weapon && _enemyList.get(i).enemyType ==0){
-					    EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;
-						LootAverage =((_lootList.get(index).wepMinDMG+_lootList.get(index).wepMaxDMG)/2)*_lootList.get(index).attackSpeed;
+					EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;
+					LootAverage =((_lootList.get(index).wepMinDMG+_lootList.get(index).wepMaxDMG)/2)*_lootList.get(index).attackSpeed;
 				}
 				else if(index < _lootList.size()-1 && _lootList.get(index) instanceof RangedWeapon && _enemyList.get(i).enemyType ==1){
 					EnemyAverage = ((_enemyList.get(i).MinDamage+_enemyList.get(i).MaxDamage)*_enemyList.get(i).AttackSpeed)/2;
@@ -268,26 +268,24 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 					EnemyAverage= _enemyList.get(i).Armor;
 					LootAverage = _lootList.get(index).Armor;
 				}
-				if(vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).hitboxX+_lootList.get(index).hitboxX+10 && EnemyAverage<LootAverage && index < _lootList.size()-1){
-					if(index < _lootList.size()-1 && _lootList.get(index) instanceof Weapon && _enemyList.get(i).enemyType ==0){
+				if(index < _lootList.size()-1 && vector.distance(_enemyList.get(i).vector)< _enemyList.get(i).hitboxX+_lootList.get(index).hitboxX+10 && EnemyAverage<LootAverage){
+					if(_lootList.get(index) instanceof Weapon && _enemyList.get(i).enemyType ==0){
 						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
-						_lootList.remove(index);
 					}
-					else if(index < _lootList.size()-1 && _lootList.get(index) instanceof RangedWeapon && _enemyList.get(i).enemyType==1){
+					else if(_lootList.get(index) instanceof RangedWeapon && _enemyList.get(i).enemyType==1){
 						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
-						_lootList.remove(index);
 					}
-					else if(index < _lootList.size()-1 && _lootList.get(index) instanceof Armor){
+					else if(_lootList.get(index) instanceof Armor){
 						_enemyList.get(i).Armor = _lootList.get(index).Armor;
 						_enemyList.get(i).ArmorName = _lootList.get(index).Name;
-						_lootList.remove(index);
 					}
+					_lootList.remove(index);
 				}
 			}
 		}

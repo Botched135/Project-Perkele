@@ -70,8 +70,10 @@ public class GameState extends BasicGameState {
 			private boolean antiAlias = true;
 			float playerDamageWarningOpacity = 0;
 			float PDWcounter = 0.01f;
-			public static int mapWidth = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
-			public static int mapHeight = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps height
+			public static int mapWidth = 32*(116); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
+			public static int mapHeight = 32*(116);
+			public static int mapBoundWidth = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
+			public static int mapBoundHeight = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps height
 			public static int collisionLayer;
 			
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -442,8 +444,26 @@ public class GameState extends BasicGameState {
 								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-123, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
 																		
 								g.setColor(new Color(255,255,255));
+								if((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2 > (player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-123);
+								if((lootList.get(i).attackSpeed > player.AttackSpeed)){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-103);
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > (player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2 * player.AttackSpeed){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("DPS: " + df.format(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2)*lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-83);
 							}
 							
@@ -456,8 +476,26 @@ public class GameState extends BasicGameState {
 								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-122, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
 								
 								g.setColor(new Color(255,255,255));
+								if(lootList.get(i).Armor > player.Armor){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Armor: " + (int)lootList.get(i).Armor, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-122 );
+								if(lootList.get(i).lifeRegen > player.lifeRegen){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Liferegen: " + lootList.get(i).lifeRegen, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-102);
+								if(lootList.get(i).hpBonus > player.MaxHitPoints - player.baseHp){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("HpBonus: " + (int)lootList.get(i).hpBonus, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-82);
 							}
 							if(lootList.get(i) instanceof RangedWeapon){
@@ -468,8 +506,26 @@ public class GameState extends BasicGameState {
 								
 								g.setColor(new Color(255,255,255));
 								g.drawString(lootList.get(i).Name+" lvl:"+lootList.get(i).lootLevel, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								if((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2 > (player.playerRangedMinDamage + player.playerRangedMaxDamage)/2){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-40);
+								if((lootList.get(i).attackSpeed > player.playerRangedAttackSpeed)){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > (player.playerRangedMinDamage + player.playerRangedMaxDamage)/2 * player.playerRangedAttackSpeed){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("DPS: " + df.format(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2)*lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY());
 							}
 						}
@@ -488,10 +544,29 @@ public class GameState extends BasicGameState {
 								g.setColor(new Color(100,100,100));
 								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
 								
+								
 								g.setColor(new Color(255,255,255));
 								g.drawString(lootList.get(i).Name+" lvl:"+lootList.get(i).lootLevel, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								if((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2 > (player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-40);
+								if((lootList.get(i).attackSpeed > player.AttackSpeed)){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > (player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2 * player.AttackSpeed){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("DPS: " + df.format(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2)*lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY());
 							}
 							
@@ -504,8 +579,26 @@ public class GameState extends BasicGameState {
 								g.fillRect(lootList.get(i).vector.getX()+39, lootList.get(i).vector.getY()-40, 180, 60); // <--- change the last parameter (Y-height) to accommodate the number of attributes that needs fitting inside the frame
 								
 								g.setColor(new Color(255,255,255));
+								if(lootList.get(i).Armor > player.Armor){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Armor: " + (int)lootList.get(i).Armor, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-40);
+								if(lootList.get(i).lifeRegen > player.lifeRegen){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Liferegen: " + lootList.get(i).lifeRegen, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
+								if(lootList.get(i).hpBonus > player.MaxHitPoints - player.baseHp){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("HpBonus: " + (int)lootList.get(i).hpBonus, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-0);
 							}
 							if(lootList.get(i) instanceof RangedWeapon){
@@ -516,8 +609,26 @@ public class GameState extends BasicGameState {
 								
 								g.setColor(new Color(255,255,255));
 								g.drawString(lootList.get(i).Name+" lvl:"+lootList.get(i).lootLevel, lootList.get(i).vector.getX()-24, lootList.get(i).vector.getY()-61);
+								if((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2 > (player.playerRangedMinDamage + player.playerRangedMaxDamage)/2){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-40);
+								if((lootList.get(i).attackSpeed > player.playerRangedAttackSpeed)){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > (player.playerRangedMinDamage + player.playerRangedMaxDamage)/2 * player.playerRangedAttackSpeed){
+									g.setColor(new Color(0,255,0));
+								}
+								else{
+									g.setColor(new Color(255,0,0));
+								}
 								g.drawString("DPS: " + df.format(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2)*lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY());
 							}
 						}

@@ -237,7 +237,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 		
 		if(direction == 2){
-			if(	tempTarget.getX() < GameState.mapWidth){
+			if(	tempTarget.getX() < GameState.mapBoundWidth){
 				tempTarget = _target.add(vector);
 		
 				Vector2f dir = tempTarget.sub(vector);
@@ -249,7 +249,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 		
 		if(direction == 3){
-			if(	tempTarget.getY() < GameState.mapHeight){
+			if(	tempTarget.getY() < GameState.mapBoundHeight){
 				tempTarget = _target.add(vector);
 		
 				Vector2f dir = tempTarget.sub(vector);

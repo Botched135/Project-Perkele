@@ -229,7 +229,6 @@ public class Enemy extends GameObject {
 		}
 	
 		//RENDER EQUIPPED WEAPON IN GAME SPACE ====================================================
-				System.out.println(vectorSnapshotted);
 				Vector2f dir = new Vector2f(0.0f, 0.0f);
 				if(stopMoving == true && vectorSnapshotted == false){
 					vectorSnapshotted = true;

@@ -270,27 +270,61 @@ public class GameState extends BasicGameState {
 			}
 		}
 		if(waveStart && enemyList.size() == 0) { //Spawning of a wave
-			//for loop for spawning melee enemies
+			//loop for spawning melee enemies
 			for(int i = 0; i < enemyMeleeAmount; i++) {
 				randEnemyPos = randPos.nextInt(8);
 				spawnPosVari = randPos.nextInt(5);
-				enemyList.add(new Enemy(spawnPos.get(randEnemyPos),0)); //<-- last argument is the type of enemy to spawn
-				enemyList.get(enemyList.size()-1).init(gc, sbg);
-				enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
-				
-				enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
-				enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
+				boolean enemySpawned = false;
+				while(enemySpawned == false){					
+					if(	spawnPos.get(randEnemyPos).getX() <= 0 ||
+							spawnPos.get(randEnemyPos).getX() >= mapBoundWidth ||
+							spawnPos.get(randEnemyPos).getY() <= 0 ||
+							spawnPos.get(randEnemyPos).getY() >= mapBoundHeight) { 
+						randEnemyPos = randPos.nextInt(8);
+					}
+					else{
+						Vector2f tempPos = new Vector2f(spawnPos.get(randEnemyPos));
+						for(int j = 0; j < enemyList.size()-1; j++){
+							if(tempPos.getX() == enemyList.get(j).vector.getX() && tempPos.getY() == enemyList.get(j).vector.getY()){
+								tempPos.add(new Vector2f(3,2));
+							}
+						}
+						enemyList.add(new Enemy(tempPos,0)); //<-- last argument is the type of enemy to spawn
+						enemyList.get(enemyList.size()-1).init(gc, sbg);
+						enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
+						enemySpawned = true;
+						enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
+						enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
+					}
+				}				
 			}
-			//for loop for spawning ranged enemies
+			//loop for spawning ranged enemies
 			for(int i = 0; i < enemyRangedAmount; i++) {
 				randEnemyPos = randPos.nextInt(8);
 				spawnPosVari = randPos.nextInt(5);
-				enemyList.add(new Enemy(spawnPos.get(randEnemyPos),1)); //<-- last argument is the type of enemy to spawn
-				enemyList.get(enemyList.size()-1).init(gc, sbg);
-				enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
-				
-				enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
-				enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
+				boolean enemySpawned = false;
+				while(enemySpawned == false){					
+					if(	spawnPos.get(randEnemyPos).getX() <= 0 ||
+							spawnPos.get(randEnemyPos).getX() >= mapBoundWidth ||
+							spawnPos.get(randEnemyPos).getY() <= 0 ||
+							spawnPos.get(randEnemyPos).getY() >= mapBoundHeight) { 
+						randEnemyPos = randPos.nextInt(8);
+					}
+					else{
+						Vector2f tempPos = new Vector2f(spawnPos.get(randEnemyPos));
+						for(int j = 0; j < enemyList.size()-1; j++){
+							if(tempPos.getX() == enemyList.get(j).vector.getX() && tempPos.getY() == enemyList.get(j).vector.getY()){
+								tempPos.add(new Vector2f(3,2));
+							}
+						}
+						enemyList.add(new Enemy(tempPos,1)); //<-- last argument is the type of enemy to spawn
+						enemyList.get(enemyList.size()-1).init(gc, sbg);
+						enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
+						enemySpawned = true;
+						enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
+						enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
+					}
+				}	
 			}
 			enemyMeleeAmount += 2;
 			enemyRangedAmount++;

@@ -123,7 +123,6 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
 		
-		//System.out.println("playerX: " + vector.getX() + "  playerY: " + vector.getY());
 		//Keeping HP from exceeding max hp.
 		if(hitPoints > MaxHitPoints){
 			hitPoints = MaxHitPoints;

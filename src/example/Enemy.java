@@ -65,7 +65,7 @@ public class Enemy extends GameObject {
 	//Images =================================================
 	
 	private int imageDirection = 0;
-	protected Image[][] sprite = new Image[2][2];
+	protected Image[][] sprite = new Image[3][2];
 	private ArrayList <Image> enemyEquippedLootList = new ArrayList <Image>();
 	private Image arrow = null;;
 	
@@ -109,6 +109,7 @@ public class Enemy extends GameObject {
 			maxRange = 90;
 			minSeekDistance = 0;
 			maxSeekDistance = 500;
+			wepRenderId = 0;
 			
 			EnemyNames[0] = "Dwarf Grunt";
 			EnemyNames[1] = "Dwarf Soldier";
@@ -126,6 +127,7 @@ public class Enemy extends GameObject {
 			minRange = 100;
 			minSeekDistance = 200;
 			maxSeekDistance = 500;
+			wepRenderId = 1;
 			
 			EnemyNames[0] = "Elven Stakethrower";
 			EnemyNames[1] = "Elven Archer";
@@ -139,20 +141,23 @@ public class Enemy extends GameObject {
 			AttackSpeed = 1;
 			rangedDamage = 10;
 			projectileSpeed = 12;
-			maxRange = 400;
-			minRange = 100;
-			minSeekDistance = 200;
+			maxRange = 90;
+			minRange = 0;
+			minSeekDistance = 0;
 			maxSeekDistance = 500;
+			wepRenderId = 0;
 			
 			EnemyNames[0] = "Perkele the Destroyer of Worlds";
 		}
 		
-		wepRenderId = enemyType;
+		
 		
 		sprite[0][0] = new Image("data/meleeEnemy1Up.png"); 		//index 0
 		sprite[0][1] = new Image("data/meleeEnemy1Down.png");		//index 1
 		sprite[1][0] = new Image("data/rangedEnemy1Up.png");		//index 2 
-		sprite[1][1] =  new Image("data/rangedEnemy1Down.png");		//index 3
+		sprite[1][1] = new Image("data/rangedEnemy1Down.png");		//index 3
+		sprite[2][0] = new Image("data/meleeEnemy1Up.png"); 		//index 0
+		sprite[2][1] = new Image("data/meleeEnemy1Down.png");		//index 1
 		arrow = new Image("data/arrowSprite.png");
 		enemyEquippedLootList.add(new Image("data/meleeWepEquip1.png"));
 		enemyEquippedLootList.add(new Image("data/rangedWepEquip1.png"));
@@ -188,6 +193,13 @@ public class Enemy extends GameObject {
 			if(enemyType == 1){
 				isRangedAttacking(gc, sbg, _player, _projectileList);
 			}
+			if(enemyType == 2){
+				isMeleeAttacking();
+				if(vector.distance(_player.vector) > this.hitboxX + _player.hitboxX + (maxSeekDistance/2)){
+					isRangedAttacking(gc, sbg, _player, _projectileList);
+				}
+			}
+			
 		} 
 		
 		stopMovingWhenAttacking(stopMoving);
@@ -462,7 +474,6 @@ public class Enemy extends GameObject {
 	
 	public void isMeleeAttacking(){
 		if(this.isAttackReady){	
-
 			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
 			this.isMeleeAttacking = true;
@@ -473,7 +484,6 @@ public class Enemy extends GameObject {
 	
 	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList) throws SlickException{
 		if(this.isAttackReady == true){
-		
 			//Play rangedEnemy's ranged attack sound
 			rangedAttackSound0.play();
 			this.isRangedAttacking = true;

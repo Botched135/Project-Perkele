@@ -131,7 +131,19 @@ public class Enemy extends GameObject {
 			EnemyNames[2] = "Elven Marksmen";
 			EnemyNames[3] = "Elven Sharpshooter";
 			EnemyNames[4] = "Elven Trueshot";
+		}
+		
+		//Setting variables if enemy is a boss
+		if(enemyType == 2){
+			AttackSpeed = 1;
+			rangedDamage = 10;
+			projectileSpeed = 12;
+			maxRange = 400;
+			minRange = 100;
+			minSeekDistance = 200;
+			maxSeekDistance = 500;
 			
+			EnemyNames[0] = "Perkele the Destroyer of Worlds";
 		}
 		
 		wepRenderId = enemyType;
@@ -483,14 +495,49 @@ public class Enemy extends GameObject {
 	//Method to set the enemy's level
 	void SetEnemyLevel(int _wave){
 		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/2);
-		if(this.EnemyLevel < 1)
+		if(this.EnemyLevel < 1){
 			this.EnemyLevel = 1;
-		else if(this.EnemyLevel > 5)
+			this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+			this.maxHitpoints=this.hitpoints;
+			this.EnemyName = EnemyNames[0];
+			this.Armor = 5 * 1;
+		}
+		else if(this.EnemyLevel > 5){
 			this.EnemyLevel = 5;
-		this.hitpoints = (100 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+			this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+			this.maxHitpoints=this.hitpoints;
+			this.EnemyName = EnemyNames[4];
+			this.Armor = 5 * 5;
+		}
+		else{
+		this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
 		this.maxHitpoints=this.hitpoints;
 		this.EnemyName = EnemyNames[this.EnemyLevel-1];
-		this.Armor = 5 * this.EnemyLevel; //Started out as ten. We might want to change that again
+		this.Armor = 5 * this.EnemyLevel;
+		}
+	}
+	//Method for setting the boss level
+	void SetEnemyLevel(int _wave, int _bossLevel){
+		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/2) + _bossLevel;
+		if(this.EnemyLevel < 1){
+			this.EnemyLevel = 1;
+			this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+			this.maxHitpoints=this.hitpoints;
+			this.EnemyName = EnemyNames[0];
+			this.Armor = 5 * 1;
+		}
+		else if(this.EnemyLevel > 5){
+			this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+			this.maxHitpoints=this.hitpoints;
+			this.EnemyName = EnemyNames[0];
+			this.Armor = 5 * 5;
+		}
+		else{
+		this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+		this.maxHitpoints=this.hitpoints;
+		this.EnemyName = EnemyNames[0];
+		this.Armor = 5 * this.EnemyLevel;
+		}
 	}
 	//Method to drop loot from the enemy
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{

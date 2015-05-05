@@ -49,6 +49,7 @@ public class GameState extends BasicGameState {
 			protected int enemyMeleeAmount = 2;
 			protected int enemyRangedAmount = 1;
 			protected int randEnemyPos;
+			protected int bossLevel = 1;
 			
 
 			protected static Vector2f mousePos;
@@ -264,6 +265,30 @@ public class GameState extends BasicGameState {
 			}
 		}
 		if(waveStart && enemyList.size() == 0) { //Spawning of a wave
+			//Detecting if a boss should be spawned instead
+			if(wave%10 == 0){
+				randEnemyPos = randPos.nextInt(8);
+				spawnPosVari = randPos.nextInt(5);
+				boolean enemySpawned = false;
+				while(enemySpawned == false){					
+					if(	spawnPos.get(randEnemyPos).getX() <= 0 ||
+							spawnPos.get(randEnemyPos).getX() >= mapBoundWidth ||
+							spawnPos.get(randEnemyPos).getY() <= 0 ||
+							spawnPos.get(randEnemyPos).getY() >= mapBoundHeight) { 
+						randEnemyPos = randPos.nextInt(8);
+					}
+					else{
+						enemyList.add(new Enemy(spawnPos.get(randEnemyPos),2)); //<-- last argument is the type of enemy to spawn
+						enemyList.get(enemyList.size()-1).init(gc, sbg);
+						enemyList.get(enemyList.size()-1).SetEnemyLevel(wave, bossLevel);
+						enemySpawned = true;
+						enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
+						enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
+						bossLevel++;
+					}
+				}
+			}
+			else{
 			//loop for spawning melee enemies
 			for(int i = 0; i < enemyMeleeAmount; i++) {
 				randEnemyPos = randPos.nextInt(8);
@@ -322,6 +347,7 @@ public class GameState extends BasicGameState {
 			}
 			enemyMeleeAmount += 2;
 			enemyRangedAmount++;
+			}
 		}
 		
 		//UPDATING ENEMIES

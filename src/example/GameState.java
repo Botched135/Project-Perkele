@@ -71,7 +71,7 @@ public class GameState extends BasicGameState {
 			private boolean antiAlias = true;
 			float playerDamageWarningOpacity = 0;
 			float PDWcounter = 0.01f;
-			boolean wepSwap = false;
+			public static boolean wepSwap = false;
 			public static int mapWidth = 32*(116); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
 			public static int mapHeight = 32*(116);
 			public static int mapBoundWidth = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
@@ -730,15 +730,16 @@ public class GameState extends BasicGameState {
 		
 		g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
 		
-		if(wepSwap == true){
+		if(wepSwap == false){
 			equippedLootList.get(2).draw(48, 640);
 			guiButtomEquipmentUnderlay.draw(18, 618);
 			equippedLootList.get(1).draw(18, 618);
-			}
-			else{
-				equippedLootList.get(1).draw(18, 618);
-				guiButtomEquipmentUnderlay.draw(18, 618);
-				equippedLootList.get(2).draw(48, 640);
+		}
+		else{
+				
+			equippedLootList.get(1).draw(48, 640);
+			guiButtomEquipmentUnderlay.draw(18, 618);
+			equippedLootList.get(2).draw(18, 618);
 			}
 			
 		if(player.armorID == 3){

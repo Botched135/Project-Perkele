@@ -73,6 +73,7 @@ public class Player extends GameObject{
 	
 	private Image playerTestSprite = null; 
 	private Image hpBar = null; 
+	private Image arrow = null;
 	private ArrayList <Image> playerEquippedLootList = new ArrayList <Image>();
 	
 	//Sounds =================================================
@@ -110,8 +111,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 	
 		playerTestSprite = new Image("data/player.png");
+		arrow = new Image("data/arrowSprite.png");
 		hpBar = new Image("data/hpBar.png");
 		playerEquippedLootList.add(new Image("data/meleeWepEquip1.png"));
+		playerEquippedLootList.add(new Image("data/rangedWepEquip1.png"));
 		
 		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
@@ -154,13 +157,20 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 		
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
-			isMeleeAttacking(GameState.mousePos);
+			if(GameState.wepSwap == false){
+				//PLAYER MELEE ATTACKS TOWARDS "mousePos"
+				isMeleeAttacking(GameState.mousePos);
+			}
+			else{
+				//PLAYER SHOOTS ARROW TOWARDS "mousePos"
+				isRangedAttacking(gc, sbg, GameState.mousePos, _projectileList);
+			}
 		}
 		
-		//PLAYER SHOOTS ARROW TOWARDS "mousePos"
+		/* ?? SPELL CAST? :D
 		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
 				isRangedAttacking(gc, sbg, GameState.mousePos, _projectileList);
-		}
+		}*/
 		
 		//healthGlobe pickup by player
 		if(this.hitPoints < this.MaxHitPoints){
@@ -213,7 +223,21 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		playerEquippedLootList.get(0).setCenterOfRotation(32,96);
 		playerEquippedLootList.get(0).setRotation(spriteAngle);
-		playerEquippedLootList.get(0).draw(vector.getX()-32, vector.getY()-96);
+		playerEquippedLootList.get(1).setCenterOfRotation(32,96);
+		playerEquippedLootList.get(1).setRotation(spriteAngle);
+		if(GameState.wepSwap == false){
+			playerEquippedLootList.get(0).draw(vector.getX()-32, vector.getY()-96);
+		}
+		else{
+			playerEquippedLootList.get(1).draw(vector.getX()-32, vector.getY()-96);
+			
+			if(isAttackReady == true){
+			
+				arrow.setCenterOfRotation(16,64);
+				arrow.setRotation(spriteAngle);
+				arrow.draw(vector.getX()-16, vector.getY()-64);
+			}
+		}
 		//=========================
 		
 		g.translate((vector.getX())-(Window.WIDTH/2), (vector.getY())-(Window.HEIGHT/2));

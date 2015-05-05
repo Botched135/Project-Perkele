@@ -67,7 +67,7 @@ public class Enemy extends GameObject {
 	private int imageDirection = 0;
 	protected Image[][] sprite = new Image[2][2];
 	private ArrayList <Image> enemyEquippedLootList = new ArrayList <Image>();
-	private Image arrow = null;;
+	private Image arrow = null;
 	
 	//Sounds =================================================
 	

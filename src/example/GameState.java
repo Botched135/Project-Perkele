@@ -558,14 +558,14 @@ public class GameState extends BasicGameState {
 									g.setColor(new Color(255,0,0));
 								}
 								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-123);
-								if((lootList.get(i).attackSpeed > player.AttackSpeed)){
+								if((lootList.get(i).attackSpeed > player.playerMeleeAttackSpeed)){
 									g.setColor(new Color(0,255,0));
 								}
 								else{
 									g.setColor(new Color(255,0,0));
 								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-103);
-								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > ((player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2)* player.AttackSpeed){
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > ((player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2)* player.playerMeleeAttackSpeed){
 									g.setColor(new Color(0,255,0));
 								}
 								else{
@@ -627,7 +627,7 @@ public class GameState extends BasicGameState {
 									g.setColor(new Color(255,0,0));
 								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
-								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > (player.playerRangedMinDamage + player.playerRangedMaxDamage)/2 * player.playerRangedAttackSpeed){
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > ((player.playerRangedMinDamage + player.playerRangedMaxDamage)/2)* player.playerRangedAttackSpeed){
 									g.setColor(new Color(0,255,0));
 								}
 								else{
@@ -661,14 +661,14 @@ public class GameState extends BasicGameState {
 									g.setColor(new Color(255,0,0));
 								}
 								g.drawString("Damage: " + (int)lootList.get(i).wepMinDMG +" - "+ (int)lootList.get(i).wepMaxDMG, lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-40);
-								if((lootList.get(i).attackSpeed > player.AttackSpeed)){
+								if((lootList.get(i).attackSpeed > player.playerMeleeAttackSpeed)){
 									g.setColor(new Color(0,255,0));
 								}
 								else{
 									g.setColor(new Color(255,0,0));
 								}
 								g.drawString("Att. Speed: " + df.format(lootList.get(i).attackSpeed), lootList.get(i).vector.getX()+40 , lootList.get(i).vector.getY()-20);
-								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > ((player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2) * player.AttackSpeed){
+								if(((lootList.get(i).wepMinDMG + lootList.get(i).wepMaxDMG)/2) * lootList.get(i).attackSpeed > ((player.playerMeleeMinDamage + player.playerMeleeMaxDamage)/2) * player.playerMeleeAttackSpeed){
 									g.setColor(new Color(0,255,0));
 								}
 								else{

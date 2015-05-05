@@ -277,7 +277,13 @@ public class GameState extends BasicGameState {
 						randEnemyPos = randPos.nextInt(8);
 					}
 					else{
-						enemyList.add(new Enemy(spawnPos.get(randEnemyPos),0)); //<-- last argument is the type of enemy to spawn
+						Vector2f tempPos = new Vector2f(spawnPos.get(randEnemyPos));
+						for(int j = 0; j < enemyList.size()-1; j++){
+							if(tempPos.getX() == enemyList.get(j).vector.getX() && tempPos.getY() == enemyList.get(j).vector.getY()){
+								tempPos.add(new Vector2f(3,2));
+							}
+						}
+						enemyList.add(new Enemy(tempPos,0)); //<-- last argument is the type of enemy to spawn
 						enemyList.get(enemyList.size()-1).init(gc, sbg);
 						enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
 						enemySpawned = true;
@@ -299,7 +305,13 @@ public class GameState extends BasicGameState {
 						randEnemyPos = randPos.nextInt(8);
 					}
 					else{
-						enemyList.add(new Enemy(spawnPos.get(randEnemyPos),1)); //<-- last argument is the type of enemy to spawn
+						Vector2f tempPos = new Vector2f(spawnPos.get(randEnemyPos));
+						for(int j = 0; j < enemyList.size()-1; j++){
+							if(tempPos.getX() == enemyList.get(j).vector.getX() && tempPos.getY() == enemyList.get(j).vector.getY()){
+								tempPos.add(new Vector2f(3,2));
+							}
+						}
+						enemyList.add(new Enemy(tempPos,1)); //<-- last argument is the type of enemy to spawn
 						enemyList.get(enemyList.size()-1).init(gc, sbg);
 						enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
 						enemySpawned = true;

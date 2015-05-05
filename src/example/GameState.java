@@ -72,6 +72,7 @@ public class GameState extends BasicGameState {
 			private boolean antiAlias = true;
 			float playerDamageWarningOpacity = 0;
 			float PDWcounter = 0.01f;
+			boolean wepSwap = false;
 			public static int mapWidth = 32*(116); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
 			public static int mapHeight = 32*(116);
 			public static int mapBoundWidth = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
@@ -230,6 +231,11 @@ public class GameState extends BasicGameState {
 		spawnPos.set(5, new Vector2f(player.vector.getX() + spawnPosVari -2, player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari -1)));
 		spawnPos.set(6, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari -2), player.vector.getY() + Window.HEIGHT/2 + (63 + spawnPosVari -1)));
 		spawnPos.set(7, new Vector2f(player.vector.getX() - Window.WIDTH/2 - (63 + spawnPosVari -2), player.vector.getY() + spawnPosVari -2));
+		
+		//Swapping active weapon
+		if(gc.getInput().isKeyPressed(Input.KEY_Q)) {
+			wepSwap = !wepSwap;
+		}
 		
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY()),0));
@@ -749,15 +755,18 @@ public class GameState extends BasicGameState {
 		}
 		
 		g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
-		if(player.meleeWepID == 4){
+		
+		if(wepSwap == true){
 			equippedLootList.get(2).draw(48, 640);
-		}
-		
-		guiButtomEquipmentUnderlay.draw(18, 618);
-		
-		if(player.meleeWepID == 4){
+			guiButtomEquipmentUnderlay.draw(18, 618);
 			equippedLootList.get(1).draw(18, 618);
-		}
+			}
+			else{
+				equippedLootList.get(1).draw(18, 618);
+				guiButtomEquipmentUnderlay.draw(18, 618);
+				equippedLootList.get(2).draw(48, 640);
+			}
+			
 		if(player.armorID == 3){
 			equippedLootList.get(0).draw(1200, 617);
 		} 

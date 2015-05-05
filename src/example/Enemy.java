@@ -64,7 +64,8 @@ public class Enemy extends GameObject {
 	
 	//Images =================================================
 	
-	protected ArrayList<Image> sprite = new ArrayList<Image>();
+	private int imageDirection = 0;
+	protected Image[][] sprite = new Image[2][2];
 	private ArrayList <Image> enemyEquippedLootList = new ArrayList <Image>();
 	private Image arrow = null;;
 	
@@ -148,10 +149,10 @@ public class Enemy extends GameObject {
 		
 		wepRenderId = enemyType;
 		
-		sprite.add(null);
-		sprite.add(null);
-		sprite.set(0, new Image("data/meleeEnemySprite.png"));
-		sprite.set(1, new Image("data/rangedEnemySprite.png"));
+		sprite[0][0] = new Image("data/meleeEnemy1Up.png"); 		//index 0
+		sprite[0][1] = new Image("data/meleeEnemy1Down.png");		//index 1
+		sprite[1][0] = new Image("data/rangedEnemy1Up.png");		//index 2 
+		sprite[1][1] =  new Image("data/rangedEnemy1Down.png");		//index 3
 		arrow = new Image("data/arrowSprite.png");
 		enemyEquippedLootList.add(new Image("data/meleeWepEquip1.png"));
 		enemyEquippedLootList.add(new Image("data/rangedWepEquip1.png"));
@@ -174,6 +175,8 @@ public class Enemy extends GameObject {
 			_enemyIndicatorList.get(index).destroy(index, _enemyIndicatorList);
 			this.destroy(index, _enemyList);
 		}
+		
+		Vector2f posSnapshotBefore = new Vector2f(vector.getX(), vector.getY());
 		beingHit = false;
 		
 		//Attacking if enemy is ranged
@@ -208,16 +211,33 @@ public class Enemy extends GameObject {
 		if(vector.distance(_player.vector) <  maxRange + _player.hitboxX){
 			setAttackReady();
 			}
+		
+		Vector2f posSnapshotAfter = new Vector2f(vector.getX(), vector.getY());
+		
+		if(posSnapshotBefore.getY() == posSnapshotAfter.getY()){
+			if(posSnapshotBefore.getY() < _player.vector.getY()){
+				imageDirection = 1;
+			}
+			else if(posSnapshotBefore.getY() > _player.vector.getY()){
+				imageDirection = 0;
+			}
+		}
+		else if(posSnapshotAfter.getY() > posSnapshotBefore.getY()){
+			imageDirection = 1;
+		}
+		else{
+			imageDirection = 0;
+		}	
 	}
 	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g, Player player) throws SlickException{
 		
 		if(beingHit == true){
-			sprite.get(enemyType).drawFlash(vector.getX()-32, vector.getY()-32);
+			sprite[enemyType][imageDirection].drawFlash(vector.getX()-32, vector.getY()-32);
 		}
 		else{
-			sprite.get(enemyType).draw(vector.getX()-32, vector.getY()-32);
+			sprite[enemyType][imageDirection].draw(vector.getX()-32, vector.getY()-32);
 		}
 	
 		//RENDER EQUIPPED WEAPON IN GAME SPACE ====================================================

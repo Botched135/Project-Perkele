@@ -104,12 +104,6 @@ public class GameState extends BasicGameState {
 		spawnPos.add(new Vector2f(0, 0));
 		spawnPos.add(new Vector2f(0, 0));
 		
-		wave = 0;
-		currentWave = 0;
-		waveStartTimer = 0;
-		waveTimeDif = 0;
-		waveStart = true;
-		
 		Font awtFont = new Font("Times New Roman", Font.BOLD, 30);
 		font = new TrueTypeFont(awtFont, antiAlias);
 		
@@ -143,7 +137,7 @@ public class GameState extends BasicGameState {
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
 			
-			wave = 0;
+			wave = 9;
 			currentWave = 0;
 			waveStartTimer = 0;
 			waveTimeDif = 0;

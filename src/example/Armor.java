@@ -17,6 +17,7 @@ public class Armor extends Loot{
 	Armor() {
 		 
 		super();
+		//Start values for the armor you have when the game starts
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 3;
@@ -27,6 +28,8 @@ public class Armor extends Loot{
 		hpBonus = 0;
 		lifeRegen = 0.0f;
 		lootLevel = 0;
+		Armor = 1;
+		numberOfStats = 1;
 	}
 	
 	Armor(Enemy _enemy) {
@@ -45,6 +48,7 @@ public class Armor extends Loot{
 		}
 		
 		this.Health = this.lootLevel;
+
 		if(_enemy.EnemyLevel > 5){
 			this.Armor = (5 * 10) + (randArmor.nextInt(11)-5);
 		}
@@ -56,7 +60,7 @@ public class Armor extends Loot{
 		this.Name = this.setName(ArmorNames);
 	}
 	
-public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 		armorSprite[0] = new Image("data/armorSprite0.png");
 		armorSprite[1] = new Image("data/armorSprite1.png");
@@ -66,32 +70,37 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		armorSprite[5] = new Image("data/armorSprite5.png");
 	}
 	
-public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 	
-	//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
+		//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 	
-	if(this.beingHit == true){
+		if(this.beingHit == true){
 		armorSprite[spriteRenderID].drawFlash(vector.getX()-32, vector.getY()-32);
-	}
-	else{
-		armorSprite[spriteRenderID].draw(vector.getX()-32, vector.getY()-32);
-	}
-		
+		}
+		else{
+			armorSprite[spriteRenderID].draw(vector.getX()-32, vector.getY()-32);
+		}
 		//Display the name of the item if the "shift" key is hold
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			g.drawString(this.Name, vector.getX()-23, vector.getY()-60);
 		}
 	
-}
-
+	}
+	
+	/**
+	 * Method used for giving armor names based on lootLevel
+	 * @param string is a array of armor names
+	 * @return returns the name of the armor
+	 */
 	public String setName(String[] string){
+		String setName;
 		if(this.lootLevel-1 > 4){
-			String Name = string[4]; 
+			setName = string[4]; 
 		}
 		else{
-			String Name = string[this.lootLevel-1]; 
+			setName = string[this.lootLevel-1]; 
 		}
-		return Name;
+		return setName;
 	}
 
 }

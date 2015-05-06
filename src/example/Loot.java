@@ -15,28 +15,41 @@ import org.newdawn.slick.Sound;
 
 public class Loot extends GameObject {
 	
-	//VARIABLE DECLARATION ==============================================================================================================================================
-	
+	//VARIABLE DECLARATION =============================================================================================================================================
+	//RNG-sus
 	protected Random randDmg = new Random();
 	protected Random randSpeed = new Random();
 	protected Random randArmor = new Random();
 	protected Random randlifeRegen = new Random();
+	protected Random randVamp = new Random();
+	
+	//General Loot Stats
+	protected boolean beingHit = false;
+	protected int Health=2;
+	protected String Name="";
+	protected float Average;
+	protected float EnemyAverage;
+	protected float LootAverage;
+	protected int numberOfStats=3;
+	public int lootLevel = 1;
+	boolean leftMousePressed = false;
+	
+	//Weapons Stats
 	protected static Color lootTestCol = new Color(255,255,0);
 	protected float speedMultiplier = 5.0f; 
 	protected float wepMinDMG;
 	protected float wepMaxDMG;
 	protected float attackSpeed;
+	protected int isVamp;
+	protected float Vamp = 0;
+	
+	//Armor Stats
+	protected String[]ArmorNames = {"Leather Armor","Breast Plate","Scale Mail","Full Plate","Crystal Armor"};
 	protected float hpBonus;
 	protected float Armor;
 	protected float lifeRegen;
-	protected boolean beingHit = false;
-	protected int Health=1;
-	protected String Name="";
-	protected float Average;
-	protected float EnemyAverage;
-	protected float LootAverage;
-	public int lootLevel = 1;
-	boolean leftMousePressed = false;
+	
+
 	
 	
 	//Sounds =============================================
@@ -74,7 +87,6 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		this.enemyPickUp(index, gc, sbg, _enemyList, _lootList, _inventoryList);
 		this.playerPickUp(index, gc, sbg, _player, _lootList, _inventoryList);
 		
-	
 		if(!gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			this.beingMeleeAttacked(_player);
 		}
@@ -87,18 +99,22 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 
 	//METHODS
-	
+	/**
+	 * Method used for calling the separate method if the conditions are right
+	 * @param _index
+	 * @param _lootList
+	 */
 	void stateManager(int _index, ArrayList<Loot> _lootList){
-		
 		if(_lootList.size() > 0 && _index == _lootList.size()-1) {
 			separate(_lootList);
 		}
-
 	}
 	
-	
+	/**
+	 * Method used for separating the the loot given in the lootList
+	 * @param _lootList gives the loot which are to be separated
+	 */
 	void separate(ArrayList<Loot> _lootList){
-
 		float desiredSeparation = hitboxX*2;
 		Vector2f sum = new Vector2f(0.0f, 0.0f);
 		int count = 0;
@@ -124,11 +140,16 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 		}
 	}
-	
 
-//spawnLoot method used for spawning loot at the enemys position regardless of where the mouse is.
+	/**
+	 * spawnLoot method used for spawning loot at the enemys position regardless of where the mouse is.
+	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param _lootList is used to add a new item to the lootLists and initialise it
+	 * @param enemy is used in order to pass on the enemy's variables, and is used for spawning the loot at the enemy's position
+	 * @throws SlickException
+	 */
 	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Enemy enemy) throws SlickException {
-		
 		Random randLoot = new Random();
 		Random randDrop = new Random();
 		int lootDropDist = 10;
@@ -158,24 +179,35 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 		}
 	}
-	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Loot _lootIndex, ArrayList<Loot> _inventoryList, Loot _inventoryIndex, Player _player){
+	
+	/**
+	 * Method used to drop the loot which the player had, when something new is picked up
+	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param _lootList is used to add a new item to the lootLists and initialise it
+	 * @param _lootType is used to determine what type of item it is
+	 * @param _inventoryList is used to get the list of items that the player have equipped
+	 * @param _inventoryIndex is used to determine what of the items equipped is to be changed when picking something new up
+	 * @param _player is used to get the position of the player
+	 */
+	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Loot _lootType, ArrayList<Loot> _inventoryList, Loot _inventoryIndex, Player _player){
 		Random randLoot = new Random();
 		int lootDropDist = 10;
 		
 		if(_inventoryIndex instanceof Weapon){
 			_lootList.add(_inventoryIndex);
 			_inventoryList.remove(1);
-			_inventoryList.add(1,_lootIndex);
+			_inventoryList.add(1,_lootType);
 		}
 		else if(_inventoryIndex instanceof RangedWeapon){
 			_lootList.add(_inventoryIndex);
 			_inventoryList.remove(2);
-			_inventoryList.add(2, _lootIndex);
+			_inventoryList.add(2, _lootType);
 		}
 		else if(_inventoryIndex instanceof Armor){
 			_lootList.add(_inventoryIndex);
 			_inventoryList.remove(0);
-			_inventoryList.add(0,_lootIndex);
+			_inventoryList.add(0,_lootType);
 			
 		}
 		
@@ -185,11 +217,17 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		float tempY = _player.vector.getY() + (tempRandY)-(lootDropDist/2);
 		
 		_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));
-		
 	}
 	
-public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayList<healthGlobe> _healthGlobeList, Enemy enemy) throws SlickException {
-		
+	/**
+	 * Method used to spawn a healthglobe based on a 80% chance
+	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param _healthGlobeList is used in order to add a new healthglobe to the game
+	 * @param enemy is used to get the position that the healthglobe should spawn at
+	 * @throws SlickException
+	 */
+	public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayList<healthGlobe> _healthGlobeList, Enemy enemy) throws SlickException {
 		Random randLoot = new Random();
 		Random randDrop = new Random();
 		int lootDropDist = 10;
@@ -209,26 +247,41 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 		}
 	}
 	
+	/**
+	 * Method used to setting the loot level based on the enemy level
+	 * @param _enemy is used to get the enemy level
+	 */
 	public void SetLootLevel(Enemy _enemy){
 		System.out.println("enemy: "+ _enemy.EnemyLevel);
 		this.lootLevel = _enemy.EnemyLevel;
 	}
 	
+	/**
+	 * Method used to giving damage to the loot on the ground
+	 * @param _player is used in order to detect if the player is close enough to the loot
+	 */
 	public void beingMeleeAttacked(Player _player){
-		
 		if(_player.isMeleeAttacking && 
 				GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			
 			beingHit = true;
 			
 			this.Health -= 1;
-					
-			
 			if(this.Health <0){
 				this.Health=0;
 			}
 		}
 	}
+	
+	/**
+	 * Method used for letting the player pick up loot based on certain conditions
+	 * @param index is used for determing which item is being handleded
+	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param _player is used to get the players position and its meleeRange in order to know if the player is close enough to pick up loot
+	 * @param _lootList is used in order to get the info of the certain item being picked up
+	 * @param _inventoryList is used in order to swap out the equipped item with the new one
+	 */
 	public void playerPickUp(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
 		if(_lootList.size() >= 0) {
 			if(gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false){
@@ -256,6 +309,16 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 				}
 			}
 		}
+	
+	/**
+	 * Method used for letting the enemy pick up loot based on certain conditions
+	 * @param index is used for determing which item is being handleded
+	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param _enemyList is used to get the enemy position and its meleeRange in order to know if the enemy is close enough to pick up loot
+	 * @param _lootList is used in order to get the info of the certain item being picked up
+	 * @param _inventoryList is used in order to swap out the equipped item with the new one
+	 */
 	public void enemyPickUp(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
 		if(_lootList.size()>=0){
 			for(int i = _enemyList.size()-1; i>=0;i--){ 
@@ -276,24 +339,34 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
+						_enemyList.get(i).enemyVamp = _lootList.get(index).Vamp;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
+						_lootList.remove(index);
 					}
 					else if(_lootList.get(index) instanceof RangedWeapon && _enemyList.get(i).enemyType==1){
 						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
+						_lootList.remove(index);
 					}
 					else if(_lootList.get(index) instanceof Armor){
 						_enemyList.get(i).Armor = _lootList.get(index).Armor;
 						_enemyList.get(i).ArmorName = _lootList.get(index).Name;
+						_lootList.remove(index);
 					}
-					_lootList.remove(index);
+					
 					break;
 				}
 			}
 		}
 	}
+	
+	/**
+	 * Method used to remove a certain item
+	 * @param index is used to determine which item is to be removed from the list
+	 * @param _lootList is used for getting the list which items should be removed from
+	 */
 	void destroy(int index, ArrayList<Loot> _lootList){
 		_lootList.remove(index);
 

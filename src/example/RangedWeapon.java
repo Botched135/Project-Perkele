@@ -8,10 +8,11 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class RangedWeapon extends Loot {
 
+	//VARIABLE DECLARATION ============================================================================================================================================
 	private Image[] rangedWeaponSprite = new Image[5];
 	private int spriteRenderID = 0;
 	
-	RangedWeapon(){
+	RangedWeapon(){ //Constructor for initial ranged weapon of the player
 		super();
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
@@ -25,7 +26,7 @@ public class RangedWeapon extends Loot {
 		attackSpeed = 5f;
 		
 	}
-	RangedWeapon(Enemy _enemy){
+	RangedWeapon(Enemy _enemy){//Constructor for enemy dropped ranged weapon
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 5;
@@ -41,14 +42,14 @@ public class RangedWeapon extends Loot {
 			spriteRenderID = this.lootLevel;
 		}
 		this.lootLevel = _enemy.EnemyLevel;
-		this.Health = this.lootLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
 		this.Name = this.setName();
 		
 	}
-public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+	
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 	rangedWeaponSprite[0] = new Image("data/rangedWeaponTestSprite.png");
 	rangedWeaponSprite[1] = new Image("data/rangedWeaponTestSprite.png");
@@ -58,23 +59,24 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	}
 	
-public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
-	//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
-	if(beingHit == true){
-		rangedWeaponSprite[spriteRenderID].drawFlash(vector.getX()-32, vector.getY()-32);
-	}
+
+		//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
+		if(beingHit == true){
+			rangedWeaponSprite[spriteRenderID].drawFlash(vector.getX()-32, vector.getY()-32);
+		}
 	
-	else{
-		rangedWeaponSprite[spriteRenderID].draw(vector.getX()-32, vector.getY()-32);
-	}
+		else{
+			rangedWeaponSprite[spriteRenderID].draw(vector.getX()-32, vector.getY()-32);
+		}
 	
-	//Display the name of the item if the "shift" key is hold
-	if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
-		g.drawString(this.Name+" "+"lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
-	}
+		//Display the name of the item if the "shift" key is hold
+		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
+			g.drawString(this.Name+" "+"lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
+		}
 	
-}	
+	}
 	public String setName(){
 		String Name="";
 		if(this.attackSpeed <= 0.5){

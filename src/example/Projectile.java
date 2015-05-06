@@ -49,30 +49,22 @@ public class Projectile extends GameObject {
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	public void update(Player _player, int index, GameContainer gc, StateBasedGame sbg, int delta, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
 		
-		stateManager(_player, index, _projectileList, _enemyList);
+		moveTo();
+		if(((System.currentTimeMillis()) - startTime)/1000 >= duration){
+			destroy(index, _projectileList);
+		}
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 	}	
 	
-	
-	//METHODS ===========================================================================================================================================================
-	void stateManager(Player _player, int index, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
-		
-		//Moves towards a snapshotted vector position of the enemies target
-		
-		Vector2f temp = new Vector2f(_player.vector.getX(), _player.vector.getY());
-		moveTo();
-		_player.vector.set(temp.getX(), temp.getY()); 
-				
-		//Destroys projectile when its duration runs out
-		if(((System.currentTimeMillis()) - startTime)/1000 >= duration){
-					
-			destroy(index, _projectileList);
-		}
-	}
-	
+	/**
+	 * Method which enables projectile to fork
+	 * @param _projectileList is used in order to add new projectiles to a list
+	 * @param _owner is used in order to get whom shot the projectile
+	 * @param _target is used to get the direction the projectile should move towards
+	 */
 	public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Player _owner, Vector2f _target){
 		
 		int maxRandDist = 10;
@@ -85,37 +77,21 @@ public class Projectile extends GameObject {
 		
 	}
 	
-public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Enemy _owner, Vector2f _target){
-		
-		int maxRandDist = 10;
-		Random randLoot = new Random();
-		float tempRandX = randLoot.nextInt(maxRandDist);
-		float tempRandY = randLoot.nextInt(maxRandDist);
-		Projectile subProjectile = new Projectile(_owner, _target);
-		subProjectile.vector.set(subProjectile.vector.getX() + tempRandX - maxRandDist/2, subProjectile.vector.getY() + tempRandY + maxRandDist/2);
-		_projectileList.add(subProjectile);
-		
-	}
-	
-	void seekState(Vector2f _target){
-		
-		Vector2f dir = new Vector2f(0.0f, 0.0f);
-		
-		dir = _target.sub(vector);
-		dir.normalise();
-		dir = dir.scale(speedMultiplier);	
-		vector = vector.add(dir);
-		
-	}
-	
+	/**
+	 * Method used for moving the projectile at a set speed in a direction
+	 */
 	public void moveTo(){
 		
 		dir.normalise();
 		dir = dir.scale(speedMultiplier);	
 		vector = vector.add(dir);
-
 	}
 		
+	/**
+	 * Method used for destroying the projectile
+	 * @param index is used for determing which projectile in the list should be destroyed
+	 * @param _projectileList is used in order to determine which list something should be removed from
+	 */
 	public void destroy(int index, ArrayList<Projectile> _projectileList){
 		
 		if(_projectileList.size() > 0 && _projectileList.get(index) != null){

@@ -17,39 +17,44 @@ public class Enemy extends GameObject {
 	//VARIABLE DECLARATION ===========================================================================================================================================================
 	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;
-	protected float hitpoints = 100;
-	protected float maxHitpoints;
-	protected Random randEnemyHP = new Random();
-	protected float speedMultiplier = 1.0f;
-	protected float projectileSpeed;
-	protected long StartTime = System.currentTimeMillis();
-	protected long EndTime = 0;
-	protected boolean isAttackReady = false;
 	protected Random randLvl = new Random();
 	protected String[]EnemyNames = new String[5];
 	protected String EnemyName;
-	protected String WeaponName;
-	protected String ArmorName;
-	protected int wepRenderId;
 	protected boolean beingHit = false;
-	protected boolean isMeleeAttacking = false;
-	protected boolean isRangedAttacking = false;
-	protected float Armor = 10;
 
+	//Enemy offensive stats ===================================================================================
+	protected String WeaponName;
 	protected float AttackSpeed = 0.5f;
 	protected float MinDamage = 2;
 	protected float MaxDamage = 10;
+	protected float enemyVamp;
 	protected float enemyDamage;
 	protected float rangedDamage;
 	protected Random randDmg = new Random();
+	protected float projectileSpeed;
+	protected boolean isMeleeAttacking = false;
+	protected boolean isRangedAttacking = false;
+	protected int wepRenderId;
+	//Attack cooldown variables
+	protected long StartTime = System.currentTimeMillis();
+	protected long EndTime = 0;
+	protected boolean isAttackReady = false;
 	
+	//Enemy defensive stats ===================================================================================
+	protected float hitpoints = 100;
+	protected float maxHitpoints;
+	protected Random randEnemyHP = new Random();
+	protected float Armor = 10;
+	protected String ArmorName;
+	
+	//Enemy movement variables ================================================================================
 	protected float maxRange;
 	protected float minRange;
 	protected float minSeekDistance;
 	protected float maxSeekDistance;
+	protected float speedMultiplier = 1.0f;
 	
-	
-	//variables used for stopping movement when attacking
+	//variables used for stopping movement when attacking =====================================================
 	protected boolean stopMoving = false;
 	protected long attackSTime;
 	protected long attackETime;
@@ -63,14 +68,12 @@ public class Enemy extends GameObject {
 	float spriteAngle = 0;
 	
 	//Images =================================================
-	
 	private int imageDirection = 0;
 	protected Image[][] sprite = new Image[3][2];
 	private ArrayList <Image> enemyEquippedLootList = new ArrayList <Image>();
 	private Image arrow = null;
 	
 	//Sounds =================================================
-	
 	protected Sound meleeAttackSound0 = null;
 	protected Sound rangedAttackSound0 = null;
 	protected Sound meleeHitSound = null;
@@ -82,9 +85,7 @@ public class Enemy extends GameObject {
 	//CONTRUCTERS ===========================================================================================================================================================
 	
 	Enemy(){
-		
 		super(); 
-		//ID = 2;
 	}
 	
 	Enemy(Vector2f _vector, int _enemyType) {
@@ -93,9 +94,7 @@ public class Enemy extends GameObject {
 		
 		enemyType = _enemyType;
 		hitboxX = 32.0f;
-		//hitboxY = 32.0f;
-		//ID = 2;
-		
+		//hitboxY = 32.0f;		
 	}
 	
 	//INIT FUNCTION/METHOD ===============================================================================================================================================
@@ -111,6 +110,7 @@ public class Enemy extends GameObject {
 			maxSeekDistance = 500;
 			wepRenderId = 0;
 			
+			//Enemy melee names
 			EnemyNames[0] = "Dwarf Grunt";
 			EnemyNames[1] = "Dwarf Soldier";
 			EnemyNames[2] = "Dwarf Veteran";
@@ -129,6 +129,7 @@ public class Enemy extends GameObject {
 			maxSeekDistance = 500;
 			wepRenderId = 1;
 			
+			//Ranged enemy names
 			EnemyNames[0] = "Elven Stakethrower";
 			EnemyNames[1] = "Elven Archer";
 			EnemyNames[2] = "Elven Marksmen";
@@ -184,7 +185,7 @@ public class Enemy extends GameObject {
 		Vector2f posSnapshotBefore = new Vector2f(vector.getX(), vector.getY());
 		beingHit = false;
 		
-		//Attacking if enemy is ranged
+		//Attacking for enemies based on if they are ranged or melee
 		if(vector.distance(_player.vector) <  maxRange + _player.hitboxX && vector.distance(_player.vector) >  minRange){
 				
 			if(enemyType == 0){
@@ -192,15 +193,20 @@ public class Enemy extends GameObject {
 			}
 			if(enemyType == 1){
 				isRangedAttacking(gc, sbg, _player, _projectileList);
-			}
+			}			
+		} 
+		//Statements detecting if the boss should melee attacking or use a ranged attack
+		if(vector.distance(_player.vector) < this.hitboxX + _player.hitboxX + maxSeekDistance && vector.distance(_player.vector) >  minRange){
 			if(enemyType == 2){
-				isMeleeAttacking();
 				if(vector.distance(_player.vector) > this.hitboxX + _player.hitboxX + (maxSeekDistance/2)){
 					isRangedAttacking(gc, sbg, _player, _projectileList);
+					setAttackReady();
+				}
+				else{
+					isMeleeAttacking();
 				}
 			}
-			
-		} 
+		}
 		
 		stopMovingWhenAttacking(stopMoving);
 		beingMeleeAttacked(_player);
@@ -220,6 +226,7 @@ public class Enemy extends GameObject {
 			}
 		}
 		
+		//Making the enemy's attack ready
 		if(vector.distance(_player.vector) <  maxRange + _player.hitboxX){
 			setAttackReady();
 			}
@@ -335,7 +342,11 @@ public class Enemy extends GameObject {
 	
 	//METHODS ===========================================================================================================================================================
 	
-	//Method to keep enemies separated from each other
+	/**
+	 * Method to keep enemies separated from each other
+	 * @param _enemyList is used in order to get the enemies positions
+	 * @return returns a new vector that the enemy should move towards
+	 */
 	public Vector2f separate(ArrayList<Enemy > _enemyList){
 		
 		float desiredSeparation = hitboxX * 2;
@@ -370,7 +381,12 @@ public class Enemy extends GameObject {
 		}
 		return new Vector2f(0,0);
 	} 
-	//Method to move the enemy closer to a target - goes in a straight line
+
+	/**
+	 * Method to move the enemy closer to a target - goes in a straight line
+	 * @param _target the target used moving towards
+	 * @param _enemyList list used for determing that it is the enemy who are to move
+	 */
 	public void moveTo(Vector2f _target, ArrayList<Enemy > _enemyList){
 		
 		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
@@ -390,7 +406,11 @@ public class Enemy extends GameObject {
 		}
 }
 	
-	//Method to move the enemy closer to a target - goes in a straight line
+	/**
+	 * Method used by the ranged enemies in order to move away from the target
+	 * @param _target the target whom the enemies are moving away from
+	 * @param _enemyList list used for determing that it is the enemy who are to move
+	 */
 	public void moveAwayFrom(Vector2f _target, ArrayList<Enemy > _enemyList){
 			
 		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
@@ -410,7 +430,10 @@ public class Enemy extends GameObject {
 		}
 	}
 	
-	//Method to set the enemy's attack to be ready according to its cooldowns
+	/**
+	 * Method used to setting the enemies melee attack ready
+	 * @return isAttackReady for use, so enemies can attack again in isMeleeAttacking
+	 */
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		float AS = AttackSpeed;
 		if(this.isAttackReady == false){ 
@@ -421,11 +444,14 @@ public class Enemy extends GameObject {
 				this.EndTime = 0;
 			}
 		}
-		//isAttackReady = this.isAttackReady;
 		return isAttackReady;
 	}
 	
 	//Method to check if the enemy is being hit by a melee attack
+	/**
+	 * Method used for detecting if the player is close enough to deal damage. Will deal damage to the enemy if the player is close enough
+	 * @param _player is used in order to get the player's position and damage value. And giving the palyer hitpoints based on vampire value
+	 */
 	void beingMeleeAttacked (Player _player){
 		
 		if(_player.isMeleeAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
@@ -436,6 +462,7 @@ public class Enemy extends GameObject {
 			
 			//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 			beingHit = true;
+			_player.hitPoints+=_player.playerVamp;
 			
 			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitpoints - _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor) < 0){
@@ -447,7 +474,10 @@ public class Enemy extends GameObject {
 		}
 	}	
 	
-	//Method to check if the enemy is being hit by a ranged attack
+	/**
+	 * Method to check if the enemy is being hit by a ranged attack
+	 * @param _projectileList is used in order to destroy the arrow that hit the enemy. and get the damage that the arrow have
+	 */
 	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
 		
 		if(_projectileList.size() > 0){
@@ -460,11 +490,11 @@ public class Enemy extends GameObject {
 					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 					beingHit = true;
 					
-					if(this.hitpoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor)<0){
+					if(this.hitpoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor)<0){ //Setting the hitpoints to 0 if damage taken is more then remaing hp
 						this.hitpoints=0;
 					}
 					else{
-						this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor);
+						this.hitpoints -= _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor); //taking hitpoint damage
 					}
 					_projectileList.get(i).disableDmg = true;
 					_projectileList.get(i).destroy(i, _projectileList);
@@ -473,8 +503,11 @@ public class Enemy extends GameObject {
 		}
 	}
 	
+	/**
+	 * Method for detecting if the enemy is able to melee attack and will then let the enemy attack
+	 */
 	public void isMeleeAttacking(){
-		if(this.isAttackReady){	
+		if(this.isAttackReady){	//Detecting if the enemy are able to attack based on if its attack are ready
 			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
 			this.isMeleeAttacking = true;
@@ -483,6 +516,14 @@ public class Enemy extends GameObject {
 		}
 	}
 	
+	/**
+	 * Method for detecting if the enemy is able to ranged attack and will then let the player shoot an arrow
+	 * @param gc used to initialise the arrow in our GameContainer - Parameters default to slick2D init method
+	 * @param sbg used to initialise the arrow in our GameContainer - Parameters default to slick2D init method
+	 * @param _player is used for the direction the arrow should move
+	 * @param _projectileList is used in order to add a new arrow to the ArrayList
+	 * @throws SlickException
+	 */
 	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Player _player, ArrayList<Projectile> _projectileList) throws SlickException{
 		if(this.isAttackReady == true){
 			//Play rangedEnemy's ranged attack sound
@@ -496,11 +537,15 @@ public class Enemy extends GameObject {
 		}
 	}
 	
-	public void stopMovingWhenAttacking(boolean stopMoving){
+	/**
+	 * Method for stopping the enemy's movement by reducing the speedMultiplier to 0
+	 * @param stopMoving is used for detecting whether or not this methods should be used
+	 */
+	public void stopMovingWhenAttacking(boolean stopMoving){ //Method to make the enemy stop moving when attacking
 		if(stopMoving == true){
 			
 			if(this.attackSTime == 0){
-				this.speedMultiplier = 0.0f;
+				this.speedMultiplier = 0.0f; //Movement is stopped by making the enemy's speed 0 for one second
 				this.attackSTime = System.currentTimeMillis();
 			}
 			else {
@@ -515,25 +560,36 @@ public class Enemy extends GameObject {
 		}
 	}
 	
+	/**
+	 * Method for calculating the enemy's melee damage
+	 */
 	public void AttackDamage(){
 		enemyDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 	
+	/**
+	 * Method for calculating the enemy's ranged damage
+	 */
 	public void RangedDamage(){
 		rangedDamage = ((randDmg.nextFloat() * (this.MaxDamage-this.MinDamage) + (this.EnemyLevel*2)));
 	}
 
-	//Method to set the enemy's level
+	/**
+	 * Method used for determing the enemies levels based on the wave number
+	 * @param _wave is needed in order to scale the levels so they are harder as longer as you progress in the game
+	 */
 	void SetEnemyLevel(int _wave){
-		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/2);
-		if(this.EnemyLevel < 1){
+		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/3);
+		if(this.EnemyLevel < 1){ //statement in order to prevent enemy levels being below 1
+			//Adjusting stats in order to keep the enemy level 1
 			this.EnemyLevel = 1;
 			this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
 			this.maxHitpoints=this.hitpoints;
 			this.EnemyName = EnemyNames[0];
 			this.Armor = 5 * 1;
 		}
-		else if(this.EnemyLevel > 5){
+		else if(this.EnemyLevel > 5){ //Making sure that enemies which are higher then level 5 are set to level 5
+			//Adjusting stats in order to prevent overpowered enemies
 			this.EnemyLevel = 5;
 			this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
 			this.maxHitpoints=this.hitpoints;
@@ -547,43 +603,55 @@ public class Enemy extends GameObject {
 		this.Armor = 5 * this.EnemyLevel;
 		}
 	}
-	//Method for setting the boss level
+	
+	/**
+	 * Overloaded Method used for determing the enemies levels based on the wave number
+	 * @param _wave is needed in order to scale the levels so they are harder as longer as you progress in the game
+	 * @param _bossLevel is used as an extra parameter for determing the level of enemy as the boss is supposed to be harder then everything else
+	 */
 	void SetEnemyLevel(int _wave, int _bossLevel){
-		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/2) + _bossLevel;
+		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/3) + _bossLevel;
 		if(this.EnemyLevel < 1){
 			this.EnemyLevel = 1;
-			this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+			this.hitpoints = (75 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
 			this.maxHitpoints=this.hitpoints;
 			this.EnemyName = EnemyNames[0];
 			this.Armor = 5 * 1;
 		}
 		else if(this.EnemyLevel > 5){
-			this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+			this.hitpoints = (75 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
 			this.maxHitpoints=this.hitpoints;
 			this.EnemyName = EnemyNames[0];
 			this.Armor = 5 * 5;
 		}
 		else{
-		this.hitpoints = (50 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
+		this.hitpoints = (75 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);
 		this.maxHitpoints=this.hitpoints;
 		this.EnemyName = EnemyNames[0];
 		this.Armor = 5 * this.EnemyLevel;
 		}
 	}
-	//Method to drop loot from the enemy
+
+	/**
+	 * Method to drop loot from the enemy
+	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
+	 * @param _lootList is used to pass on the list of loot
+	 * @param _healthGlobeList is used to pass on the list of healthglobes
+	 * @throws SlickException
+	 */
 	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
 		Loot.spawnLoot(gc, sbg, _lootList, this);
 		Loot.spawnHealthGlobe(gc, sbg, _healthGlobeList, this);
-		
-		//if(_lootList.size()>0){
-			//_lootList.get(_lootList.size()-1).SetLootLevel(this);
-		//}
 	}
-	//Method to "kill" destroy the enemy (remove it from the list of enemies)
+	
+	/**
+	 * Method to "kill" destroy the enemy (remove it from the list of enemies)
+	 * @param index is used to get what enemy that died
+	 * @param _enemyList is used in order to access the enemyList
+	 */
 	void destroy(int index, ArrayList<Enemy> _enemyList){
 			_enemyList.remove(index);
-		
-	
 	}
 	
 }

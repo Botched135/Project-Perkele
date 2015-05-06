@@ -30,7 +30,12 @@ public class Armor extends Loot{
 		ID = 3;
 		this.lootLevel = _enemy.EnemyLevel;
 		this.Health = this.lootLevel;
-		this.Armor = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
+		if(_enemy.EnemyLevel > 5){
+			this.Armor = (5 * 10) + (randArmor.nextInt(11)-5);
+		}
+		else{
+			this.Armor = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
+		}
 		this.hpBonus = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
 		this.lifeRegen = ((float)_enemy.EnemyLevel / 5) + (((float)randlifeRegen.nextInt(3)-1)/10);
 		this.Name = this.setName(ArmorNames);
@@ -56,17 +61,14 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 		}
 	
 }
-	
-	public void hpBonus() {
-		
-	}
-	
-	public void getInfo() {
-		
-	}
+
 	public String setName(String[] string){
-		String Name = string[this.lootLevel-1]; 
-		
+		if(this.lootLevel-1 > 4){
+			String Name = string[4]; 
+		}
+		else{
+			String Name = string[this.lootLevel-1]; 
+		}
 		return Name;
 	}
 

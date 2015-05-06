@@ -19,6 +19,8 @@ public class Menu extends BasicGameState {
 	private Image menuNewGameButton1 = null;
 	private Image menuLoadGameButton0 = null;
 	private Image menuLoadGameButton1 = null;
+	private Image menuResumeButton0 = null;
+	private Image menuResumeButton1 = null;
 	private Image menuExitButton0 = null;
 	private Image menuExitButton1 = null;
 	
@@ -37,7 +39,9 @@ public class Menu extends BasicGameState {
 		menuNewGameButton0 = new Image("data/menuNewGameButton0.png");	
 		menuNewGameButton1 = new Image("data/menuNewGameButton1.png");
 		menuLoadGameButton0 = new Image("data/menuLoadGameButton0.png");	
-		menuLoadGameButton1 = new Image("data/menuLoadGameButton1.png");	
+		menuLoadGameButton1 = new Image("data/menuLoadGameButton1.png");
+		menuResumeButton0 = new Image("data/menuResumeButton0.png");	
+		menuResumeButton1 = new Image("data/menuResumeButton1.png");
 		menuExitButton0 = new Image("data/menuExitButton0.png");	
 		menuExitButton1 = new Image("data/menuExitButton1.png");	
 		menuBg = new Image("data/menuBg.png");
@@ -64,7 +68,7 @@ public class Menu extends BasicGameState {
 			leftMousePressed = false;
 		}
 		
-		//Clicking on "new game" button
+		//Clicking on first menu button (can be New Game or Resume depending on game state)
 		if(		gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false &&
 				menuMousePos.getX() > Window.WIDTH/2 - 200 &&
 				menuMousePos.getX() < Window.WIDTH/2 + 200  &&
@@ -77,14 +81,16 @@ public class Menu extends BasicGameState {
 			//if(GameState.mainTheme.playing() == false){
 			//	GameState.mainTheme.loop();
 			//}
+			
 			if(playerDead == true){
 				resetGame = true;
+				playerDead = false;
 			}
 			sbg.enterState(1);
 			//gc.reinit();
 		}
 		
-		//Clicking on "load game" button
+		//Clicking on seconds menu button (can be Exit or new game depending on game state)
 		if(		gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false &&
 				menuMousePos.getX() > Window.WIDTH/2 - 200 &&
 				menuMousePos.getX() < Window.WIDTH/2 + 200  &&
@@ -92,10 +98,19 @@ public class Menu extends BasicGameState {
 				menuMousePos.getY() < Window.HEIGHT/2 + 170 ){
 			
 			leftMousePressed = true;
-			//INSERT METHOD TO LOAD A SAVE GAME!
+			
+			if(playerDead == false){
+				resetGame = true;
+				playerDead = false;
+				sbg.enterState(1);
+			}
+			
+			if(playerDead == true){
+				gc.exit();
+				}
 		}
 		
-		//Clicking on "exit" button
+		//Clicking on third menu button (can be Exit depending on game state)
 		if(		gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false &&
 				menuMousePos.getX() > Window.WIDTH/2 - 200 &&
 				menuMousePos.getX() < Window.WIDTH/2 + 200  &&
@@ -103,7 +118,10 @@ public class Menu extends BasicGameState {
 				menuMousePos.getY() < Window.HEIGHT/2 + 270 ){
 			
 			leftMousePressed = true;
+			
+			if(playerDead == false){
 			gc.exit();
+			}
 		}
 		
 		if(gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
@@ -124,15 +142,26 @@ public class Menu extends BasicGameState {
 		menuBg.draw(0,0);
 		
 		//Draw "new game" button
+		
 		if(		menuMousePos.getX() > Window.WIDTH/2 - 200 &&
 				menuMousePos.getX() < Window.WIDTH/2 + 200  &&
 				menuMousePos.getY() > Window.HEIGHT/2 &&
 				menuMousePos.getY() < Window.HEIGHT/2 + 70 ){
 			
-			menuNewGameButton1.draw(Window.WIDTH/2 - 219, Window.HEIGHT/2 - 19);
+			if(playerDead == true){
+				menuNewGameButton1.draw(Window.WIDTH/2 - 219, Window.HEIGHT/2 - 19);
+			}
+			else{
+				menuResumeButton1.draw(Window.WIDTH/2 - 220, Window.HEIGHT/2 - 20);
+			}
 		}
 		else{
-		menuNewGameButton0.draw(Window.WIDTH/2 - 202, Window.HEIGHT/2 - 2);
+			if(playerDead == true){
+				menuNewGameButton0.draw(Window.WIDTH/2 - 202, Window.HEIGHT/2 - 2);
+			}
+			else{
+				menuResumeButton0.draw(Window.WIDTH/2 - 202, Window.HEIGHT/2 - 2);
+			}
 		}
 	
 		//Draw "load game" button
@@ -141,25 +170,38 @@ public class Menu extends BasicGameState {
 				menuMousePos.getY() > Window.HEIGHT/2 + 100 &&
 				menuMousePos.getY() < Window.HEIGHT/2 + 170){
 			
-			menuLoadGameButton1.draw(Window.WIDTH/2 - 219, Window.HEIGHT/2 + 81);
+			if(playerDead == true){
+				menuExitButton1.draw(Window.WIDTH/2 - 219, Window.HEIGHT/2 + 81);
+			}
+			else{
+				menuNewGameButton1.draw(Window.WIDTH/2 - 219, Window.HEIGHT/2 + 81);
+			}
 		}
 		else{
-		menuLoadGameButton0.draw(Window.WIDTH/2 - 202, Window.HEIGHT/2 + 98);
+			if(playerDead == true){
+				menuExitButton0.draw(Window.WIDTH/2 - 202, Window.HEIGHT/2 + 98);
+			}
+			else{
+				menuNewGameButton0.draw(Window.WIDTH/2 - 202, Window.HEIGHT/2 + 98);
+			}
 		}
 		
 		//Draw "Exit" button
-		if(		menuMousePos.getX() > Window.WIDTH/2 - 200 &&
-				menuMousePos.getX() < Window.WIDTH/2 + 200  &&
-				menuMousePos.getY() > Window.HEIGHT/2 + 200 &&
-				menuMousePos.getY() < Window.HEIGHT/2 + 270){
-					
-			menuExitButton1.draw(Window.WIDTH/2 - 219, Window.HEIGHT/2 + 181);
+		if(playerDead == false){
+			if(		menuMousePos.getX() > Window.WIDTH/2 - 200 &&
+					menuMousePos.getX() < Window.WIDTH/2 + 200  &&
+					menuMousePos.getY() > Window.HEIGHT/2 + 200 &&
+					menuMousePos.getY() < Window.HEIGHT/2 + 270){
+			
+				menuExitButton1.draw(Window.WIDTH/2 - 219, Window.HEIGHT/2 + 178);
+		
+			}else{
+		
+				menuExitButton0.draw(Window.WIDTH/2 - 202, Window.HEIGHT/2 + 195);
+	
+			}
 		}
-		else{
-		menuExitButton0.draw(Window.WIDTH/2 - 202, Window.HEIGHT/2 + 198);
-		}	
 	}
-
 
 	public int getID() {
 		return 0;			// The ID of this state

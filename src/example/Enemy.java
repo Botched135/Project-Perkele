@@ -39,6 +39,7 @@ public class Enemy extends GameObject {
 	protected float AttackSpeed = 0.5f;
 	protected float MinDamage = 2;
 	protected float MaxDamage = 10;
+	protected float enemyVamp;
 	protected float enemyDamage;
 	protected float rangedDamage;
 	protected Random randDmg = new Random();

@@ -16,22 +16,14 @@ import org.newdawn.slick.Sound;
 public class Loot extends GameObject {
 	
 	//VARIABLE DECLARATION ==============================================================================================================================================
-	
-	protected String[]ArmorNames = {"Leather Armor","Ringmail","Breast Plate","Full Plate","Dragonbone Armor"};
+	//RNG-sus
 	protected Random randDmg = new Random();
 	protected Random randSpeed = new Random();
 	protected Random randArmor = new Random();
 	protected Random randlifeRegen = new Random();
-	protected static Color lootTestCol = new Color(255,255,0);
-	protected float speedMultiplier = 5.0f; 
-	protected float wepMinDMG;
-	protected float wepMaxDMG;
-	protected float attackSpeed;
-	protected int isVamp;
-	protected float Vamp = 0;
-	protected float hpBonus;
-	protected float Armor;
-	protected float lifeRegen;
+	protected Random randVamp = new Random();
+	
+	//General Loot
 	protected boolean beingHit = false;
 	protected int Health=1;
 	protected String Name="";
@@ -41,6 +33,23 @@ public class Loot extends GameObject {
 	protected int numberOfStats=3;
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
+	
+	//Weapons
+	protected static Color lootTestCol = new Color(255,255,0);
+	protected float speedMultiplier = 5.0f; 
+	protected float wepMinDMG;
+	protected float wepMaxDMG;
+	protected float attackSpeed;
+	protected int isVamp;
+	protected float Vamp = 0;
+	
+	//Armor
+	protected String[]ArmorNames = {"Leather Armor","Ringmail","Breast Plate","Full Plate","Dragonbone Armor"};
+	protected float hpBonus;
+	protected float Armor;
+	protected float lifeRegen;
+	
+
 	
 	
 	//Sounds =============================================
@@ -279,6 +288,7 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
+						_enemyList.get(i).enemyVamp = _lootList.get(index).Vamp;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
 					}
 					else if(_lootList.get(index) instanceof RangedWeapon && _enemyList.get(i).enemyType==1){

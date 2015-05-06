@@ -59,7 +59,7 @@ public class Inventory {
 				g.drawString(df.format(player.playerMeleeMinDamage)+"-"+df.format(player.playerMeleeMaxDamage), xOrigin+250, yOrigin+621);
 				g.drawString(df.format(player.playerMeleeAttackSpeed), xOrigin+250, yOrigin+642);
 				g.drawString(df.format(((player.playerMeleeMinDamage+player.playerMeleeMaxDamage)/2)*player.playerMeleeAttackSpeed), xOrigin+250, yOrigin+663);
-				//g.drawString(df.format(player.meleeLifeSteal), xOrigin+250, yOrigin+684);
+				g.drawString(df.format(player.playerVamp)+" hp/hit", xOrigin+250, yOrigin+684);
 			}
 			else{
 				

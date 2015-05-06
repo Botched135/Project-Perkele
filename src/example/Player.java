@@ -32,19 +32,19 @@ public class Player extends GameObject{
 	protected float AttackSpeed = 5.0f; //Attacks per second
 	protected float lifeRegen = 0.2f;
 	protected float playerMeleeAttackSpeed = 5.0f; //Attacks per second
-	protected int meleeWepID;
+	protected static int meleeWepID = 0;
 	
 	//Ranged
 	protected float playerRangedMinDamage;
 	protected float playerRangedMaxDamage;
 	protected float playerRangedAttackSpeed;
 	protected float rangedDamage;
-	protected int rangedWepID;
+	protected static int rangedWepID = 0;
 	protected float projectileSpeed = 12;
 	
 	//Armor
 	protected float Armor = 0; //Damage reductions
-	protected int armorID;
+	protected static int armorID = 0;
 	
 	//=======================================================
 	
@@ -71,10 +71,13 @@ public class Player extends GameObject{
 	
 	//Images =================================================
 	
-	private Image playerTestSprite = null; 
+	private int imageDirection = 0;
+	private Image[]playerBaseSprite = new Image[2];
 	private Image hpBar = null; 
 	private Image arrow = null;
-	private ArrayList <Image> playerEquippedLootList = new ArrayList <Image>();
+	private Image[] playerEquippedMeleeWepList = new Image[5];
+	private Image[] playerEquippedRangedWepList = new Image[5];
+	private Image[][] playerEquippedArmorList = new Image[6][2];
 	
 		//Variables for animations of weapons
 		float moveY = 0;
@@ -116,11 +119,36 @@ public class Player extends GameObject{
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 	
-		playerTestSprite = new Image("data/player.png");
+		playerBaseSprite[0] = new Image("data/playerBaseSpriteUp.png"); 		//index 0
+		playerBaseSprite[1] = new Image("data/playerBaseSpriteDown.png");		//index 1
 		arrow = new Image("data/arrowSprite.png");
 		hpBar = new Image("data/hpBar.png");
-		playerEquippedLootList.add(new Image("data/meleeWepEquip1.png"));
-		playerEquippedLootList.add(new Image("data/rangedWepEquip1.png"));
+		
+		playerEquippedMeleeWepList[0] = new Image("data/meleeWepEquip1.png");
+		playerEquippedMeleeWepList[1] = new Image("data/meleeWepEquip1.png");
+		playerEquippedMeleeWepList[2] = new Image("data/meleeWepEquip1.png");
+		playerEquippedMeleeWepList[3] = new Image("data/meleeWepEquip1.png");
+		playerEquippedMeleeWepList[4] = new Image("data/meleeWepEquip1.png");
+		
+		playerEquippedRangedWepList[0] = new Image("data/rangedWepEquip1.png");
+		playerEquippedRangedWepList[1] = new Image("data/rangedWepEquip1.png");
+		playerEquippedRangedWepList[2] = new Image("data/rangedWepEquip1.png");
+		playerEquippedRangedWepList[3] = new Image("data/rangedWepEquip1.png");
+		playerEquippedRangedWepList[4] = new Image("data/rangedWepEquip1.png");
+		
+		playerEquippedArmorList[0][0] = new Image("data/playerEquipArmor0Up.png");
+		playerEquippedArmorList[0][1] = new Image("data/playerEquipArmor0Down.png");
+		playerEquippedArmorList[1][0] = new Image("data/playerEquipArmor1Up.png");
+		playerEquippedArmorList[1][1] = new Image("data/playerEquipArmor1Down.png");
+		playerEquippedArmorList[2][0] = new Image("data/playerEquipArmor2Up.png");
+		playerEquippedArmorList[2][1] = new Image("data/playerEquipArmor2Down.png");
+		playerEquippedArmorList[3][0] = new Image("data/playerEquipArmor3Up.png");
+		playerEquippedArmorList[3][1] = new Image("data/playerEquipArmor3Down.png");
+		playerEquippedArmorList[4][0] = new Image("data/playerEquipArmor4Up.png");
+		playerEquippedArmorList[4][1] = new Image("data/playerEquipArmor4Down.png");
+		playerEquippedArmorList[5][0] = new Image("data/playerEquipArmor5Up.png");
+		playerEquippedArmorList[5][1] = new Image("data/playerEquipArmor5Down.png");
+		
 		
 		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
@@ -139,7 +167,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		else if(hitPoints < MaxHitPoints){
 			regeneration();
 		}
-
+		
 		beingHit = false;
 		isMeleeAttacking = false;
 		isRangedAttacking = false;
@@ -208,8 +236,14 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		if(gc.getInput().isKeyDown(Input.KEY_S)) {
 			MoveSelf(new Vector2f(0.0f, 1.0f),3);
 		}
+		
+		if(vector.getY() > GameState.mousePos.getY()){
+			imageDirection = 0;
+		}
+		else{
+			imageDirection = 1;
+		}
 	}
-	
 	//RENDER METHOD =====================================================================================================================================================
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
@@ -217,10 +251,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 		if(beingHit == true){
-			playerTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+			playerBaseSprite[imageDirection].drawFlash(vector.getX()-32, vector.getY()-32);
 		}
 		else{
-			playerTestSprite.draw(vector.getX()-32, vector.getY()-32);
+			playerBaseSprite[imageDirection].draw(vector.getX()-32, vector.getY()-32);
 		}
 		
 		//RENDER EQUIPPED WEAPON IN GAME SPACE ======================================================
@@ -233,10 +267,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		float spriteAngle = (float)dir.getTheta()+90;
 		
-		playerEquippedLootList.get(0).setCenterOfRotation(32,96);
-		playerEquippedLootList.get(0).setRotation(spriteAngle);
-		playerEquippedLootList.get(1).setCenterOfRotation(32,96);
-		playerEquippedLootList.get(1).setRotation(spriteAngle);
+		playerEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
+		playerEquippedMeleeWepList[meleeWepID].setRotation(spriteAngle);
+		
+		playerEquippedRangedWepList[rangedWepID].setCenterOfRotation(32,96);
+		playerEquippedRangedWepList[rangedWepID].setRotation(spriteAngle);
 		
 		if(GameState.wepSwap == false && isAttackReady == false){
 			moveY = 0;
@@ -253,23 +288,22 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				moveYIncrement *= -1;
 			}
 			
-			playerEquippedLootList.get(0).setCenterOfRotation(32,96);
+			playerEquippedMeleeWepList[0].setCenterOfRotation(32,96);
 			if(GameState.mousePos.getX() < vector.getX()){
-				playerEquippedLootList.get(0).setRotation((spriteAngle-(maxMoveY/2)) + moveY );
+				playerEquippedMeleeWepList[meleeWepID].setRotation((spriteAngle-(maxMoveY/2)) + moveY );
 			}
 			else{
-				playerEquippedLootList.get(0).setRotation((spriteAngle+(maxMoveY/2)) - moveY );
+				playerEquippedMeleeWepList[meleeWepID].setRotation((spriteAngle+(maxMoveY/2)) - moveY );
 			}
-			playerEquippedLootList.get(0).draw(vector.getX()-32, vector.getY()-96);
+			playerEquippedMeleeWepList[meleeWepID].draw(vector.getX()-32, vector.getY()-96);
 			
 		}
 		
 		if(GameState.wepSwap == false){
-			playerEquippedLootList.get(0).draw(vector.getX()-32, vector.getY()-96);
+			playerEquippedMeleeWepList[meleeWepID].draw(vector.getX()-32, vector.getY()-96);
 		}
 		else{
-			playerEquippedLootList.get(1).draw(vector.getX()-32, vector.getY()-96);
-			System.out.println(isAttackReady);
+			playerEquippedRangedWepList[rangedWepID].draw(vector.getX()-32, vector.getY()-96);
 			if(isRangedReady == true){
 			
 				arrow.setCenterOfRotation(16,64);
@@ -277,7 +311,16 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 				arrow.draw(vector.getX()-16, vector.getY()-64);
 			}
 		}
-		//=========================
+		
+		//RENDER EQUIPPED ARMOR IN GAME SPACE ======================================================
+		
+		if(GameState.mousePos.getY() < vector.getY()){
+			playerEquippedArmorList[armorID][0].draw(vector.getX()-32, vector.getY()-32);
+		}
+		else{
+			playerEquippedArmorList[armorID][1].draw(vector.getX()-32, vector.getY()-32);
+		}
+		
 		
 		g.translate((vector.getX())-(Window.WIDTH/2), (vector.getY())-(Window.HEIGHT/2));
 		hpBar.draw(Inventory.xOrigin+453, Inventory.yOrigin+647, 378*(this.hitPoints/this.MaxHitPoints), 43);
@@ -460,13 +503,25 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		this.playerMeleeMinDamage = loot.wepMinDMG;
 		this.playerMeleeMaxDamage = loot.wepMaxDMG;
 		this.playerMeleeAttackSpeed = loot.attackSpeed;
-		this.meleeWepID = loot.ID;
+		this.meleeWepID = loot.lootLevel;
+		if(loot.lootLevel > 5) {
+			this.meleeWepID = 5;
+		}
+		else{
+			this.meleeWepID = loot.lootLevel;
+		}
 		}
 		else if(loot instanceof RangedWeapon){
 			this.playerRangedMinDamage = loot.wepMinDMG;
 			this.playerRangedMaxDamage= loot.wepMaxDMG;
 			this.playerRangedAttackSpeed = loot.attackSpeed;
-			this.rangedWepID = loot.ID;
+			this.rangedWepID = loot.lootLevel;
+			if(loot.lootLevel > 5) {
+				this.rangedWepID = 5;
+			}
+			else{
+				this.rangedWepID = loot.lootLevel;
+			}
 		}
 		else if(loot instanceof Armor){
 			this.Armor = loot.Armor;
@@ -477,7 +532,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			else{
 			this.MaxHitPoints = baseHp + loot.hpBonus;
 			}
-			this.armorID = loot.ID;
+			//System.out.println(armorID);
+			if(loot.lootLevel > 5) {
+				this.armorID = 5;
+			}
+			else{
+				this.armorID = loot.lootLevel;
+			}
 		}
 	}
 	public void AttackDamage(){

@@ -8,12 +8,15 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class RangedWeapon extends Loot {
 
-	private Image rangedWeaponSprite = null;
+	private Image[] rangedWeaponSprite = new Image[5];
+	private int spriteRenderID = 0;
+	
 	RangedWeapon(){
 		super();
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 5;
+		lootLevel = 0;
 		
 		//Setting the starting item of this type's stats.
 		Name = "Bow-ner";
@@ -27,7 +30,16 @@ public class RangedWeapon extends Loot {
 		hitboxY = 32.0f;
 		ID = 5;
 		
+		
+		
 		//Setting the items stats depending on the level of the enemy which dropped it.
+		
+		if(this.lootLevel > 5){
+			spriteRenderID = 5;
+		}
+		else{
+			spriteRenderID = this.lootLevel;
+		}
 		this.lootLevel = _enemy.EnemyLevel;
 		this.Health = this.lootLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
@@ -38,25 +50,31 @@ public class RangedWeapon extends Loot {
 	}
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-		rangedWeaponSprite = new Image("data/rangedWeaponTestSprite.png");
+	rangedWeaponSprite[0] = new Image("data/rangedWeaponTestSprite.png");
+	rangedWeaponSprite[1] = new Image("data/rangedWeaponTestSprite.png");
+	rangedWeaponSprite[2] = new Image("data/rangedWeaponTestSprite.png");
+	rangedWeaponSprite[3] = new Image("data/rangedWeaponTestSprite.png");
+	rangedWeaponSprite[4] = new Image("data/rangedWeaponTestSprite.png");
+	
 	}
 	
 public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 	//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 	if(beingHit == true){
-		rangedWeaponSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+		rangedWeaponSprite[spriteRenderID].drawFlash(vector.getX()-32, vector.getY()-32);
 	}
 	
 	else{
-		rangedWeaponSprite.draw(vector.getX()-32, vector.getY()-32);
+		rangedWeaponSprite[spriteRenderID].draw(vector.getX()-32, vector.getY()-32);
 	}
 	
-		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
-			g.drawString(this.Name+" "+"lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
-		}
+	//Display the name of the item if the "shift" key is hold
+	if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
+		g.drawString(this.Name+" "+"lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
+	}
 	
-}
+}	
 	public String setName(){
 		String Name="";
 		if(this.attackSpeed <= 0.5){

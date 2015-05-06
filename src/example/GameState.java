@@ -25,9 +25,6 @@ public class GameState extends BasicGameState {
 	
 	//VARIABLE DECLARATION
 			Player player = new Player(new Vector2f(mapBoundWidth/2, mapBoundHeight/2));
-			private Circle playerTestCircle = new Circle(player.vector.getX(), player.vector.getY(), player.hitboxX);
-			private Circle playerMeleeRangeCircle = new Circle(player.vector.getX(), player.vector.getY(), 150);
-			private Line playerToMouseTestLine = new Line(player.vector.getX(), player.vector.getY(), Mouse.getX(), Mouse.getY());
 			private Inventory inventory = new Inventory(player);
 			private ArrayList <Loot> lootList = new ArrayList <Loot>();
 			private ArrayList <Enemy> enemyList = new ArrayList <Enemy>();
@@ -59,7 +56,9 @@ public class GameState extends BasicGameState {
 			public static TiledMap bgMap = null;
 			private Image playerDamageWarning = null; 
 			private Image guiButtomEquipmentUnderlay = null;
-			private ArrayList <Image> equippedLootList = new ArrayList <Image>();
+			private Image[] playerEquippedMeleeWepList = new Image[5];
+			private Image[] playerEquippedRangedWepList = new Image[5];
+			private Image[] playerEquippedArmorList = new Image[6];
 			
 			
 			//Sounds
@@ -89,9 +88,25 @@ public class GameState extends BasicGameState {
 		bgMap = new TiledMap("data/map.tmx");
 		playerDamageWarning = new Image("data/playerDamageWarning.png");
 		guiButtomEquipmentUnderlay = new Image("data/guiButtomEquipmentUnderlay.png");
-		equippedLootList.add(new Image("data/armorTestSprite.png"));
-		equippedLootList.add(new Image("data/meleeWeaponTestSprite.png"));
-		equippedLootList.add(new Image("data/rangedWeaponTestSprite.png"));
+		
+		playerEquippedMeleeWepList[0] = new Image("data/meleeWeaponTestSprite.png");
+		playerEquippedMeleeWepList[1] = new Image("data/meleeWeaponTestSprite.png");
+		playerEquippedMeleeWepList[2] = new Image("data/meleeWeaponTestSprite.png");
+		playerEquippedMeleeWepList[3] = new Image("data/meleeWeaponTestSprite.png");
+		playerEquippedMeleeWepList[4] = new Image("data/meleeWeaponTestSprite.png");
+		
+		playerEquippedRangedWepList[0] = new Image("data/rangedWeaponTestSprite.png");
+		playerEquippedRangedWepList[1] = new Image("data/rangedWeaponTestSprite.png");
+		playerEquippedRangedWepList[2] = new Image("data/rangedWeaponTestSprite.png");
+		playerEquippedRangedWepList[3] = new Image("data/rangedWeaponTestSprite.png");
+		playerEquippedRangedWepList[4] = new Image("data/rangedWeaponTestSprite.png");
+		
+		playerEquippedArmorList[0] = new Image("data/armorSprite0.png");
+		playerEquippedArmorList[1] = new Image("data/armorSprite1.png");
+		playerEquippedArmorList[2]= new Image("data/armorSprite2.png");
+		playerEquippedArmorList[3]= new Image("data/armorSprite3.png");
+		playerEquippedArmorList[4] = new Image("data/armorSprite4.png");
+		playerEquippedArmorList[5] = new Image("data/armorSprite5.png");
 		
 		inventory.init(gc, sbg);
 		player.init(gc, sbg);
@@ -136,9 +151,9 @@ public class GameState extends BasicGameState {
 			inventoryList = null;
 			inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon			
 			
-			equippedLootList.add(new Image("data/armorTestSprite.png"));
-			equippedLootList.add(new Image("data/meleeWeaponTestSprite.png"));
-			equippedLootList.add(new Image("data/rangedWeaponTestSprite.png"));
+			Player.armorID = 0;
+			Player.meleeWepID = 0;
+			Player.rangedWepID = 0;
 			
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
@@ -170,9 +185,6 @@ public class GameState extends BasicGameState {
 		player.update(gc, sbg, enemyList, projectileList, healthGlobeList);
 		
 		//UDATES PLAYER SPRITE
-		playerTestCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.hitboxX);
-		playerMeleeRangeCircle = new Circle(Window.WIDTH/2, Window.HEIGHT/2, player.meleeRange);
-		playerToMouseTestLine = new Line(Window.WIDTH/2, Window.HEIGHT/2, Mouse.getX(), Window.HEIGHT-Mouse.getY());
 		if(player.hitPoints<=0){
 			EndScreen.wave = currentWave;
 			sbg.enterState(2);
@@ -762,20 +774,18 @@ public class GameState extends BasicGameState {
 		g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
 		
 		if(wepSwap == false){
-			equippedLootList.get(2).draw(48, 640);
+			playerEquippedRangedWepList[Player.rangedWepID].draw(48, 640);
 			guiButtomEquipmentUnderlay.draw(18, 618);
-			equippedLootList.get(1).draw(18, 618);
+			playerEquippedMeleeWepList[Player.rangedWepID].draw(18, 618);
 		}
 		else{
 				
-			equippedLootList.get(1).draw(48, 640);
+			playerEquippedMeleeWepList[Player.meleeWepID].draw(48, 640);
 			guiButtomEquipmentUnderlay.draw(18, 618);
-			equippedLootList.get(2).draw(18, 618);
+			playerEquippedRangedWepList[Player.rangedWepID].draw(18, 618);
 			}
 			
-		if(player.armorID == 3){
-			equippedLootList.get(0).draw(1200, 617);
-		} 
+			playerEquippedArmorList[Player.armorID].draw(1200, 617);
 		
 	}
 	public int getID() {

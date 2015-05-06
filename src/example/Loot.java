@@ -17,7 +17,6 @@ public class Loot extends GameObject {
 	
 	//VARIABLE DECLARATION ==============================================================================================================================================
 	
-	protected String[]ArmorNames = {"Leather Armor","Ringmail","Breast Plate","Full Plate","Dragonbone Armor"};
 	protected Random randDmg = new Random();
 	protected Random randSpeed = new Random();
 	protected Random randArmor = new Random();
@@ -211,6 +210,7 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 	}
 	
 	public void SetLootLevel(Enemy _enemy){
+		System.out.println("enemy: "+ _enemy.EnemyLevel);
 		this.lootLevel = _enemy.EnemyLevel;
 	}
 	

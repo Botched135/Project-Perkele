@@ -9,7 +9,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Weapon extends Loot{
 	
-	private Image meleeWeaponTestSprite = null;
+	private Image[] meleeWeaponSprite = new Image[5];
+	private int spriteRenderID = 0;
 	//protected int wepDMG = (randDmg.nextInt(100))*LootLevel;
 	//protected float attackSpeed = (randSpeed.nextFloat())*2*LootLevel;
 	
@@ -19,6 +20,7 @@ public class Weapon extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 4;
+		lootLevel = 0;
 		
 		//Setting the starting item of this type's stats.
 		Name = "Smelly Stick";
@@ -40,7 +42,13 @@ public class Weapon extends Loot{
 		ID = 4;
 		
 		//Setting the items stats depending on the level of the enemy which dropped it.
-		this.lootLevel = _enemy.EnemyLevel;
+		if(this.lootLevel > 5){
+			spriteRenderID = 5;
+		}
+		else{
+			spriteRenderID = this.lootLevel;
+		}
+		
 		this.Health = this.lootLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
@@ -50,17 +58,21 @@ public class Weapon extends Loot{
 	
 public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-		meleeWeaponTestSprite = new Image("data/meleeWeaponTestSprite.png");
+	meleeWeaponSprite[0] = new Image("data/meleeWeaponTestSprite.png");
+	meleeWeaponSprite[1] = new Image("data/meleeWeaponTestSprite.png");
+	meleeWeaponSprite[2] = new Image("data/meleeWeaponTestSprite.png");
+	meleeWeaponSprite[3] = new Image("data/meleeWeaponTestSprite.png");
+	meleeWeaponSprite[4] = new Image("data/meleeWeaponTestSprite.png");
 	}
 	
 public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 	//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 	if(beingHit == true){
-		meleeWeaponTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+		meleeWeaponSprite[spriteRenderID].drawFlash(vector.getX()-32, vector.getY()-32);
 	}
 	else{
-		meleeWeaponTestSprite.draw(vector.getX()-32, vector.getY()-32);
+		meleeWeaponSprite[spriteRenderID].draw(vector.getX()-32, vector.getY()-32);
 	}
 	//Display the name of the item if the "shift" key is hold
 	if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){

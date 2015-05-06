@@ -21,8 +21,7 @@ public class Armor extends Loot{
 		ID = 3;
 		Name = "Slighly used Loincloth";
 		Armor = 50;
-		hpBonus = 0;
-		lifeRegen = 0.0f;
+		numberOfStats = 1;
 	}
 	
 	Armor(Enemy _enemy) {

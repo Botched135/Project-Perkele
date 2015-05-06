@@ -29,6 +29,7 @@ public class Player extends GameObject{
 	protected float AttackSpeed = 5.0f; //Attacks per second
 	protected float lifeRegen = 0.2f;
 	protected float playerMeleeAttackSpeed = 5.0f; //Attacks per second
+	protected float playerVamp = 0;
 	protected int meleeWepID;
 	protected float playerRangedMinDamage;
 	protected float playerRangedMaxDamage;
@@ -353,7 +354,12 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 			//Play players being melee hit sound
 			meleeHitSound.play();
-			
+			if(_enemy.enemyVamp > 0){
+				_enemy.hitpoints +=_enemy.enemyVamp;
+				if(_enemy.hitpoints>_enemy.maxHitpoints){
+					_enemy.hitpoints=_enemy.maxHitpoints;
+				}
+			}
 			this.hitPoints -= _enemy.enemyDamage - ((_enemy.enemyDamage / 100) * this.Armor); //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){
 				this.hitPoints=0;
@@ -408,6 +414,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		this.playerMeleeMinDamage = loot.wepMinDMG;
 		this.playerMeleeMaxDamage = loot.wepMaxDMG;
 		this.playerMeleeAttackSpeed = loot.attackSpeed;
+		this.playerVamp = loot.Vamp;
 		this.meleeWepID = loot.ID;
 		}
 		else if(loot instanceof RangedWeapon){

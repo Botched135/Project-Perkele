@@ -25,7 +25,7 @@ public class Loot extends GameObject {
 	
 	//General Loot
 	protected boolean beingHit = false;
-	protected int Health=1;
+	protected int Health=2;
 	protected String Name="";
 	protected float Average;
 	protected float EnemyAverage;
@@ -290,18 +290,21 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
 						_enemyList.get(i).enemyVamp = _lootList.get(index).Vamp;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
+						_lootList.remove(index);
 					}
 					else if(_lootList.get(index) instanceof RangedWeapon && _enemyList.get(i).enemyType==1){
 						_enemyList.get(i).MinDamage=_lootList.get(index).wepMinDMG;
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
+						_lootList.remove(index);
 					}
 					else if(_lootList.get(index) instanceof Armor){
 						_enemyList.get(i).Armor = _lootList.get(index).Armor;
 						_enemyList.get(i).ArmorName = _lootList.get(index).Name;
+						_lootList.remove(index);
 					}
-					_lootList.remove(index);
+					
 					break;
 				}
 			}

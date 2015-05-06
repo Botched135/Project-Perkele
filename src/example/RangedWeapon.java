@@ -26,7 +26,6 @@ public class RangedWeapon extends Loot {
 		ID = 5;
 		
 		this.lootLevel = _enemy.EnemyLevel;
-		this.Health = this.lootLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());

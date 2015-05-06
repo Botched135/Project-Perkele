@@ -28,7 +28,6 @@ public class Armor extends Loot{
 		hitboxY = 32.0f;
 		ID = 3;
 		this.lootLevel = _enemy.EnemyLevel;
-		this.Health = this.lootLevel;
 		if(_enemy.EnemyLevel > 5){
 			this.Armor = (5 * 10) + (randArmor.nextInt(11)-5);
 		}
@@ -62,13 +61,14 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 }
 
 	public String setName(String[] string){
+		String setName;
 		if(this.lootLevel-1 > 4){
-			String Name = string[4]; 
+			setName = string[4]; 
 		}
 		else{
-			String Name = string[this.lootLevel-1]; 
+			setName = string[this.lootLevel-1]; 
 		}
-		return Name;
+		return setName;
 	}
 
 }

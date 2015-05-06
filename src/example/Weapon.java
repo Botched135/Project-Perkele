@@ -40,13 +40,12 @@ public class Weapon extends Loot{
 		ID = 4;
 		
 		this.lootLevel = _enemy.EnemyLevel;
-		this.Health = this.lootLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
 		this.isVamp = randVamp.nextInt(101);
 		if(isVamp > 80 ){
-			Vamp = 2.5f*_enemy.EnemyLevel*randDmg.nextFloat();
+			Vamp = 2.5f*_enemy.EnemyLevel*(randDmg.nextFloat()+0.5f);
 			this.numberOfStats+=1;
 		}
 		this.Name = this.setName();
@@ -80,7 +79,7 @@ public String setName(){
 	else if(this.attackSpeed >= 2 ){
 		Name+="Speedy ";
 	}
-	if(Vamp > 9){
+	if(Vamp > 0){
 		Name+="Vampiric";
 	}
 	if(this.wepMinDMG > (this.lootLevel*20+15) && this.wepMaxDMG >(this.lootLevel*20+50)){

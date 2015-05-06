@@ -27,6 +27,8 @@ public class Loot extends GameObject {
 	protected float wepMinDMG;
 	protected float wepMaxDMG;
 	protected float attackSpeed;
+	protected int isVamp;
+	protected float Vamp = 0;
 	protected float hpBonus;
 	protected float Armor;
 	protected float lifeRegen;
@@ -36,6 +38,7 @@ public class Loot extends GameObject {
 	protected float Average;
 	protected float EnemyAverage;
 	protected float LootAverage;
+	protected int numberOfStats=3;
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
 	

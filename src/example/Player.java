@@ -32,6 +32,7 @@ public class Player extends GameObject{
 	protected float AttackSpeed = 5.0f; //Attacks per second
 	protected float lifeRegen = 0.2f;
 	protected float playerMeleeAttackSpeed = 5.0f; //Attacks per second
+	protected float playerVamp = 0;
 	protected int meleeWepID;
 	
 	//Ranged
@@ -418,6 +419,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		this.playerMeleeMinDamage = loot.wepMinDMG;
 		this.playerMeleeMaxDamage = loot.wepMaxDMG;
 		this.playerMeleeAttackSpeed = loot.attackSpeed;
+		this.playerVamp = loot.Vamp;
 		this.meleeWepID = loot.ID;
 		}
 		else if(loot instanceof RangedWeapon){

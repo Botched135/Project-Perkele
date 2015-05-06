@@ -23,6 +23,8 @@ public class Weapon extends Loot{
 		wepMinDMG = 75;
 		wepMaxDMG = 125;
 		attackSpeed = 5;
+		Vamp = 20;
+		numberOfStats=4;
 		
 		//20+lootLevel*(randDmg.nextInt(80));
 		//wepMinDMG = lootLevel*20+randDmg.nextInt(20);
@@ -42,6 +44,11 @@ public class Weapon extends Loot{
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
+		this.isVamp = randDmg.nextInt(101);
+		if(isVamp > 80 ){
+			Vamp = 2.5f*_enemy.EnemyLevel*randDmg.nextFloat();
+			this.numberOfStats+=1;
+		}
 		this.Name = this.setName();
 	}
 	
@@ -72,6 +79,9 @@ public String setName(){
 	}
 	else if(this.attackSpeed >= 2 ){
 		Name+="Speedy ";
+	}
+	if(Vamp > 9){
+		Name+="Vampiric";
 	}
 	if(this.wepMinDMG > (this.lootLevel*20+15) && this.wepMaxDMG >(this.lootLevel*20+50)){
 		Name="Andúril, Flame of the West";

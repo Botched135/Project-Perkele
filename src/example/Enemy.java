@@ -435,6 +435,7 @@ public class Enemy extends GameObject {
 			
 			//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 			beingHit = true;
+			_player.hitPoints+=_player.playerVamp;
 			
 			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitpoints - _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor) < 0){

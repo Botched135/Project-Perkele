@@ -184,7 +184,7 @@ public class Enemy extends GameObject {
 		Vector2f posSnapshotBefore = new Vector2f(vector.getX(), vector.getY());
 		beingHit = false;
 		
-		//Attacking if enemy is ranged
+		//Attacking for enemies based on if they are ranged or melee
 		if(vector.distance(_player.vector) <  maxRange + _player.hitboxX && vector.distance(_player.vector) >  minRange){
 				
 			if(enemyType == 0){
@@ -192,15 +192,19 @@ public class Enemy extends GameObject {
 			}
 			if(enemyType == 1){
 				isRangedAttacking(gc, sbg, _player, _projectileList);
-			}
+			}			
+		} 
+		if(vector.distance(_player.vector) < this.hitboxX + _player.hitboxX + maxSeekDistance && vector.distance(_player.vector) >  minRange){
 			if(enemyType == 2){
-				isMeleeAttacking();
 				if(vector.distance(_player.vector) > this.hitboxX + _player.hitboxX + (maxSeekDistance/2)){
 					isRangedAttacking(gc, sbg, _player, _projectileList);
+					setAttackReady();
+				}
+				else{
+					isMeleeAttacking();
 				}
 			}
-			
-		} 
+		}
 		
 		stopMovingWhenAttacking(stopMoving);
 		beingMeleeAttacked(_player);

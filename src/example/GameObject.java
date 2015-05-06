@@ -38,19 +38,4 @@ public class GameObject {
 	
 	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 	}	
-
-	boolean getRenderState(){
-		return render;
-	}
- 
-	public void setRenderstate(boolean _render){
-		render = _render;
-	}
-	
-	public boolean isColliding(GameObject _obj){
-		if(this.vector.distance(_obj.vector)<this.hitboxX+_obj.hitboxX){
-			return true;
-		}else
-			return false;
-	}
 }

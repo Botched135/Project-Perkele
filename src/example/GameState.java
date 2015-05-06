@@ -365,7 +365,7 @@ public class GameState extends BasicGameState {
 				if(projectileList.size() > 0){
 					for(int i = projectileList.size()-1; i >= 0; i--){
 					
-						projectileList.get(i).stateManager(player, i, projectileList, enemyList);
+						projectileList.get(i).update(player, i, gc, sbg, delta, projectileList, enemyList);
 					}
 				}
 		

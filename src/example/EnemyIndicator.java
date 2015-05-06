@@ -49,7 +49,12 @@ public class EnemyIndicator extends GameObject {
 		}
 
 		//METHODS
-		public void destroy(int index, ArrayList<EnemyIndicator> _enemyIndicatorList){
+	/**
+	 * Method for destroying the enemy indicator arrows showing around the player
+	 * @param index used for determing which indicator is to be removed
+	 * @param _enemyIndicatorList is used to determine which list something is to be removed from
+	 */
+	public void destroy(int index, ArrayList<EnemyIndicator> _enemyIndicatorList){
 		_enemyIndicatorList.remove(index);
 		}
 	}

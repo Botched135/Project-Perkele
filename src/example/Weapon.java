@@ -21,10 +21,10 @@ public class Weapon extends Loot{
 		hitboxY = 32.0f;
 		ID = 4;
 		Name = "Smelly Stick";
-		wepMinDMG = 75;
-		wepMaxDMG = 125;
-		attackSpeed = 5;
-		Vamp = 20;
+		wepMinDMG = 10;
+		wepMaxDMG = 25;
+		attackSpeed = 0.8f;
+		Vamp = 0;
 		numberOfStats=4;
 	}
 	

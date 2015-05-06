@@ -20,7 +20,7 @@ public class Armor extends Loot{
 		hitboxY = 32.0f;
 		ID = 3;
 		Name = "Slighly used Loincloth";
-		Armor = 50;
+		Armor = 1;
 		numberOfStats = 1;
 	}
 	

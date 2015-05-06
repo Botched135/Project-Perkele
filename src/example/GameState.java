@@ -135,7 +135,7 @@ public class GameState extends BasicGameState {
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
 			
-			wave = 9;
+			wave = 0;
 			currentWave = 0;
 			waveStartTimer = 0;
 			waveTimeDif = 0;
@@ -402,10 +402,6 @@ public class GameState extends BasicGameState {
 		//RENDER TEXT (and miscellaneous)
 		g.setColor(new Color(255,255,255));
 		g.drawString("Wave Number: " + wave, 10, 50); //Displaying the wave number
-		g.drawString("Number of enemies: " + enemyList.size(), 10, 65); //To be removed
-		g.drawString("Number of loot: " + lootList.size(), 10, 80);
-		g.drawString("Melee Attack is Ready: "+player.setAttackReady(), 10, 95);
-		g.drawString("Ranged Attack is Ready: "+player.setRangedAttackReady(),10,110);
 
 		for(int i = enemyList.size()-1; i >= 0; i-- ){
 			if(GameState.mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX){

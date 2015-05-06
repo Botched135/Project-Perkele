@@ -578,7 +578,7 @@ public class Enemy extends GameObject {
 	 * @param _wave is needed in order to scale the levels so they are harder as longer as you progress in the game
 	 */
 	void SetEnemyLevel(int _wave){
-		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/2);
+		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/3);
 		if(this.EnemyLevel < 1){ //statement in order to prevent enemy levels being below 1
 			//Adjusting stats in order to keep the enemy level 1
 			this.EnemyLevel = 1;
@@ -609,7 +609,7 @@ public class Enemy extends GameObject {
 	 * @param _bossLevel is used as an extra parameter for determing the level of enemy as the boss is supposed to be harder then everything else
 	 */
 	void SetEnemyLevel(int _wave, int _bossLevel){
-		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/2) + _bossLevel;
+		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/3) + _bossLevel;
 		if(this.EnemyLevel < 1){
 			this.EnemyLevel = 1;
 			this.hitpoints = (75 * this.EnemyLevel) + (randEnemyHP.nextInt(51)-25);

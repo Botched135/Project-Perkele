@@ -13,7 +13,8 @@ public class Weapon extends Loot{
 	//protected int wepDMG = (randDmg.nextInt(100))*LootLevel;
 	//protected float attackSpeed = (randSpeed.nextFloat())*2*LootLevel;
 	
-	Weapon() {
+	//CONSTRUCTORS ======================================================================================================================================================
+	Weapon() {//Constructor for initial weapon of the player
 		 
 		super();
 		hitboxX = 32.0f;
@@ -27,7 +28,7 @@ public class Weapon extends Loot{
 		numberOfStats=4;
 	}
 	
-	Weapon(Enemy _enemy) {
+	Weapon(Enemy _enemy) {//Constructor for enemy dropped weapons.
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 4;
@@ -44,12 +45,12 @@ public class Weapon extends Loot{
 		this.Name = this.setName();
 	}
 	
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {//Initialise the sprite used to display the weapon		
 		
 		meleeWeaponTestSprite = new Image("data/meleeWeaponTestSprite.png");
 	}
 	
-	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {//Render the name, and the flashing animation when the weapon gets attacked
 		
 		if(beingHit == true){
 			meleeWeaponTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
@@ -64,7 +65,7 @@ public class Weapon extends Loot{
 	}
 	
 
-	public String setName(){
+	public String setName(){//Returns the name of the weapon based on the stats of the loot. 
 		String Name = ""; 
 		if(this.attackSpeed <= 0.5){
 			Name += "Slow ";

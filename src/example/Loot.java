@@ -23,7 +23,7 @@ public class Loot extends GameObject {
 	protected Random randlifeRegen = new Random();
 	protected Random randVamp = new Random();
 	
-	//General Loot
+	//General Loot Stats
 	protected boolean beingHit = false;
 	protected int Health=2;
 	protected String Name="";
@@ -34,7 +34,7 @@ public class Loot extends GameObject {
 	public int lootLevel = 1;
 	boolean leftMousePressed = false;
 	
-	//Weapons
+	//Weapons Stats
 	protected static Color lootTestCol = new Color(255,255,0);
 	protected float speedMultiplier = 5.0f; 
 	protected float wepMinDMG;
@@ -43,7 +43,7 @@ public class Loot extends GameObject {
 	protected int isVamp;
 	protected float Vamp = 0;
 	
-	//Armor
+	//Armor Stats
 	protected String[]ArmorNames = {"Leather Armor","Ringmail","Breast Plate","Full Plate","Dragonbone Armor"};
 	protected float hpBonus;
 	protected float Armor;

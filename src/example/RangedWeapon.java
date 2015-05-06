@@ -7,9 +7,11 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class RangedWeapon extends Loot {
-
+    //VARIABLE DECLARATION =============================================================================================================================================
 	private Image rangedWeaponSprite = null;
-	RangedWeapon(){
+	
+	//CONSTRUCTORS ======================================================================================================================================================
+	RangedWeapon(){//Constructor for initial ranged weapon of the player
 		super();
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
@@ -20,7 +22,7 @@ public class RangedWeapon extends Loot {
 		attackSpeed = 5f;
 		
 	}
-	RangedWeapon(Enemy _enemy){
+	RangedWeapon(Enemy _enemy){//Constructor for enemy dropped ranged weapon
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 5;

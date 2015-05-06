@@ -36,17 +36,13 @@ public class Inventory {
 		
 		guiButtom = new Image("data/guiButtom.png");
 		
-		
-		
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 
-		
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		
 		
 			g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
 			

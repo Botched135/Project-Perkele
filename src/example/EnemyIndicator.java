@@ -15,46 +15,41 @@ public class EnemyIndicator extends GameObject {
 	protected Vector2f target;
 	protected Vector2f tempTarget = new Vector2f();
 	//Images 
-		private Image enemyIndicatorSprite = null;
-		double spriteAngle;
+	private Image enemyIndicatorSprite = null;
+	double spriteAngle;
 		
 		
-		//CONSTRUCTERS
-		EnemyIndicator(Player _owner, Vector2f _target){
+	//CONSTRUCTERS
+	EnemyIndicator(Player _owner, Vector2f _target){
 			
-			owner = _owner;
-			target = _target;
-		}
+		owner = _owner;
+		target = _target;
+	}
 		
-		public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 			
-			enemyIndicatorSprite = new Image("data/enemyIndicatorSprite.png");
-		}
+		enemyIndicatorSprite = new Image("data/enemyIndicatorSprite.png");
+	}
 			
-		public void update(Player _owner, Vector2f _target, GameContainer gc, StateBasedGame sbg, int delta){
+	public void update(Player _owner, Vector2f _target, GameContainer gc, StateBasedGame sbg, int delta){
 			
-				Vector2f dir = new Vector2f(0.0f, 0.0f);
-				tempTarget = new Vector2f(_target.getX(), _target.getY());
+			Vector2f dir = new Vector2f(0.0f, 0.0f);
+			tempTarget = new Vector2f(_target.getX(), _target.getY());
 				
-				dir = tempTarget.sub(_owner.vector);
-				dir.normalise();
+			dir = tempTarget.sub(_owner.vector);
+			dir.normalise();
 				
-				spriteAngle = dir.getTheta()+90;
-				
-				
-		}
+			spriteAngle = dir.getTheta()+90;	
+	}
 		
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 		enemyIndicatorSprite.setRotation((float) spriteAngle);
-		enemyIndicatorSprite.draw(vector.getX()-64, vector.getY()-64);
-		//g.drawRect(tempTarget.getX()-5, tempTarget.getY()-5, 10, 10);
-			
+		enemyIndicatorSprite.draw(vector.getX()-64, vector.getY()-64);			
 		}
 
 		//METHODS
 		public void destroy(int index, ArrayList<EnemyIndicator> _enemyIndicatorList){
 		_enemyIndicatorList.remove(index);
-
-}
+		}
 	}

@@ -29,8 +29,6 @@ public class Arrow extends Projectile {
 		hitboxX = 5;
 		disableDmg = false;
 		
-		
-		
 		vector.set(_owner.vector.getX(), _owner.vector.getY());
 	}
 	
@@ -58,14 +56,12 @@ public class Arrow extends Projectile {
 		dir.normalise();
 		
 		spriteAngle = dir.getTheta()+90;
-		
 	}
 	
-public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 	
 		arrowSprite.setRotation((float) spriteAngle);
 		arrowSprite.draw(vector.getX()-16, vector.getY()-16);
-		
 	}
 
 	//METHODS

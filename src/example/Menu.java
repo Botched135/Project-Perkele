@@ -17,8 +17,6 @@ public class Menu extends BasicGameState {
 	private Image menuBg = null;
 	private Image menuNewGameButton0 = null;
 	private Image menuNewGameButton1 = null;
-	private Image menuLoadGameButton0 = null;
-	private Image menuLoadGameButton1 = null;
 	private Image menuResumeButton0 = null;
 	private Image menuResumeButton1 = null;
 	private Image menuExitButton0 = null;
@@ -38,8 +36,6 @@ public class Menu extends BasicGameState {
 	
 		menuNewGameButton0 = new Image("data/menuNewGameButton0.png");	
 		menuNewGameButton1 = new Image("data/menuNewGameButton1.png");
-		menuLoadGameButton0 = new Image("data/menuLoadGameButton0.png");	
-		menuLoadGameButton1 = new Image("data/menuLoadGameButton1.png");
 		menuResumeButton0 = new Image("data/menuResumeButton0.png");	
 		menuResumeButton1 = new Image("data/menuResumeButton1.png");
 		menuExitButton0 = new Image("data/menuExitButton0.png");	
@@ -61,7 +57,6 @@ public class Menu extends BasicGameState {
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
 			
 			//menuTheme.stop();
-			
 		}
 		
 		if(!gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
@@ -132,7 +127,6 @@ public class Menu extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && playerDead == true) {
 			sbg.enterState(1);
 		}
-		
 	}
 	
 	
@@ -142,7 +136,6 @@ public class Menu extends BasicGameState {
 		menuBg.draw(0,0);
 		
 		//Draw "new game" button
-		
 		if(		menuMousePos.getX() > Window.WIDTH/2 - 200 &&
 				menuMousePos.getX() < Window.WIDTH/2 + 200  &&
 				menuMousePos.getY() > Window.HEIGHT/2 &&

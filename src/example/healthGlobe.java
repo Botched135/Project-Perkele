@@ -19,13 +19,12 @@ public class healthGlobe extends Loot {
 		super();
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
-
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 			healthGlobeSprite = new Image("data/healthGlobeSprite.png");
-		}
+	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList){
 		
@@ -35,11 +34,9 @@ public class healthGlobe extends Loot {
 	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 			healthGlobeSprite.draw(vector.getX()-32, vector.getY()-32);
-	
 	}
 	
 	//METHODS
-	
 	void separate(ArrayList<Loot> _lootList){
 
 		float desiredSeparation = hitboxX*2;
@@ -64,7 +61,6 @@ public class healthGlobe extends Loot {
 				sum.scale(speedMultiplier);				
 				vector.add(sum);
 			}
-			
 		}
 	}
 	

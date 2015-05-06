@@ -33,27 +33,26 @@ public class RangedWeapon extends Loot {
 		this.Name = this.setName();
 		
 	}
-public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+	
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 		rangedWeaponSprite = new Image("data/rangedWeaponTestSprite.png");
 	}
 	
-public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
-	
-	if(beingHit == true){
-		rangedWeaponSprite.drawFlash(vector.getX()-32, vector.getY()-32);
-	}
-	
-	else{
-		rangedWeaponSprite.draw(vector.getX()-32, vector.getY()-32);
-	}
+		if(beingHit == true){
+			rangedWeaponSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+		}
+		else{
+			rangedWeaponSprite.draw(vector.getX()-32, vector.getY()-32);
+		}
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			g.drawString(this.Name+" "+"lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
 		}
 	
-}
+	}
 	public String setName(){
 		String Name="";
 		if(this.attackSpeed <= 0.5){

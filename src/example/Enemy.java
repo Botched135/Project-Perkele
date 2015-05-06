@@ -245,6 +245,7 @@ public class Enemy extends GameObject {
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g, Player player) throws SlickException{
 		
+		//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 		if(beingHit == true){
 			sprite[enemyType][imageDirection].drawFlash(vector.getX()-32, vector.getY()-32);
 		}

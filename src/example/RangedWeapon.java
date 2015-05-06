@@ -14,6 +14,8 @@ public class RangedWeapon extends Loot {
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 5;
+		
+		//Setting the starting item of this type's stats.
 		Name = "Bow-ner";
 		wepMinDMG = 80;
 		wepMaxDMG = 120;
@@ -25,6 +27,7 @@ public class RangedWeapon extends Loot {
 		hitboxY = 32.0f;
 		ID = 5;
 		
+		//Setting the items stats depending on the level of the enemy which dropped it.
 		this.lootLevel = _enemy.EnemyLevel;
 		this.Health = this.lootLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
@@ -40,7 +43,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
-	
+	//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 	if(beingHit == true){
 		rangedWeaponSprite.drawFlash(vector.getX()-32, vector.getY()-32);
 	}

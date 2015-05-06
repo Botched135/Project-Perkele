@@ -76,6 +76,12 @@ public class Player extends GameObject{
 	private Image arrow = null;
 	private ArrayList <Image> playerEquippedLootList = new ArrayList <Image>();
 	
+		//Variables for animations of weapons
+		float moveY = 0;
+		float maxMoveY = 32;
+		float moveYIncrement = 2*maxMoveY/(AttackSpeed);
+		float spriteAngle = 0;
+	
 	//Sounds =================================================
 	
 	private Sound meleeAttackSound0 = null;
@@ -126,7 +132,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	public void update(GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
 		
-		//Keeping HP from exceeding max hp.
+		//Keeping HP from exceeding max HP.
 		if(hitPoints > MaxHitPoints){
 			hitPoints = MaxHitPoints;
 		}
@@ -134,7 +140,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			regeneration();
 		}
 
-		
+		beingHit = false;
 		isMeleeAttacking = false;
 		isRangedAttacking = false;
 
@@ -209,9 +215,15 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		g.translate((-vector.getX())+(Window.WIDTH/2), (-vector.getY())+(Window.HEIGHT/2));
 		
-		playerTestSprite.draw(vector.getX()-32, vector.getY()-32);
+		//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
+		if(beingHit == true){
+			playerTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+		}
+		else{
+			playerTestSprite.draw(vector.getX()-32, vector.getY()-32);
+		}
 		
-		//RENDER EQUIPPED WEAPON IN GAME SPACE ==========================
+		//RENDER EQUIPPED WEAPON IN GAME SPACE ======================================================
 		
 		Vector2f dir = new Vector2f(0.0f, 0.0f);
 		Vector2f tempTarget = new Vector2f(GameState.mousePos.getX(), GameState.mousePos.getY());
@@ -225,13 +237,40 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		playerEquippedLootList.get(0).setRotation(spriteAngle);
 		playerEquippedLootList.get(1).setCenterOfRotation(32,96);
 		playerEquippedLootList.get(1).setRotation(spriteAngle);
+		
+		if(GameState.wepSwap == false && isAttackReady == false){
+			moveY = 0;
+			maxMoveY = 64;
+			moveYIncrement = 3;
+		}
+		if(GameState.wepSwap == false && isAttackReady == false){
+			moveY = moveY + moveYIncrement;
+			
+			if(moveY >= maxMoveY){
+				moveYIncrement *= -1;
+			}
+			if(moveY < -(maxMoveY/3)){
+				moveYIncrement *= -1;
+			}
+			
+			playerEquippedLootList.get(0).setCenterOfRotation(32,96);
+			if(GameState.mousePos.getX() < vector.getX()){
+				playerEquippedLootList.get(0).setRotation((spriteAngle-(maxMoveY/2)) + moveY );
+			}
+			else{
+				playerEquippedLootList.get(0).setRotation((spriteAngle+(maxMoveY/2)) - moveY );
+			}
+			playerEquippedLootList.get(0).draw(vector.getX()-32, vector.getY()-96);
+			
+		}
+		
 		if(GameState.wepSwap == false){
 			playerEquippedLootList.get(0).draw(vector.getX()-32, vector.getY()-96);
 		}
 		else{
 			playerEquippedLootList.get(1).draw(vector.getX()-32, vector.getY()-96);
-			
-			if(isAttackReady == true){
+			System.out.println(isAttackReady);
+			if(isRangedReady == true){
 			
 				arrow.setCenterOfRotation(16,64);
 				arrow.setRotation(spriteAngle);
@@ -363,6 +402,9 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 			//Play players being melee hit sound
 			meleeHitSound.play();
+			
+			//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
+			beingHit = true;
 			
 			this.hitPoints -= _enemy.enemyDamage - ((_enemy.enemyDamage / 100) * this.Armor); //(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitPoints <0){

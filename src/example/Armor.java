@@ -18,6 +18,8 @@ public class Armor extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 3;
+		
+		//Setting the starting item of this type's stats.
 		Name = "Slighly used Loincloth";
 		Armor = 50;
 		hpBonus = 0;
@@ -28,6 +30,8 @@ public class Armor extends Loot{
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
 		ID = 3;
+		
+		//Setting the items stats depending on the level of the enemy which dropped it.
 		this.lootLevel = _enemy.EnemyLevel;
 		this.Health = this.lootLevel;
 		if(_enemy.EnemyLevel > 5){
@@ -47,7 +51,8 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 	
 public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		
+	
+	//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 	if(this.beingHit == true){
 		armorTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
 	}
@@ -55,9 +60,9 @@ public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) 
 		armorTestSprite.draw(vector.getX()-32, vector.getY()-32);
 	}
 		
-	
+		//Display the name of the item if the "shift" key is hold
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
-			g.drawString(this.Name+" lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
+			g.drawString(this.Name, vector.getX()-23, vector.getY()-60);
 		}
 	
 }

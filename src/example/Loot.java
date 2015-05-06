@@ -87,7 +87,6 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		this.enemyPickUp(index, gc, sbg, _enemyList, _lootList, _inventoryList);
 		this.playerPickUp(index, gc, sbg, _player, _lootList, _inventoryList);
 		
-	
 		if(!gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			this.beingMeleeAttacked(_player);
 		}
@@ -100,18 +99,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 
 	//METHODS
-	
 	void stateManager(int _index, ArrayList<Loot> _lootList){
-		
 		if(_lootList.size() > 0 && _index == _lootList.size()-1) {
 			separate(_lootList);
 		}
-
 	}
 	
-	
 	void separate(ArrayList<Loot> _lootList){
-
 		float desiredSeparation = hitboxX*2;
 		Vector2f sum = new Vector2f(0.0f, 0.0f);
 		int count = 0;
@@ -137,11 +131,9 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 		}
 	}
-	
 
 //spawnLoot method used for spawning loot at the enemys position regardless of where the mouse is.
 	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Enemy enemy) throws SlickException {
-		
 		Random randLoot = new Random();
 		Random randDrop = new Random();
 		int lootDropDist = 10;
@@ -171,6 +163,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			
 		}
 	}
+	
 	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Loot _lootIndex, ArrayList<Loot> _inventoryList, Loot _inventoryIndex, Player _player){
 		Random randLoot = new Random();
 		int lootDropDist = 10;
@@ -198,11 +191,9 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		float tempY = _player.vector.getY() + (tempRandY)-(lootDropDist/2);
 		
 		_lootList.get(_lootList.size()-1).vector.set(new Vector2f(tempX, tempY));
-		
 	}
 	
-public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayList<healthGlobe> _healthGlobeList, Enemy enemy) throws SlickException {
-		
+	public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayList<healthGlobe> _healthGlobeList, Enemy enemy) throws SlickException {
 		Random randLoot = new Random();
 		Random randDrop = new Random();
 		int lootDropDist = 10;
@@ -227,7 +218,6 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 	}
 	
 	public void beingMeleeAttacked(Player _player){
-		
 		if(_player.isMeleeAttacking && 
 				GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			
@@ -241,6 +231,7 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 			}
 		}
 	}
+	
 	public void playerPickUp(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
 		if(_lootList.size() >= 0) {
 			if(gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false){
@@ -268,6 +259,7 @@ public static void spawnHealthGlobe(GameContainer gc, StateBasedGame sbg, ArrayL
 				}
 			}
 		}
+	
 	public void enemyPickUp(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
 		if(_lootList.size()>=0){
 			for(int i = _enemyList.size()-1; i>=0;i--){ 

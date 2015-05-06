@@ -17,14 +17,11 @@ import org.newdawn.slick.Sound;
 public class Player extends GameObject{
 	
 	//VARIABLE DECLARATION ===========================================================================================================================================================
-	//PLAYER STATS ===========================================
-	protected float hitPoints = 100;
-	protected float baseHp = 100;
-	protected float MaxHitPoints = 100;
+	protected boolean beingHit = false;
+	protected static Color playerTestCol = new Color(0,0,255);
+	DecimalFormat df = new DecimalFormat("#.##");
 	
-	protected float speedMultiplier = 5.0f;
-	
-	//Melee
+	//Player offensive stats ==============================================================================================================================
 	protected float playerMeleeMinDamage;
 	protected float playerMeleeMaxDamage ;
 	protected float playerMeleeDamage;
@@ -34,22 +31,16 @@ public class Player extends GameObject{
 	protected float playerMeleeAttackSpeed = 5.0f; //Attacks per second
 	protected float playerVamp = 0;
 	protected int meleeWepID;
-	
-	//Ranged
 	protected float playerRangedMinDamage;
 	protected float playerRangedMaxDamage;
 	protected float playerRangedAttackSpeed;
 	protected float rangedDamage;
 	protected int rangedWepID;
 	protected float projectileSpeed = 12;
-	
-	//Armor
-	protected float Armor = 0; //Damage reductions
-	protected int armorID;
-	
-	//=======================================================
-	
-	protected boolean beingHit = false;
+	protected boolean isMeleeAttacking;
+	protected boolean isRangedAttacking;
+	protected Random randDmg = new Random();
+	//Attack cooldown variables
 	protected float isReady;
 	protected boolean isAttackReady = false;
 	protected long StartTime = System.currentTimeMillis();
@@ -59,35 +50,34 @@ public class Player extends GameObject{
 	protected long rangeStartTime = System.currentTimeMillis();
 	protected long rangeEndTime = 0;
 	
-	protected boolean isMeleeAttacking;
-	protected boolean isRangedAttacking;
-	protected static Color playerTestCol = new Color(0,0,255);
-	
-	protected Random randDmg = new Random();
-	
+	//Player defensive stats ==============================================================================================================================
+	protected float Armor = 0; //Damage reductions
+	protected int armorID;
+	protected float hitPoints = 100;
+	protected float baseHp = 100;
+	protected float MaxHitPoints = 100;
 	//Variables for lifeRegen timer
 	protected long regSTimer = 0;
 	protected long regETimer = 0;
 	protected int regWTime = 1000;
 	
-	//Images =================================================
+	//Player movement variables ===========================================================================================================================
+	protected float speedMultiplier = 5.0f;
 	
+	//Images =================================================
 	private Image playerTestSprite = null; 
 	private Image hpBar = null; 
 	private Image arrow = null;
 	private ArrayList <Image> playerEquippedLootList = new ArrayList <Image>();
 	
 	//Sounds =================================================
-	
 	private Sound meleeAttackSound0 = null;
 	private Sound rangedAttackSound0 = null;
 	protected Sound meleeHitSound = null;
 	protected Sound rangedHitSound = null;
 	
 	
-	//Misc. ==================================================	
 	
-	DecimalFormat df = new DecimalFormat("#.##");
 	
 	//CONSTRUCTORS ===========================================================================================================================================================
 	Player() {

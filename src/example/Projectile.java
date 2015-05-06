@@ -85,7 +85,7 @@ public class Projectile extends GameObject {
 		
 	}
 	
-public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Enemy _owner, Vector2f _target){
+	public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Enemy _owner, Vector2f _target){
 		
 		int maxRandDist = 10;
 		Random randLoot = new Random();
@@ -94,7 +94,6 @@ public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Enemy _own
 		Projectile subProjectile = new Projectile(_owner, _target);
 		subProjectile.vector.set(subProjectile.vector.getX() + tempRandX - maxRandDist/2, subProjectile.vector.getY() + tempRandY + maxRandDist/2);
 		_projectileList.add(subProjectile);
-		
 	}
 	
 	void seekState(Vector2f _target){
@@ -105,7 +104,6 @@ public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Enemy _own
 		dir.normalise();
 		dir = dir.scale(speedMultiplier);	
 		vector = vector.add(dir);
-		
 	}
 	
 	public void moveTo(){
@@ -113,7 +111,6 @@ public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Enemy _own
 		dir.normalise();
 		dir = dir.scale(speedMultiplier);	
 		vector = vector.add(dir);
-
 	}
 		
 	public void destroy(int index, ArrayList<Projectile> _projectileList){

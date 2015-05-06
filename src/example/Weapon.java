@@ -25,13 +25,6 @@ public class Weapon extends Loot{
 		attackSpeed = 5;
 		Vamp = 20;
 		numberOfStats=4;
-		
-		//20+lootLevel*(randDmg.nextInt(80));
-		//wepMinDMG = lootLevel*20+randDmg.nextInt(20);
-		//wepMaxDMG = lootLevel*20+40+randDmg.nextInt(15);
-		//attackSpeed = 0.5f+2*lootLevel*(randSpeed.nextFloat());
-		
-
 	}
 	
 	Weapon(Enemy _enemy) {
@@ -51,57 +44,56 @@ public class Weapon extends Loot{
 		this.Name = this.setName();
 	}
 	
-public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 		meleeWeaponTestSprite = new Image("data/meleeWeaponTestSprite.png");
 	}
 	
-public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
-	
-	if(beingHit == true){
-		meleeWeaponTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
-	}
-	else{
-		meleeWeaponTestSprite.draw(vector.getX()-32, vector.getY()-32);
-	}
+		if(beingHit == true){
+			meleeWeaponTestSprite.drawFlash(vector.getX()-32, vector.getY()-32);
+		}
+		else{
+			meleeWeaponTestSprite.draw(vector.getX()-32, vector.getY()-32);
+		}
 	
 		if(gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			g.drawString(this.Name+" "+"lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
 		}
+	}
 	
-}
-public String setName(){
-	String Name = ""; 
-	if(this.attackSpeed <= 0.5){
-		Name += "Slow ";
-	}
-	else if(this.attackSpeed >= 2 ){
-		Name+="Speedy ";
-	}
-	if(Vamp > 0){
-		Name+="Vampiric";
-	}
-	if(this.wepMinDMG > (this.lootLevel*20+15) && this.wepMaxDMG >(this.lootLevel*20+50)){
-		Name="Andúril, Flame of the West";
+
+	public String setName(){
+		String Name = ""; 
+		if(this.attackSpeed <= 0.5){
+			Name += "Slow ";
+		}
+		else if(this.attackSpeed >= 2 ){
+			Name+="Speedy ";
+		}
+		if(Vamp > 0){
+			Name+="Vampiric ";
+		}
+		if(this.wepMinDMG > (this.lootLevel*20+15) && this.wepMaxDMG >(this.lootLevel*20+50)){
+			Name="Andúril, Flame of the West";
+			return Name;
+		}
+		if(this.wepMinDMG < (this.lootLevel*20+10)){
+			Name+="Dagger ";
+		}
+		else if(this.wepMinDMG >= (this.lootLevel*20+10) && this.wepMinDMG <= (this.lootLevel*20+15)){
+			Name+="Broad Sword ";
+		}
+		else if(this.wepMinDMG > (this.lootLevel*20+15)){
+			Name+="Zweihander ";
+		}
+		if(this.wepMaxDMG < (this.lootLevel*20+47)){
+			Name+="of the Weak";
+		}
+		else if(this.wepMaxDMG >(this.lootLevel*20+47)){
+			Name+="of the Bons";
+		}
 		return Name;
 	}
-	if(this.wepMinDMG < (this.lootLevel*20+10)){
-		Name+="Dagger ";
-	}
-	else if(this.wepMinDMG >= (this.lootLevel*20+10) && this.wepMinDMG <= (this.lootLevel*20+15)){
-		Name+="Broad Sword ";
-	}
-	else if(this.wepMinDMG > (this.lootLevel*20+15)){
-		Name+="Zweihander ";
-	}
-	if(this.wepMaxDMG < (this.lootLevel*20+47)){
-		Name+="of the Weak";
-	}
-	else if(this.wepMaxDMG >(this.lootLevel*20+47)){
-		Name+="of the Bons";
-	}
-	return Name;
-}
-
 }

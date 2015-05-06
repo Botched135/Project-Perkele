@@ -58,8 +58,13 @@ public class Armor extends Loot{
 			g.drawString(this.Name+" lvl:" + this.lootLevel, vector.getX()-23, vector.getY()-60);
 		}
 	
-}
-
+	}
+	
+	/**
+	 * Method used for giving armor names based on lootLevel
+	 * @param string is a array of armor names
+	 * @return returns the name of the armor
+	 */
 	public String setName(String[] string){
 		String setName;
 		if(this.lootLevel-1 > 4){

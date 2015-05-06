@@ -76,6 +76,7 @@ public class GameState extends BasicGameState {
 			public static int mapBoundHeight = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps height
 			public static int collisionLayer;
 			
+
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		Menu.resetGame = false;

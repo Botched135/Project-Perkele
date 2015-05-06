@@ -48,7 +48,6 @@ public class Inventory {
 			
 			guiButtom.draw(xOrigin, yOrigin);
 			
-			
 			g.setColor(new Color(255,255,255));
 			
 			if(GameState.wepSwap == false){
@@ -62,14 +61,11 @@ public class Inventory {
 				g.drawString(df.format(player.playerRangedMinDamage)+"-"+df.format(player.playerRangedMaxDamage), xOrigin+250, yOrigin+621);
 				g.drawString(df.format(player.playerRangedAttackSpeed), xOrigin+250, yOrigin+642);
 				g.drawString(df.format(((player.playerRangedMinDamage+player.playerRangedMaxDamage)/2)*player.playerRangedAttackSpeed), xOrigin+250, yOrigin+663);
-				//g.drawString(df.format(player.rangedLifeSteal), xOrigin+250, yOrigin+684);
 			}
 			
 			g.drawString(df.format(player.MaxHitPoints), xOrigin+960, yOrigin+621);
 			g.drawString(df.format(player.Armor), xOrigin+960, yOrigin+642);
 			g.drawString(df.format(player.lifeRegen), xOrigin+960, yOrigin+663);
-		
-			//Draw the items in the bag
 	}
 }
 

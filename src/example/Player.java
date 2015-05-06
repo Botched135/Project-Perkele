@@ -150,18 +150,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			if(GameState.wepSwap == false){
 				//PLAYER MELEE ATTACKS TOWARDS "mousePos"
-				isMeleeAttacking(GameState.mousePos);
+				isMeleeAttacking();
 			}
 			else{
 				//PLAYER SHOOTS ARROW TOWARDS "mousePos"
-				isRangedAttacking(gc, sbg, GameState.mousePos, _projectileList);
+				isRangedAttacking(gc, sbg, _projectileList);
 			}
 		}
-		
-		/* ?? SPELL CAST? :D
-		if(gc.getInput().isMousePressed(Input.MOUSE_RIGHT_BUTTON)){
-				isRangedAttacking(gc, sbg, GameState.mousePos, _projectileList);
-		}*/
 		
 		//healthGlobe pickup by player
 		if(this.hitPoints < this.MaxHitPoints){
@@ -180,7 +175,6 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 		
 		//PLAYER MOVEMENT INPUT
-		
 		if(gc.getInput().isKeyDown(Input.KEY_A)) {
 			MoveSelf(new Vector2f(-1.0f, 0f),0);
 		}
@@ -240,6 +234,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	
 	
 	//METHODS ===========================================================================================================================================================
+	/**
+	 * A method to move the player in a certain direction given by "WASD" inputs
+	 * @param _target is the desired position
+	 * @param direction is the direction the player is moving. 0=left, 1=up, 2=right and 3=down
+	 */
 	public void MoveSelf(Vector2f _target, int direction){
 		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
 		tempTarget = tempTarget.add(vector);
@@ -292,7 +291,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 	}
 	
-	public void isMeleeAttacking(Vector2f vector){
+	/**
+	 * Method for detecting if the player is able to melee attack and will then let the player attack
+	 */
+	public void isMeleeAttacking(){
 		if(this.isAttackReady && this.isRangedReady){			
 			//Play meleeEnemy's melee attack sound 
 			meleeAttackSound0.play();
@@ -303,7 +305,14 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			this.isMeleeAttacking = false;
 	}
 	
-	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, Vector2f vector, ArrayList<Projectile> _projectileList) throws SlickException{
+	/**
+	 * Method for detecting if the player is able to ranged attack and will then let the player shoot an arrow
+	 * @param gc used to initialise the arrow in our GameContainer - Parameters default to slick2D init method
+	 * @param sbg used to initialise the arrow in our GameContainer - Parameters default to slick2D init method
+	 * @param _projectileList is used in order to add a new arrow to the ArrayList
+	 * @throws SlickException
+	 */
+	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList) throws SlickException{
 		if(this.isRangedReady && this.isAttackReady){			
 			//Play players ranged attack sound
 			rangedAttackSound0.play();
@@ -317,6 +326,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			this.isRangedAttacking = false;
 	}
 	
+	/**
+	 * Method used to setting the Players melee attack ready
+	 * @return isAttackReady for use, so we can attack again in isMeleeAttacking
+	 */
 	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		if(this.isAttackReady == false){ 
 			this.EndTime = System.currentTimeMillis();//StartTime should start from without
@@ -332,6 +345,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		return isAttackReady;
 
 	}
+	/**
+	 * Method used to setting the Players ranged attack ready - very similar to setAttackReady, but needs different variables in order to being able to shoot without waiting on melee cooldown
+	 * @return isAttackReady for use, so we can attack again in isRangedReady
+	 */
 	public boolean setRangedAttackReady(){
 		if(this.isRangedReady == false){
 			this.rangeEndTime = System.currentTimeMillis();
@@ -346,6 +363,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		return isRangedReady;
 	}
 	
+	/**
+	 * Method used for detecting if the enemy is close enough to deal damage. Will deal damage if the enemy is close enough
+	 * @param _enemy is used in order to get the enemy's position, damage values and vampiric amount
+	 */
 	void beingMeleeAttacked (Enemy _enemy){
 		
 		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.maxRange + _enemy.hitboxX && vector.distance(_enemy.vector) > _enemy.minRange){
@@ -366,8 +387,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			}
 		}
 	}
-	
-	//Method to check if the player is being hit by a ranged attack
+	/**
+	 * Method to check if the player is being hit by a ranged attack
+	 * @param _projectileList is used in order to destroy the arrow that hit the player. and get the damage that the arrow have
+	 */
 	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
 		if(_projectileList.size() > 0){
 			for(int i = _projectileList.size()-1; i >= 0; i--){
@@ -393,7 +416,10 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			}
 		}
 	}
-		
+	
+	/**
+	 * Method that uses a timer in order to give the player hitPoints based on their lifeRegen
+	 */
 	public void regeneration(){
 		if(regSTimer == 0){
 			regSTimer = System.currentTimeMillis();
@@ -408,7 +434,11 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		}
 	}
 	
-	//Setting the weapon loot to the player
+
+	/**
+	 * giving the picked up loot stats to the player
+	 * @param loot is used to tell which item is used, and in order to get the stats from this loot
+	 */
 	public void setLootEquipment(Loot loot){
 		if(loot instanceof Weapon){
 		this.playerMeleeMinDamage = loot.wepMinDMG;
@@ -435,9 +465,17 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 			this.armorID = loot.ID;
 		}
 	}
+	
+	/**
+	 * Method for calculating the players melee damage
+	 */
 	public void AttackDamage(){
 		playerMeleeDamage = (randDmg.nextFloat()*(this.playerMeleeMaxDamage-this.playerMeleeMinDamage))+this.playerMeleeMinDamage;
 	}
+	
+	/**
+	 * Method for calculating the players ranged damage
+	 */
 	public void RangedAttackDamage(){
 		rangedDamage = (randDmg.nextFloat()*(this.playerRangedMaxDamage-this.playerRangedMinDamage))+this.playerRangedMinDamage;
 	}

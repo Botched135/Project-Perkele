@@ -84,8 +84,8 @@ public class Loot extends GameObject {
 		if(!gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
 			leftMousePressed = false;
 		}
-		this.enemyPickUp(index, gc, sbg, _enemyList, _lootList, _inventoryList);
-		this.playerPickUp(index, gc, sbg, _player, _lootList, _inventoryList);
+		this.enemyPickUp(index, gc, _enemyList, _lootList);
+		this.playerPickUp(index, gc, _player, _lootList, _inventoryList);
 		
 		if(!gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			this.beingMeleeAttacked(_player);
@@ -182,15 +182,13 @@ public class Loot extends GameObject {
 	
 	/**
 	 * Method used to drop the loot which the player had, when something new is picked up
-	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
-	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
 	 * @param _lootList is used to add a new item to the lootLists and initialise it
 	 * @param _lootType is used to determine what type of item it is
 	 * @param _inventoryList is used to get the list of items that the player have equipped
 	 * @param _inventoryIndex is used to determine what of the items equipped is to be changed when picking something new up
 	 * @param _player is used to get the position of the player
 	 */
-	public static void spawnLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, Loot _lootType, ArrayList<Loot> _inventoryList, Loot _inventoryIndex, Player _player){
+	public static void spawnLoot(ArrayList<Loot> _lootList, Loot _lootType, ArrayList<Loot> _inventoryList, Loot _inventoryIndex, Player _player){
 		Random randLoot = new Random();
 		int lootDropDist = 10;
 		
@@ -277,12 +275,11 @@ public class Loot extends GameObject {
 	 * Method used for letting the player pick up loot based on certain conditions
 	 * @param index is used for determing which item is being handleded
 	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
-	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
 	 * @param _player is used to get the players position and its meleeRange in order to know if the player is close enough to pick up loot
 	 * @param _lootList is used in order to get the info of the certain item being picked up
 	 * @param _inventoryList is used in order to swap out the equipped item with the new one
 	 */
-	private void playerPickUp(int index, GameContainer gc, StateBasedGame sbg, Player _player, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
+	private void playerPickUp(int index, GameContainer gc, Player _player, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
 		if(_lootList.size() >= 0) {
 			if(gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false){
 				leftMousePressed = true;
@@ -291,15 +288,15 @@ public class Loot extends GameObject {
 							
 						if(_lootList.get(index) != null){
 							if(_lootList.get(index) instanceof Weapon){
-								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(1), _player);
+								spawnLoot(_lootList, _lootList.get(index), _inventoryList, _inventoryList.get(1), _player);
 								//_inventoryList.remove(1);
 								//_inventoryList.add(1,_lootList.get(index));
 							}
 							else if(_lootList.get(index) instanceof RangedWeapon){
-								spawnLoot(gc,sbg,_lootList,_lootList.get(index), _inventoryList, _inventoryList.get(2),_player);
+								spawnLoot(_lootList,_lootList.get(index), _inventoryList, _inventoryList.get(2),_player);
 							}
 							else if(_lootList.get(index) instanceof Armor){
-								spawnLoot(gc, sbg, _lootList, _lootList.get(index), _inventoryList, _inventoryList.get(0), _player);
+								spawnLoot(_lootList, _lootList.get(index), _inventoryList, _inventoryList.get(0), _player);
 								//_inventoryList.remove(0);
 								//_inventoryList.add(0,_lootList.get(index));
 							}
@@ -314,12 +311,10 @@ public class Loot extends GameObject {
 	 * Method used for letting the enemy pick up loot based on certain conditions
 	 * @param index is used for determing which item is being handleded
 	 * @param gc used to initialise the loot in our GameContainer - Parameters default to slick2D init method
-	 * @param sbg used to initialise the loot in our GameContainer - Parameters default to slick2D init method
 	 * @param _enemyList is used to get the enemy position and its meleeRange in order to know if the enemy is close enough to pick up loot
 	 * @param _lootList is used in order to get the info of the certain item being picked up
-	 * @param _inventoryList is used in order to swap out the equipped item with the new one
 	 */
-	private void enemyPickUp(int index, GameContainer gc, StateBasedGame sbg, ArrayList<Enemy> _enemyList, ArrayList <Loot> _lootList, ArrayList<Loot> _inventoryList){
+	private void enemyPickUp(int index, GameContainer gc, ArrayList<Enemy> _enemyList, ArrayList <Loot> _lootList){
 		if(_lootList.size()>=0){
 			for(int i = _enemyList.size()-1; i>=0;i--){ 
 				if(index <= _lootList.size()-1 && _lootList.get(index) instanceof Weapon && _enemyList.get(i).enemyType ==0 && !gc.getInput().isKeyDown(Input.KEY_LSHIFT) && !gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
@@ -355,7 +350,6 @@ public class Loot extends GameObject {
 						_enemyList.get(i).ArmorName = _lootList.get(index).Name;
 						_lootList.remove(index);
 					}
-					
 					break;
 				}
 			}

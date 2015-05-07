@@ -91,7 +91,7 @@ public class Armor extends Loot{
 	}
 	
 	/**
-	 * Method used for giving armor names based on lootLevel
+	 * Method used for giving armor names based on lootLevel and their attributes
 	 * @param string is a array of armor names
 	 * @return returns the name of the armor
 	 */

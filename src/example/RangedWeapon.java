@@ -78,6 +78,12 @@ public class RangedWeapon extends Loot {
 		}
 	
 	}
+
+	/**
+	 * Method used for giving ranged weapon names based on lootLevel and their attributes
+	 * @param string is a array of ranged weapon names
+	 * @return returns the name of the weapon
+	 */
 	public String setName(String[] names){
 		String Name="";
 		if(this.attackSpeed <= 0.5){

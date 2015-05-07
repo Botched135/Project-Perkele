@@ -142,6 +142,7 @@ public class Enemy extends GameObject {
 		
 		//Setting variables if enemy is a boss
 		if(enemyType == 2){
+			hitboxX = 64.0f;
 			AttackSpeed = 1;
 			rangedDamage = 10;
 			projectileSpeed = 12;
@@ -156,12 +157,12 @@ public class Enemy extends GameObject {
 		
 		
 		
-		sprite[0][0] = new Image("data/meleeEnemy1Up.png"); 		//index 0
-		sprite[0][1] = new Image("data/meleeEnemy1Down.png");		//index 1
-		sprite[1][0] = new Image("data/rangedEnemy1Up.png");		//index 2 
-		sprite[1][1] = new Image("data/rangedEnemy1Down.png");		//index 3
-		sprite[2][0] = new Image("data/meleeEnemy1Up.png"); 		//index 0
-		sprite[2][1] = new Image("data/meleeEnemy1Down.png");		//index 1
+		sprite[0][0] = new Image("data/meleeEnemy1Up.png"); 	
+		sprite[0][1] = new Image("data/meleeEnemy1Down.png");		 
+		sprite[1][0] = new Image("data/rangedEnemy1Up.png");		 
+		sprite[1][1] = new Image("data/rangedEnemy1Down.png");		
+		sprite[2][0] = new Image("data/bossEnemy1Up.png"); 		
+		sprite[2][1] = new Image("data/bossEnemy1Down.png");		
 		arrow = new Image("data/arrowSprite.png");
 		
 		enemyEquippedMeleeWepList[0] = new Image("data/meleeWepEquip0.png");
@@ -269,10 +270,20 @@ public class Enemy extends GameObject {
 		
 		//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 		if(beingHit == true){
-			sprite[enemyType][imageDirection].drawFlash(vector.getX()-32, vector.getY()-32);
+			if(enemyType == 2){
+				sprite[enemyType][imageDirection].drawFlash(vector.getX()-64, vector.getY()-64);
+			}
+			else{
+				sprite[enemyType][imageDirection].drawFlash(vector.getX()-32, vector.getY()-32);
+			}
 		}
 		else{
-			sprite[enemyType][imageDirection].draw(vector.getX()-32, vector.getY()-32);
+			if(enemyType == 2){
+				sprite[enemyType][imageDirection].draw(vector.getX()-64, vector.getY()-64);
+			}
+			else{
+				sprite[enemyType][imageDirection].draw(vector.getX()-32, vector.getY()-32);
+			}
 		}
 	
 		//RENDER EQUIPPED WEAPON IN GAME SPACE ====================================================

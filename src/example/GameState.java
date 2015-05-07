@@ -46,7 +46,7 @@ public class GameState extends BasicGameState {
 			private int enemyMeleeAmount = 2;
 			private int enemyRangedAmount = 1;
 			private int randEnemyPos;
-			private int bossLevel = 1;
+			private int bossLevel = 2;
 			
 
 			protected static Vector2f mousePos;
@@ -155,7 +155,7 @@ public class GameState extends BasicGameState {
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
 			
-			wave = 0;
+			wave = 9;
 			currentWave = 0;
 			waveStartTimer = 0;
 			waveTimeDif = 0;

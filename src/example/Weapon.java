@@ -83,8 +83,12 @@ public class Weapon extends Loot{
 		}
 	}
 	
-
-	public String setName(){//Returns the name of the weapon based on the stats of the loot. 
+	/**
+	 * Method used for giving weapon names based on lootLevel and their attributes
+	 * @param string is a array of weapon names
+	 * @return returns the name of the weapon
+	 */
+	public String setName(){
 		String Name = ""; 
 		if(this.attackSpeed <= 0.5){
 			Name += "Slow ";

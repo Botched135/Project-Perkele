@@ -16,6 +16,7 @@ import org.newdawn.slick.Sound;
 public class Loot extends GameObject {
 	
 	//VARIABLE DECLARATION =============================================================================================================================================
+
 	//RNG-sus
 	protected Random randDmg = new Random();
 	protected Random randSpeed = new Random();
@@ -33,6 +34,8 @@ public class Loot extends GameObject {
 	protected int numberOfStats=3;
 	public int lootLevel = 1;
 	private boolean leftMousePressed = false;
+	private long startTime = System.currentTimeMillis();
+	private float duration = 60;
 	
 	//Weapons Stats
 	protected static Color lootTestCol = new Color(255,255,0);
@@ -89,6 +92,12 @@ public class Loot extends GameObject {
 		
 		if(!gc.getInput().isKeyDown(Input.KEY_LSHIFT)){
 			this.beingMeleeAttacked(_player);
+		}
+		
+		if(_lootList.size() > 0){
+			if(((System.currentTimeMillis()) - startTime)/1000 >= duration){
+				destroy(index, _lootList);
+			}
 		}
 		
 		stateManager(index, _lootList);

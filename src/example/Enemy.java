@@ -549,6 +549,12 @@ public class Enemy extends GameObject {
 					
 			_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
 			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+			if(enemyType == 2){
+				_projectileList.add(new Arrow(this, new Vector2f((float)(_player.vector.getX() / Math.cos(0.2f)),(float)(_player.vector.getY() / Math.cos(0.2f))), projectileSpeed));
+				_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+				_projectileList.add(new Arrow(this, new Vector2f((float)(_player.vector.getX() * Math.cos(0.2f)),(float)(_player.vector.getY() * Math.cos(0.2f))), projectileSpeed));
+				_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+			}
 		}
 	}
 	

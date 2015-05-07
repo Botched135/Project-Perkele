@@ -155,7 +155,7 @@ public class GameState extends BasicGameState {
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
 			
-			wave = 0;
+			wave = 9;
 			currentWave = 0;
 			waveStartTimer = 0;
 			waveTimeDif = 0;

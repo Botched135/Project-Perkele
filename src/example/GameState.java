@@ -46,7 +46,7 @@ public class GameState extends BasicGameState {
 			private int enemyMeleeAmount = 2;
 			private int enemyRangedAmount = 1;
 			private int randEnemyPos;
-			private int bossLevel = 2;
+			public static int bossLevel = 2;
 			
 
 			protected static Vector2f mousePos;
@@ -72,10 +72,10 @@ public class GameState extends BasicGameState {
 			float playerDamageWarningOpacity = 0;
 			float PDWcounter = 0.01f;
 			public static boolean wepSwap = false;
-			public static int mapWidth = 32*(116); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
-			public static int mapHeight = 32*(116);
-			public static int mapBoundWidth = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
-			public static int mapBoundHeight = 32*(100); // <-- change the number in the parenthesis according to the amount of tiles for the maps height
+			public static int mapWidth = 32*(119); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
+			public static int mapHeight = 32*(80);
+			public static int mapBoundWidth = mapWidth - (32*2*(20)); // <-- change the number in the parenthesis according to the amount of tiles for the maps width
+			public static int mapBoundHeight = mapHeight - (32*2*(11)); // <-- change the number in the parenthesis according to the amount of tiles for the maps height
 			public static int collisionLayer;
 			
 
@@ -155,7 +155,7 @@ public class GameState extends BasicGameState {
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
 			
-			wave = 9;
+			wave = 0;
 			currentWave = 0;
 			waveStartTimer = 0;
 			waveTimeDif = 0;
@@ -244,7 +244,7 @@ public class GameState extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY()),0));
 			enemyList.get(enemyList.size()-1).init(gc, sbg);
-			enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
+			enemyList.get(enemyList.size()-1).SetEnemyLevel(currentWave);
 			
 			enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
 			enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
@@ -253,7 +253,7 @@ public class GameState extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_R)) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY()),1));
 			enemyList.get(enemyList.size()-1).init(gc, sbg);
-			enemyList.get(enemyList.size()-1).SetEnemyLevel(wave);
+			enemyList.get(enemyList.size()-1).SetEnemyLevel(currentWave);
 			
 			enemyIndicatorList.add(new EnemyIndicator(player, enemyList.get(enemyList.size()-1).vector));
 			enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
@@ -407,7 +407,7 @@ public class GameState extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
-		bgMap.render(0,0);
+		bgMap.render(32*(-20), 32*(-11));
 		g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
 		
 		//inventory.render(gc, sbg, g);

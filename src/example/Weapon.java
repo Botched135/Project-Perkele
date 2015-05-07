@@ -11,7 +11,7 @@ public class Weapon extends Loot{
 	
 	private Image[] meleeWeaponSprite = new Image[6];
 	private int spriteRenderID = 0;
-	private String[]WeaponNames ={"Dagger ","Shortsword ","Warhammer ","Zweihander ","Demon-Infused Sword "};
+	protected String[]WeaponNames ={"Dagger ","Shortsword ","Warhammer ","Zweihander ","Demon-Infused Sword "};
 	//protected int wepDMG = (randDmg.nextInt(100))*LootLevel;
 	//protected float attackSpeed = (randSpeed.nextFloat())*2*LootLevel;
 	
@@ -90,8 +90,7 @@ public class Weapon extends Loot{
 	 * @param string is a array of weapon names
 	 * @return returns the name of the weapon
 	 */
-
-	private String setName(String[] names){
+	public String setName(String[] names){
 		String Name = ""; 
 		if(this.attackSpeed <= 0.5){
 			Name += "Slow ";
@@ -102,7 +101,7 @@ public class Weapon extends Loot{
 		if(Vamp > 0){
 			Name+="Vampiric ";
 		}
-		Name += names[this.lootLevel-1];
+		Name += names[this.spriteRenderID-1];
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
 			Name+="of the Weak";
 		}

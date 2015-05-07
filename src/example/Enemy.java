@@ -99,7 +99,6 @@ public class Enemy extends GameObject {
 	
 	//INIT FUNCTION/METHOD ====================================================================================
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
-		
 		//Setting variables if a melee enemy
 		if(enemyType == 0){
 			AttackSpeed = 1;
@@ -108,7 +107,7 @@ public class Enemy extends GameObject {
 			maxRange = 90;
 			minSeekDistance = 0;
 			maxSeekDistance = 500;
-			wepRenderId = 0;
+			meleeWepID = EnemyLevel;
 			
 			//Enemy melee names
 			EnemyNames[0] = "Dwarf Grunt";
@@ -127,7 +126,7 @@ public class Enemy extends GameObject {
 			minRange = 100;
 			minSeekDistance = 200;
 			maxSeekDistance = 500;
-			wepRenderId = 1;
+			rangedWepID = EnemyLevel;
 			
 			//Ranged enemy names
 			EnemyNames[0] = "Elven Stakethrower";
@@ -147,8 +146,8 @@ public class Enemy extends GameObject {
 			minRange = 0;
 			minSeekDistance = 0;
 			maxSeekDistance = 500;
-			wepRenderId = 0;
-			speedMultiplier = 1.5f;
+			meleeWepID = EnemyLevel;
+			speedMultiplier = 2.0f;
 			
 			EnemyNames[0] = "Perkele the Destroyer of Worlds";
 		}
@@ -168,7 +167,7 @@ public class Enemy extends GameObject {
 		enemyEquippedMeleeWepList[2] = new Image("data/meleeWepEquip2.png");
 		enemyEquippedMeleeWepList[3] = new Image("data/meleeWepEquip3.png");
 		enemyEquippedMeleeWepList[4] = new Image("data/meleeWepEquip4.png");
-		enemyEquippedMeleeWepList[4] = new Image("data/meleeWepEquip5.png");
+		enemyEquippedMeleeWepList[5] = new Image("data/meleeWepEquip5.png");
 		
 		enemyEquippedRangedWepList[0] = new Image("data/rangedWepEquip0.png");
 		enemyEquippedRangedWepList[1] = new Image("data/rangedWepEquip1.png");
@@ -187,14 +186,15 @@ public class Enemy extends GameObject {
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
 	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
-	
 		if(this.hitpoints <= 0){
-
 			this.hitpoints=0;
 			this.dropLoot(gc, sbg, _lootList, _healthGlobeList);
 			_enemyIndicatorList.get(index).destroy(index, _enemyIndicatorList);
 			this.destroy(index, _enemyList);
 		}
+		
+		meleeWepID = EnemyLevel;
+		rangedWepID = EnemyLevel;
 		
 		Vector2f posSnapshotBefore = new Vector2f(vector.getX(), vector.getY());
 		beingHit = false;
@@ -260,8 +260,18 @@ public class Enemy extends GameObject {
 		}
 		else{
 			imageDirection = 0;
-		}	
+		}
+		
+		if(this.meleeWepID > 5){
+			meleeWepID = 5;
+		}
+		
+		if(this.rangedWepID > 5){
+			rangedWepID = 5;
+		}
 	}
+	
+	
 	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g, Player player) throws SlickException{
@@ -358,9 +368,6 @@ public class Enemy extends GameObject {
 		
 		g.setColor(new Color(255,255,255));
 		g.drawString(""+(int)hitpoints, vector.getX()-10, vector.getY()-61);
-		g.drawString("Wep: " + this.WeaponName, vector.getX()-50, vector.getY()+32);
-		g.drawString("Armor: "+this.ArmorName, vector.getX()-55, vector.getY()+47);
-		g.drawString("Lvl " + EnemyLevel, vector.getX()-20, vector.getY()-80);
 		
 	}
 	
@@ -409,7 +416,7 @@ public class Enemy extends GameObject {
 	/**
 	 * Method to move the enemy closer to a target - goes in a straight line
 	 * @param _target the target used moving towards
-	 * @param _enemyList list used for determing that it is the enemy who are to move
+	 * @param _enemyList list used for determining that it is the enemy who are to move
 	 */
 	private void moveTo(Vector2f _target, ArrayList<Enemy > _enemyList){
 		
@@ -433,7 +440,7 @@ public class Enemy extends GameObject {
 	/**
 	 * Method used by the ranged enemies in order to move away from the target
 	 * @param _target the target whom the enemies are moving away from
-	 * @param _enemyList list used for determing that it is the enemy who are to move
+	 * @param _enemyList list used for determining that it is the enemy who are to move
 	 */
 	private void moveAwayFrom(Vector2f _target, ArrayList<Enemy > _enemyList){
 			
@@ -616,7 +623,7 @@ public class Enemy extends GameObject {
 	 * @param _wave is needed in order to scale the levels so they are harder as longer as you progress in the game
 	 */
 	public void SetEnemyLevel(int _wave){
-		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/3);
+		this.EnemyLevel = randLvl.nextInt(3)-1 + (int)(_wave/3);
 		if(this.EnemyLevel < 1){ //statement in order to prevent enemy levels being below 1
 			//Adjusting stats in order to keep the enemy level 1
 			this.EnemyLevel = 1;
@@ -641,7 +648,7 @@ public class Enemy extends GameObject {
 		}
 	}
 	
-	/**
+	/**s
 	 * Overloaded Method used for determing the enemies levels based on the wave number
 	 * @param _wave is needed in order to scale the levels so they are harder as longer as you progress in the game
 	 * @param _bossLevel is used as an extra parameter for determing the level of enemy as the boss is supposed to be harder then everything else

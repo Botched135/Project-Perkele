@@ -17,7 +17,7 @@ public class Projectile extends GameObject {
 	protected Vector2f dir;
 	protected float damage;
 	protected float speedMultiplier = 0;
-	private float duration = 3;
+	private float duration = 1;
 	protected boolean disableDmg;
 	private long startTime = System.currentTimeMillis();
 

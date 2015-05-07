@@ -84,7 +84,7 @@ public class RangedWeapon extends Loot {
 	 * @param string is a array of ranged weapon names
 	 * @return returns the name of the weapon
 	 */
-	public String setName(){
+	private String setName(){
 		String Name="";
 		if(this.attackSpeed <= 0.5){
 			Name += "Rusty ";

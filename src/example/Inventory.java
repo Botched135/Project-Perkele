@@ -12,7 +12,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Inventory {
 	
 	//VARIABLE DECLARATION
-	protected Player player;
+	private Player player;
 	
 	//Inventory window boundaries
 	static protected float xOrigin = 0;

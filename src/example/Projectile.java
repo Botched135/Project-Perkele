@@ -17,7 +17,7 @@ public class Projectile extends GameObject {
 	protected Vector2f dir;
 	protected float damage;
 	protected float speedMultiplier = 0;
-	protected float duration = 3;
+	private float duration = 3;
 	protected boolean disableDmg;
 	protected long startTime = System.currentTimeMillis();
 
@@ -65,7 +65,7 @@ public class Projectile extends GameObject {
 	 * @param _owner is used in order to get whom shot the projectile
 	 * @param _target is used to get the direction the projectile should move towards
 	 */
-	public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Player _owner, Vector2f _target){
+	private void spawnSubProjectile(ArrayList<Projectile> _projectileList, Player _owner, Vector2f _target){
 		
 		int maxRandDist = 10;
 		Random randLoot = new Random();
@@ -80,7 +80,7 @@ public class Projectile extends GameObject {
 	/**
 	 * Method used for moving the projectile at a set speed in a direction
 	 */
-	public void moveTo(){
+	private void moveTo(){
 		
 		dir.normalise();
 		dir = dir.scale(speedMultiplier);	

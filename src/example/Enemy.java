@@ -39,6 +39,8 @@ public class Enemy extends GameObject {
 	protected long StartTime = System.currentTimeMillis();
 	protected long EndTime = 0;
 	protected boolean isAttackReady = false;
+	protected int meleeWepID = 0;
+	protected int rangedWepID = 0;
 	
 	//Enemy defensive stats ===================================================================================
 	protected float hitpoints = 100;
@@ -70,8 +72,9 @@ public class Enemy extends GameObject {
 	//Images =================================================
 	private int imageDirection = 0;
 	protected Image[][] sprite = new Image[3][2];
-	private ArrayList <Image> enemyEquippedLootList = new ArrayList <Image>();
 	private Image arrow = null;
+	private Image[] enemyEquippedMeleeWepList = new Image[6];
+	private Image[] enemyEquippedRangedWepList = new Image[6];
 	
 	//Sounds =================================================
 	protected Sound meleeAttackSound0 = null;
@@ -160,8 +163,20 @@ public class Enemy extends GameObject {
 		sprite[2][0] = new Image("data/meleeEnemy1Up.png"); 		//index 0
 		sprite[2][1] = new Image("data/meleeEnemy1Down.png");		//index 1
 		arrow = new Image("data/arrowSprite.png");
-		enemyEquippedLootList.add(new Image("data/meleeWepEquip1.png"));
-		enemyEquippedLootList.add(new Image("data/rangedWepEquip1.png"));
+		
+		enemyEquippedMeleeWepList[0] = new Image("data/meleeWepEquip0.png");
+		enemyEquippedMeleeWepList[1] = new Image("data/meleeWepEquip1.png");
+		enemyEquippedMeleeWepList[2] = new Image("data/meleeWepEquip2.png");
+		enemyEquippedMeleeWepList[3] = new Image("data/meleeWepEquip3.png");
+		enemyEquippedMeleeWepList[4] = new Image("data/meleeWepEquip4.png");
+		enemyEquippedMeleeWepList[4] = new Image("data/meleeWepEquip5.png");
+		
+		enemyEquippedRangedWepList[0] = new Image("data/rangedWepEquip1.png");
+		enemyEquippedRangedWepList[1] = new Image("data/rangedWepEquip1.png");
+		enemyEquippedRangedWepList[2] = new Image("data/rangedWepEquip1.png");
+		enemyEquippedRangedWepList[3] = new Image("data/rangedWepEquip1.png");
+		enemyEquippedRangedWepList[4] = new Image("data/rangedWepEquip1.png");
+		enemyEquippedRangedWepList[4] = new Image("data/rangedWepEquip1.png");
 		
 		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
@@ -278,8 +293,8 @@ public class Enemy extends GameObject {
 					spriteAngle = (float)dir.getTheta()+90;
 				}
 				
-				enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
-				enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
+				enemyEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
+				enemyEquippedMeleeWepList[meleeWepID].setRotation(spriteAngle);
 				
 				if(enemyType == 0 && stopMoving == false){
 					moveY = 0;
@@ -296,26 +311,26 @@ public class Enemy extends GameObject {
 						moveYIncrement *= -1;
 					}
 					
-					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
+					enemyEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
 					if(player.vector.getX() < vector.getX()){
-						enemyEquippedLootList.get(wepRenderId).setRotation((spriteAngle-(maxMoveY/2)) + moveY );
+						enemyEquippedMeleeWepList[meleeWepID].setRotation((spriteAngle-(maxMoveY/2)) + moveY );
 					}
 					else{
-						enemyEquippedLootList.get(wepRenderId).setRotation((spriteAngle+(maxMoveY/2)) - moveY );
+						enemyEquippedMeleeWepList[meleeWepID].setRotation((spriteAngle+(maxMoveY/2)) - moveY );
 					}
-					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+					enemyEquippedMeleeWepList[meleeWepID].draw(vector.getX()-32, vector.getY()-96);
 					
 				}
 				else{
-					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
-					enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
-					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+					enemyEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
+					enemyEquippedMeleeWepList[meleeWepID].setRotation(spriteAngle);
+					enemyEquippedMeleeWepList[meleeWepID].draw(vector.getX()-32, vector.getY()-96);
 				}
 				
 				if(enemyType == 1){
-					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
-					enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
-					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+					enemyEquippedRangedWepList[rangedWepID].setCenterOfRotation(32,96);
+					enemyEquippedRangedWepList[rangedWepID].setRotation(spriteAngle);
+					enemyEquippedRangedWepList[rangedWepID].draw(vector.getX()-32, vector.getY()-96);
 				}
 				
 				if(enemyType == 1 && stopMoving == false){

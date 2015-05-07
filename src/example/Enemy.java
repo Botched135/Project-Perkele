@@ -150,6 +150,7 @@ public class Enemy extends GameObject {
 			minSeekDistance = 0;
 			maxSeekDistance = 500;
 			wepRenderId = 0;
+			speedMultiplier = 1.5f;
 			
 			EnemyNames[0] = "Perkele the Destroyer of Worlds";
 		}
@@ -572,7 +573,12 @@ public class Enemy extends GameObject {
 			else {
 				this.attackETime = System.currentTimeMillis() - this.attackSTime;
 				if(attackETime > moveWaitTime / this.AttackSpeed){
-					this.speedMultiplier = 1.0f;
+					if(enemyType == 2){
+						this.speedMultiplier = 1.5f;
+					}
+					else{
+						this.speedMultiplier = 1.0f;
+					}
 					this.attackSTime = 0;
 					this.attackETime = 0;
 					this.stopMoving = false;

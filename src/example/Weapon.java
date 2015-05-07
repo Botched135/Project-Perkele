@@ -55,7 +55,7 @@ public class Weapon extends Loot{
 			Vamp = 2.5f*_enemy.EnemyLevel*(randVamp.nextFloat()+0.5f);
 			this.numberOfStats+=1;
 		}
-		this.Name = this.setName();
+		this.Name = this.setName(WeaponNames);
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {//Initialise the sprite used to display the weapon		
@@ -88,7 +88,8 @@ public class Weapon extends Loot{
 	 * @param string is a array of weapon names
 	 * @return returns the name of the weapon
 	 */
-	private String setName(){
+
+	private String setName(String[] names){
 		String Name = ""; 
 		if(this.attackSpeed <= 0.5){
 			Name += "Slow ";
@@ -99,7 +100,7 @@ public class Weapon extends Loot{
 		if(Vamp > 0){
 			Name+="Vampiric ";
 		}
-		Name += this.WeaponNames[this.lootLevel-1];
+		Name += names[this.lootLevel-1];
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
 			Name+="of the Weak";
 		}

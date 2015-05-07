@@ -10,7 +10,7 @@ public class RangedWeapon extends Loot {
 
 	//VARIABLE DECLARATION ============================================================================================================================================
 	private Image[] rangedWeaponSprite = new Image[5];
-	private String[] rangedWeaponNames = {"Shortbow ","Crossbow ", "Longbow ","Repeater Crossbow ", "Eaglehorn "}; 
+	private String[] rangedWeaponNames = {"Shortbow ","Crossbow ", "Compoundbow ","Repeater Crossbow ", "Eaglehorn "}; 
 	private int spriteRenderID = 0;
 	
 	RangedWeapon(){ //Constructor for initial ranged weapon of the player

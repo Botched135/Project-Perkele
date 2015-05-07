@@ -21,9 +21,9 @@ public class RangedWeapon extends Loot {
 		
 		//Setting the starting item of this type's stats.
 		Name = "Bow-ner";
-		wepMinDMG = 80;
-		wepMaxDMG = 120;
-		attackSpeed = 5f;
+		wepMinDMG = 10;
+		wepMaxDMG = 20;
+		attackSpeed = 0.8f;
 		
 	}
 	RangedWeapon(Enemy _enemy){//Constructor for enemy dropped ranged weapon

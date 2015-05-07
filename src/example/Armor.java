@@ -56,7 +56,10 @@ public class Armor extends Loot{
 			this.Armor = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
 		}
 		this.hpBonus = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
-		this.lifeRegen = ((float)_enemy.EnemyLevel / 5) + (((float)randlifeRegen.nextInt(3)-1)/10);
+		this.isLifeRegen = randlifeRegen.nextInt(101);
+		if(isLifeRegen > 50){
+			this.lifeRegen = ((float)_enemy.EnemyLevel / 5) + (((float)randlifeRegen.nextInt(3)-1)/10);
+		}
 		this.Name = this.setName(ArmorNames);
 	}
 	

@@ -51,7 +51,7 @@ public class Weapon extends Loot{
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
 		this.isVamp = randVamp.nextInt(101);
 		if(isVamp > 80 ){
-			Vamp = 2.5f*_enemy.EnemyLevel*(randDmg.nextFloat()+0.5f);
+			Vamp = 2.5f*_enemy.EnemyLevel*(randVamp.nextFloat()+0.5f);
 			this.numberOfStats+=1;
 		}
 		this.Name = this.setName();

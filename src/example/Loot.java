@@ -46,6 +46,7 @@ public class Loot extends GameObject {
 	//Armor Stats
 	protected float hpBonus;
 	protected float Armor;
+	protected int isLifeRegen;
 	protected float lifeRegen;
 	
 

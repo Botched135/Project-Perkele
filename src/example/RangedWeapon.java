@@ -10,6 +10,7 @@ public class RangedWeapon extends Loot {
 
 	//VARIABLE DECLARATION ============================================================================================================================================
 	private Image[] rangedWeaponSprite = new Image[5];
+	private String[] rangedWeaponNames = {"Shortbow ","Crossbow ", "Longbow ","Repeater Crossbow ", "Eaglehorn "}; 
 	private int spriteRenderID = 0;
 	
 	RangedWeapon(){ //Constructor for initial ranged weapon of the player
@@ -20,10 +21,10 @@ public class RangedWeapon extends Loot {
 		lootLevel = 0;
 		
 		//Setting the starting item of this type's stats.
-		Name = "Bow-ner";
-		wepMinDMG = 10;
-		wepMaxDMG = 20;
-		attackSpeed = 0.8f;
+		Name = "Stick with String";
+		wepMinDMG = 100;
+		wepMaxDMG = 200;
+		attackSpeed = 5.8f;
 		
 	}
 	RangedWeapon(Enemy _enemy){//Constructor for enemy dropped ranged weapon
@@ -85,17 +86,11 @@ public class RangedWeapon extends Loot {
 		else if(this.attackSpeed >= 2 ){
 			Name+="Automated ";
 		}
-		if(this.wepMinDMG < (this.lootLevel*20+10)){
-			Name+="Shortbow ";
-		}
-		else if(this.wepMinDMG >= (this.lootLevel*20+10) && this.wepMinDMG <= (this.lootLevel*20+15)){
-			Name+="Longbow ";
-		}
-		else if(this.wepMinDMG > (this.lootLevel*20+15)){
-			Name+="Crossbow ";
-		}
+		
+		Name+=rangedWeaponNames[this.lootLevel-1];
+		
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
-			Name+="made of Cotton";
+			Name+="made of Glulam";
 		}
 		else if(this.wepMaxDMG >(this.lootLevel*20+47)){
 			Name+="blessed by Holmen";

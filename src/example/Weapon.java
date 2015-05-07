@@ -11,6 +11,7 @@ public class Weapon extends Loot{
 	
 	private Image[] meleeWeaponSprite = new Image[5];
 	private int spriteRenderID = 0;
+	protected String[]WeaponNames ={"Dagger ","Shortsword ","Warhammer ","Zweihander ","Demon-Infused Sword "};
 	//protected int wepDMG = (randDmg.nextInt(100))*LootLevel;
 	//protected float attackSpeed = (randSpeed.nextFloat())*2*LootLevel;
 	
@@ -45,7 +46,7 @@ public class Weapon extends Loot{
 			spriteRenderID = this.lootLevel;
 		}
 		
-		this.Health = this.lootLevel;
+		this.lootLevel = _enemy.EnemyLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
@@ -94,19 +95,7 @@ public class Weapon extends Loot{
 		if(Vamp > 0){
 			Name+="Vampiric ";
 		}
-		if(this.wepMinDMG > (this.lootLevel*20+15) && this.wepMaxDMG >(this.lootLevel*20+50)){
-			Name="Andúril, Flame of the West";
-			return Name;
-		}
-		if(this.wepMinDMG < (this.lootLevel*20+10)){
-			Name+="Dagger ";
-		}
-		else if(this.wepMinDMG >= (this.lootLevel*20+10) && this.wepMinDMG <= (this.lootLevel*20+15)){
-			Name+="Broad Sword ";
-		}
-		else if(this.wepMinDMG > (this.lootLevel*20+15)){
-			Name+="Zweihander ";
-		}
+		Name += this.WeaponNames[this.lootLevel-1];
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
 			Name+="of the Weak";
 		}

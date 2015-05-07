@@ -100,6 +100,12 @@ public class Armor extends Loot{
 		else{
 			setName = string[this.lootLevel-1]; 
 		}
+		if(this.hpBonus <=7*this.lootLevel){
+			setName += " of Thorns";
+		}
+		else if(this.hpBonus>10*this.lootLevel){
+			setName +=", Ryge Incarnated";
+		}
 		return setName;
 	}
 

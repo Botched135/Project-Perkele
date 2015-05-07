@@ -46,7 +46,7 @@ public class RangedWeapon extends Loot {
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
-		this.Name = this.setName();
+		this.Name = this.setName(rangedWeaponNames);
 		
 	}
 	
@@ -78,7 +78,7 @@ public class RangedWeapon extends Loot {
 		}
 	
 	}
-	public String setName(){
+	public String setName(String[] names){
 		String Name="";
 		if(this.attackSpeed <= 0.5){
 			Name += "Rusty ";
@@ -87,7 +87,7 @@ public class RangedWeapon extends Loot {
 			Name+="Automated ";
 		}
 		
-		Name+=rangedWeaponNames[this.lootLevel-1];
+		Name+=names[this.lootLevel-1];
 		
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
 			Name+="made of Glulam";

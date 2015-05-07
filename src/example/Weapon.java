@@ -9,9 +9,9 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Weapon extends Loot{
 	
-	private Image[] meleeWeaponSprite = new Image[5];
+	private Image[] meleeWeaponSprite = new Image[6];
 	private int spriteRenderID = 0;
-	protected String[]WeaponNames ={"Dagger ","Shortsword ","Warhammer ","Zweihander ","Demon-Infused Sword "};
+	private String[]WeaponNames ={"Dagger ","Shortsword ","Warhammer ","Zweihander ","Demon-Infused Sword "};
 	//protected int wepDMG = (randDmg.nextInt(100))*LootLevel;
 	//protected float attackSpeed = (randSpeed.nextFloat())*2*LootLevel;
 	
@@ -39,13 +39,6 @@ public class Weapon extends Loot{
 		ID = 4;
 		
 		//Setting the items stats depending on the level of the enemy which dropped it.
-		if(this.lootLevel > 5){
-			spriteRenderID = 5;
-		}
-		else{
-			spriteRenderID = this.lootLevel;
-		}
-		
 		this.lootLevel = _enemy.EnemyLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
@@ -55,16 +48,25 @@ public class Weapon extends Loot{
 			Vamp = 2.5f*_enemy.EnemyLevel*(randVamp.nextFloat()+0.5f);
 			this.numberOfStats+=1;
 		}
+		
+		if(this.lootLevel > 5){
+			spriteRenderID = 5;
+		}
+		else{
+			spriteRenderID = this.lootLevel;
+		}
+		
 		this.Name = this.setName(WeaponNames);
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {//Initialise the sprite used to display the weapon		
 		
-	meleeWeaponSprite[0] = new Image("data/meleeWeaponTestSprite.png");
-	meleeWeaponSprite[1] = new Image("data/meleeWeaponTestSprite.png");
-	meleeWeaponSprite[2] = new Image("data/meleeWeaponTestSprite.png");
-	meleeWeaponSprite[3] = new Image("data/meleeWeaponTestSprite.png");
-	meleeWeaponSprite[4] = new Image("data/meleeWeaponTestSprite.png");
+	meleeWeaponSprite[0] = new Image("data/meleeWeapon0.png");
+	meleeWeaponSprite[1] = new Image("data/meleeWeapon1.png");
+	meleeWeaponSprite[2] = new Image("data/meleeWeapon2.png");
+	meleeWeaponSprite[3] = new Image("data/meleeWeapon3.png");
+	meleeWeaponSprite[4] = new Image("data/meleeWeapon4.png");
+	meleeWeaponSprite[5] = new Image("data/meleeWeapon5.png");
 	}
 	
 	public void render(int index, GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {//Render the name, and the flashing animation when the weapon gets attacked
@@ -88,7 +90,8 @@ public class Weapon extends Loot{
 	 * @param string is a array of weapon names
 	 * @return returns the name of the weapon
 	 */
-	public String setName(String[] names){
+
+	private String setName(String[] names){
 		String Name = ""; 
 		if(this.attackSpeed <= 0.5){
 			Name += "Slow ";

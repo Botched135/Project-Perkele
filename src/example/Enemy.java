@@ -17,10 +17,10 @@ public class Enemy extends GameObject {
 	//VARIABLE DECLARATION =====================================================================================
 	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;
-	protected Random randLvl = new Random();
-	protected String[]EnemyNames = new String[5];
+	private Random randLvl = new Random();
+	private String[]EnemyNames = new String[5];
 	protected String EnemyName;
-	protected boolean beingHit = false;
+	private boolean beingHit = false;
 
 	//Enemy offensive stats ===================================================================================
 	protected String WeaponName;
@@ -30,20 +30,22 @@ public class Enemy extends GameObject {
 	protected float enemyVamp;
 	protected float enemyDamage;
 	protected float rangedDamage;
-	protected Random randDmg = new Random();
-	protected float projectileSpeed;
+	private Random randDmg = new Random();
+	private float projectileSpeed;
 	protected boolean isMeleeAttacking = false;
 	protected boolean isRangedAttacking = false;
-	protected int wepRenderId;
+	private int wepRenderId;
 	//Attack cooldown variables
-	protected long StartTime = System.currentTimeMillis();
-	protected long EndTime = 0;
+	private long StartTime = System.currentTimeMillis();
+	private long EndTime = 0;
 	protected boolean isAttackReady = false;
+	protected int meleeWepID = 0;
+	protected int rangedWepID = 0;
 	
 	//Enemy defensive stats ===================================================================================
 	protected float hitpoints = 100;
 	protected float maxHitpoints;
-	protected Random randEnemyHP = new Random();
+	private Random randEnemyHP = new Random();
 	protected float Armor = 10;
 	protected String ArmorName;
 	
@@ -55,28 +57,29 @@ public class Enemy extends GameObject {
 	protected float speedMultiplier = 1.0f;
 	
 	//variables used for stopping movement when attacking =====================================================
-	protected boolean stopMoving = false;
-	protected long attackSTime;
-	protected long attackETime;
-	protected int moveWaitTime = 1000;
+	private boolean stopMoving = false;
+	private long attackSTime;
+	private long attackETime;
+	private int moveWaitTime = 1000;
 	
 	//Variables for animations of weapons =====================================================================
-	boolean vectorSnapshotted = false;
-	float moveY = 0;
-	float maxMoveY = 32;
-	float moveYIncrement = 2*maxMoveY/(AttackSpeed);
-	float spriteAngle = 0;
+	private boolean vectorSnapshotted = false;
+	private float moveY = 0;
+	private float maxMoveY = 32;
+	private float moveYIncrement = 2*maxMoveY/(AttackSpeed);
+	private float spriteAngle = 0;
 	
 	//Images ==================================================================================================
 	private int imageDirection = 0;
 	protected Image[][] sprite = new Image[3][2];
-	private ArrayList <Image> enemyEquippedLootList = new ArrayList <Image>();
 	private Image arrow = null;
+	private Image[] enemyEquippedMeleeWepList = new Image[6];
+	private Image[] enemyEquippedRangedWepList = new Image[6];
 	
 	//Sounds ==================================================================================================
-	protected Sound meleeAttackSound0 = null;
-	protected Sound rangedAttackSound0 = null;
-	protected Sound meleeHitSound = null;
+	private Sound meleeAttackSound0 = null;
+	private Sound rangedAttackSound0 = null;
+	private Sound meleeHitSound = null;
 	protected Sound rangedHitSound = null;
 	
 	
@@ -160,8 +163,20 @@ public class Enemy extends GameObject {
 		sprite[2][0] = new Image("data/meleeEnemy1Up.png"); 		//index 0
 		sprite[2][1] = new Image("data/meleeEnemy1Down.png");		//index 1
 		arrow = new Image("data/arrowSprite.png");
-		enemyEquippedLootList.add(new Image("data/meleeWepEquip1.png"));
-		enemyEquippedLootList.add(new Image("data/rangedWepEquip1.png"));
+		
+		enemyEquippedMeleeWepList[0] = new Image("data/meleeWepEquip0.png");
+		enemyEquippedMeleeWepList[1] = new Image("data/meleeWepEquip1.png");
+		enemyEquippedMeleeWepList[2] = new Image("data/meleeWepEquip2.png");
+		enemyEquippedMeleeWepList[3] = new Image("data/meleeWepEquip3.png");
+		enemyEquippedMeleeWepList[4] = new Image("data/meleeWepEquip4.png");
+		enemyEquippedMeleeWepList[4] = new Image("data/meleeWepEquip5.png");
+		
+		enemyEquippedRangedWepList[0] = new Image("data/rangedWepEquip0.png");
+		enemyEquippedRangedWepList[1] = new Image("data/rangedWepEquip1.png");
+		enemyEquippedRangedWepList[2] = new Image("data/rangedWepEquip2.png");
+		enemyEquippedRangedWepList[3] = new Image("data/rangedWepEquip3.png");
+		enemyEquippedRangedWepList[4] = new Image("data/rangedWepEquip4.png");
+		enemyEquippedRangedWepList[5] = new Image("data/rangedWepEquip5.png");
 		
 		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
@@ -278,8 +293,8 @@ public class Enemy extends GameObject {
 					spriteAngle = (float)dir.getTheta()+90;
 				}
 				
-				enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
-				enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
+				enemyEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
+				enemyEquippedMeleeWepList[meleeWepID].setRotation(spriteAngle);
 				
 				if(enemyType == 0 && stopMoving == false){
 					moveY = 0;
@@ -296,26 +311,26 @@ public class Enemy extends GameObject {
 						moveYIncrement *= -1;
 					}
 					
-					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
+					enemyEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
 					if(player.vector.getX() < vector.getX()){
-						enemyEquippedLootList.get(wepRenderId).setRotation((spriteAngle-(maxMoveY/2)) + moveY );
+						enemyEquippedMeleeWepList[meleeWepID].setRotation((spriteAngle-(maxMoveY/2)) + moveY );
 					}
 					else{
-						enemyEquippedLootList.get(wepRenderId).setRotation((spriteAngle+(maxMoveY/2)) - moveY );
+						enemyEquippedMeleeWepList[meleeWepID].setRotation((spriteAngle+(maxMoveY/2)) - moveY );
 					}
-					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+					enemyEquippedMeleeWepList[meleeWepID].draw(vector.getX()-32, vector.getY()-96);
 					
 				}
-				else{
-					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
-					enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
-					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+				else if(enemyType == 0){
+					enemyEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
+					enemyEquippedMeleeWepList[meleeWepID].setRotation(spriteAngle);
+					enemyEquippedMeleeWepList[meleeWepID].draw(vector.getX()-32, vector.getY()-96);
 				}
 				
 				if(enemyType == 1){
-					enemyEquippedLootList.get(wepRenderId).setCenterOfRotation(32,96);
-					enemyEquippedLootList.get(wepRenderId).setRotation(spriteAngle);
-					enemyEquippedLootList.get(wepRenderId).draw(vector.getX()-32, vector.getY()-96);
+					enemyEquippedRangedWepList[rangedWepID].setCenterOfRotation(32,96);
+					enemyEquippedRangedWepList[rangedWepID].setRotation(spriteAngle);
+					enemyEquippedRangedWepList[rangedWepID].draw(vector.getX()-32, vector.getY()-96);
 				}
 				
 				if(enemyType == 1 && stopMoving == false){
@@ -347,7 +362,7 @@ public class Enemy extends GameObject {
 	 * @param _enemyList is used in order to get the enemies positions
 	 * @return returns a new vector that the enemy should move towards
 	 */
-	public Vector2f separate(ArrayList<Enemy > _enemyList){
+	private Vector2f separate(ArrayList<Enemy > _enemyList){
 		
 		float desiredSeparation = hitboxX * 2;
 		Vector2f sum = new Vector2f(0.0f, 0.0f);
@@ -387,7 +402,7 @@ public class Enemy extends GameObject {
 	 * @param _target the target used moving towards
 	 * @param _enemyList list used for determing that it is the enemy who are to move
 	 */
-	public void moveTo(Vector2f _target, ArrayList<Enemy > _enemyList){
+	private void moveTo(Vector2f _target, ArrayList<Enemy > _enemyList){
 		
 		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
 		Vector2f dir = new Vector2f(0.0f, 0.0f);
@@ -411,7 +426,7 @@ public class Enemy extends GameObject {
 	 * @param _target the target whom the enemies are moving away from
 	 * @param _enemyList list used for determing that it is the enemy who are to move
 	 */
-	public void moveAwayFrom(Vector2f _target, ArrayList<Enemy > _enemyList){
+	private void moveAwayFrom(Vector2f _target, ArrayList<Enemy > _enemyList){
 			
 		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
 		Vector2f dir = new Vector2f(0.0f, 0.0f);
@@ -452,7 +467,7 @@ public class Enemy extends GameObject {
 	 * Method used for detecting if the player is close enough to deal damage. Will deal damage to the enemy if the player is close enough
 	 * @param _player is used in order to get the player's position and damage value. And giving the palyer hitpoints based on vampire value
 	 */
-	void beingMeleeAttacked (Player _player){
+	private void beingMeleeAttacked (Player _player){
 		
 		if(_player.isMeleeAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			_player.AttackDamage();
@@ -478,7 +493,7 @@ public class Enemy extends GameObject {
 	 * Method to check if the enemy is being hit by a ranged attack
 	 * @param _projectileList is used in order to destroy the arrow that hit the enemy. and get the damage that the arrow have
 	 */
-	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
+	private void beingRangedAttacked (ArrayList<Projectile> _projectileList){
 		
 		if(_projectileList.size() > 0){
 			for(int i = _projectileList.size()-1; i >= 0; i--){
@@ -541,7 +556,7 @@ public class Enemy extends GameObject {
 	 * Method for stopping the enemy's movement by reducing the speedMultiplier to 0
 	 * @param stopMoving is used for detecting whether or not this methods should be used
 	 */
-	public void stopMovingWhenAttacking(boolean stopMoving){ //Method to make the enemy stop moving when attacking
+	private void stopMovingWhenAttacking(boolean stopMoving){ //Method to make the enemy stop moving when attacking
 		if(stopMoving == true){
 			
 			if(this.attackSTime == 0){
@@ -578,7 +593,7 @@ public class Enemy extends GameObject {
 	 * Method used for determing the enemies levels based on the wave number
 	 * @param _wave is needed in order to scale the levels so they are harder as longer as you progress in the game
 	 */
-	void SetEnemyLevel(int _wave){
+	public void SetEnemyLevel(int _wave){
 		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/3);
 		if(this.EnemyLevel < 1){ //statement in order to prevent enemy levels being below 1
 			//Adjusting stats in order to keep the enemy level 1
@@ -609,7 +624,7 @@ public class Enemy extends GameObject {
 	 * @param _wave is needed in order to scale the levels so they are harder as longer as you progress in the game
 	 * @param _bossLevel is used as an extra parameter for determing the level of enemy as the boss is supposed to be harder then everything else
 	 */
-	void SetEnemyLevel(int _wave, int _bossLevel){
+	public void SetEnemyLevel(int _wave, int _bossLevel){
 		this.EnemyLevel = randLvl.nextInt(3)-1 + (_wave/3) + _bossLevel;
 		if(this.EnemyLevel < 1){
 			this.EnemyLevel = 1;
@@ -640,7 +655,7 @@ public class Enemy extends GameObject {
 	 * @param _healthGlobeList is used to pass on the list of healthglobes
 	 * @throws SlickException
 	 */
-	void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
+	public void dropLoot(GameContainer gc, StateBasedGame sbg, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList) throws SlickException{
 		Loot.spawnLoot(gc, sbg, _lootList, this);
 		Loot.spawnHealthGlobe(gc, sbg, _healthGlobeList, this);
 	}
@@ -650,7 +665,7 @@ public class Enemy extends GameObject {
 	 * @param index is used to get what enemy that died
 	 * @param _enemyList is used in order to access the enemyList
 	 */
-	void destroy(int index, ArrayList<Enemy> _enemyList){
+	public void destroy(int index, ArrayList<Enemy> _enemyList){
 			_enemyList.remove(index);
 	}
 	

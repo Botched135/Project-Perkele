@@ -1,6 +1,5 @@
 package example;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -11,8 +10,6 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Arrow extends Projectile {
 	
 	//VARIABLE DECLARATION
-	protected static Color arrowTestCol = new Color(255,255,0);
-	
 	//Images 
 	private Image arrowSprite = null;
 	double spriteAngle;

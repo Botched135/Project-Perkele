@@ -17,9 +17,9 @@ import org.newdawn.slick.Sound;
 public class Player extends GameObject{
 	
 	//VARIABLE DECLARATION ===========================================================================================================================================================
-	protected boolean beingHit = false;
+	private boolean beingHit = false;
 	protected static Color playerTestCol = new Color(0,0,255);
-	DecimalFormat df = new DecimalFormat("#.##");
+	private DecimalFormat df = new DecimalFormat("#.##");
 	
 	//Player offensive stats ==============================================================================================================================
 	protected float playerMeleeMinDamage;
@@ -30,9 +30,9 @@ public class Player extends GameObject{
 	protected float lifeRegen = 0.2f;
 	protected float playerMeleeAttackSpeed = 5.0f; //Attacks per second
 	protected static int meleeWepID = 0;
+	protected float playerVamp = 0;
 	
 	//Ranged
-	protected float playerVamp = 0;
 	protected float playerRangedMinDamage;
 	protected float playerRangedMaxDamage;
 	protected float playerRangedAttackSpeed;
@@ -41,17 +41,17 @@ public class Player extends GameObject{
 	protected float projectileSpeed = 12;
 	protected boolean isMeleeAttacking;
 	protected boolean isRangedAttacking;
-	protected Random randDmg = new Random();
+	private Random randDmg = new Random();
 	
 	//Attack cooldown variables
 	protected float isReady;
 	protected boolean isAttackReady = false;
-	protected long StartTime = System.currentTimeMillis();
-	protected long EndTime = 0;
+	private long StartTime = System.currentTimeMillis();
+	private long EndTime = 0;
 	
 	protected boolean isRangedReady = false;
-	protected long rangeStartTime = System.currentTimeMillis();
-	protected long rangeEndTime = 0;
+	private long rangeStartTime = System.currentTimeMillis();
+	private long rangeEndTime = 0;
 	
 	//Player defensive stats ==============================================================================================================================
 	protected float Armor = 0; //Damage reductions
@@ -60,9 +60,9 @@ public class Player extends GameObject{
 	protected float baseHp = 100;
 	protected float MaxHitPoints = 100;
 	//Variables for lifeRegen timer
-	protected long regSTimer = 0;
-	protected long regETimer = 0;
-	protected int regWTime = 1000;
+	private long regSTimer = 0;
+	private long regETimer = 0;
+	private int regWTime = 1000;
 	
 	//Player movement variables ===========================================================================================================================
 	protected float speedMultiplier = 5.0f;
@@ -72,21 +72,21 @@ public class Player extends GameObject{
 	private Image hpBar = null; 
 	private Image arrow = null;
 	private Image[]playerBaseSprite = new Image[2];
-	private Image[] playerEquippedMeleeWepList = new Image[5];
-	private Image[] playerEquippedRangedWepList = new Image[5];
+	private Image[] playerEquippedMeleeWepList = new Image[6];
+	private Image[] playerEquippedRangedWepList = new Image[6];
 	private Image[][] playerEquippedArmorList = new Image[6][2];
 	
-		//Variables for animations of weapons
-		float moveY = 0;
-		float maxMoveY = 32;
-		float moveYIncrement = 2*maxMoveY/(AttackSpeed);
-		float spriteAngle = 0;
+	//Variables for animations of weapons
+	private float moveY = 0;
+	private float maxMoveY = 32;
+	private float moveYIncrement = 2*maxMoveY/(AttackSpeed);
+	private float spriteAngle = 0;
 	
 	//Sounds =================================================
 	private Sound meleeAttackSound0 = null;
 	private Sound rangedAttackSound0 = null;
-	protected Sound meleeHitSound = null;
-	protected Sound rangedHitSound = null;
+	private Sound meleeHitSound = null;
+	private Sound rangedHitSound = null;
 	
 	
 	
@@ -110,7 +110,7 @@ public class Player extends GameObject{
 		ID = 1;
 	}
 	
-public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 	
 		playerBaseSprite[0] = new Image("data/playerBaseSpriteUp.png"); 		//index 0
@@ -118,17 +118,19 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		arrow = new Image("data/arrowSprite.png");
 		hpBar = new Image("data/hpBar.png");
 		
-		playerEquippedMeleeWepList[0] = new Image("data/meleeWepEquip1.png");
+		playerEquippedMeleeWepList[0] = new Image("data/meleeWepEquip0.png");
 		playerEquippedMeleeWepList[1] = new Image("data/meleeWepEquip1.png");
-		playerEquippedMeleeWepList[2] = new Image("data/meleeWepEquip1.png");
-		playerEquippedMeleeWepList[3] = new Image("data/meleeWepEquip1.png");
-		playerEquippedMeleeWepList[4] = new Image("data/meleeWepEquip1.png");
+		playerEquippedMeleeWepList[2] = new Image("data/meleeWepEquip2.png");
+		playerEquippedMeleeWepList[3] = new Image("data/meleeWepEquip3.png");
+		playerEquippedMeleeWepList[4] = new Image("data/meleeWepEquip4.png");
+		playerEquippedMeleeWepList[5] = new Image("data/meleeWepEquip5.png");
 		
-		playerEquippedRangedWepList[0] = new Image("data/rangedWepEquip1.png");
+		playerEquippedRangedWepList[0] = new Image("data/rangedWepEquip0.png");
 		playerEquippedRangedWepList[1] = new Image("data/rangedWepEquip1.png");
-		playerEquippedRangedWepList[2] = new Image("data/rangedWepEquip1.png");
-		playerEquippedRangedWepList[3] = new Image("data/rangedWepEquip1.png");
-		playerEquippedRangedWepList[4] = new Image("data/rangedWepEquip1.png");
+		playerEquippedRangedWepList[2] = new Image("data/rangedWepEquip2.png");
+		playerEquippedRangedWepList[3] = new Image("data/rangedWepEquip3.png");
+		playerEquippedRangedWepList[4] = new Image("data/rangedWepEquip4.png");
+		playerEquippedRangedWepList[5] = new Image("data/rangedWepEquip5.png");
 		
 		playerEquippedArmorList[0][0] = new Image("data/playerEquipArmor0Up.png");
 		playerEquippedArmorList[0][1] = new Image("data/playerEquipArmor0Down.png");
@@ -253,7 +255,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		dir = tempTarget.sub(vector);
 		dir.normalise();
 		
-		float spriteAngle = (float)dir.getTheta()+90;
+		spriteAngle = (float)dir.getTheta()+90;
 		
 		playerEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
 		playerEquippedMeleeWepList[meleeWepID].setRotation(spriteAngle);
@@ -324,7 +326,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	 * @param _target is the desired position
 	 * @param direction is the direction the player is moving. 0=left, 1=up, 2=right and 3=down
 	 */
-	public void MoveSelf(Vector2f _target, int direction){
+	private void MoveSelf(Vector2f _target, int direction){
 		Vector2f tempTarget = new Vector2f(_target.getX(), _target.getY());
 		tempTarget = tempTarget.add(vector);
 		if(direction == 0){
@@ -415,7 +417,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	 * Method used to setting the Players melee attack ready
 	 * @return isAttackReady for use, so we can attack again in isMeleeAttacking
 	 */
-	public boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
+	private boolean setAttackReady(){//End time - StartTime = CD. If CD >= 1000 then move on 
 		if(this.isAttackReady == false){ 
 			this.EndTime = System.currentTimeMillis();//StartTime should start from without
 			if((this.EndTime-this.StartTime) >= 1000/playerMeleeAttackSpeed){
@@ -434,7 +436,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	 * Method used to setting the Players ranged attack ready - very similar to setAttackReady, but needs different variables in order to being able to shoot without waiting on melee cooldown
 	 * @return isAttackReady for use, so we can attack again in isRangedReady
 	 */
-	public boolean setRangedAttackReady(){
+	private boolean setRangedAttackReady(){
 		if(this.isRangedReady == false){
 			this.rangeEndTime = System.currentTimeMillis();
 			if((this.rangeEndTime-this.rangeStartTime)>= 1000/playerRangedAttackSpeed){
@@ -452,7 +454,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	 * Method used for detecting if the enemy is close enough to deal damage. Will deal damage if the enemy is close enough
 	 * @param _enemy is used in order to get the enemy's position, damage values and vampiric amount
 	 */
-	void beingMeleeAttacked (Enemy _enemy){
+	private void beingMeleeAttacked (Enemy _enemy){
 		
 		if(_enemy.isMeleeAttacking && vector.distance(_enemy.vector) < _enemy.maxRange + _enemy.hitboxX && vector.distance(_enemy.vector) > _enemy.minRange){
 			_enemy.isMeleeAttacking = false;
@@ -479,7 +481,7 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	 * Method to check if the player is being hit by a ranged attack
 	 * @param _projectileList is used in order to destroy the arrow that hit the player. and get the damage that the arrow have
 	 */
-	void beingRangedAttacked (ArrayList<Projectile> _projectileList){
+	private void beingRangedAttacked (ArrayList<Projectile> _projectileList){
 		if(_projectileList.size() > 0){
 			for(int i = _projectileList.size()-1; i >= 0; i--){
 				if(_projectileList.get(i).owner instanceof Enemy && _projectileList.get(i).disableDmg == false && vector.distance(_projectileList.get(i).vector) < hitboxX + _projectileList.get(i).hitboxX){
@@ -508,13 +510,13 @@ public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	/**
 	 * Method that uses a timer in order to give the player hitPoints based on their lifeRegen
 	 */
-	public void regeneration(){
+	private void regeneration(){
 		if(regSTimer == 0){
 			regSTimer = System.currentTimeMillis();
 		}
 		else {
 			regETimer = System.currentTimeMillis() - regSTimer;
-			if(regETimer >= 1000){
+			if(regETimer >= regWTime){
 				this.hitPoints += lifeRegen;
 				regSTimer = 0;
 				regETimer = 0;

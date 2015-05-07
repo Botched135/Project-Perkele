@@ -12,7 +12,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Inventory {
 	
 	//VARIABLE DECLARATION
-	protected Player player;
+	private Player player;
 	
 	//Inventory window boundaries
 	static protected float xOrigin = 0;
@@ -36,10 +36,6 @@ public class Inventory {
 		
 		guiButtom = new Image("data/guiButtom.png");
 		
-	}
-
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {

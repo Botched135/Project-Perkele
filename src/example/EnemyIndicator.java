@@ -13,7 +13,7 @@ public class EnemyIndicator extends GameObject {
 	
 	protected GameObject owner;
 	protected Vector2f target;
-	protected Vector2f tempTarget = new Vector2f();
+	private Vector2f tempTarget = new Vector2f();
 	//Images 
 	private Image enemyIndicatorSprite = null;
 	double spriteAngle;

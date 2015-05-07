@@ -35,29 +35,29 @@ public class GameState extends BasicGameState {
 			private ArrayList <Vector2f> spawnPos = new ArrayList <Vector2f>();
 			
 			//Enemy wave system
-			protected Random randPos = new Random();
-			protected int spawnPosVari;
-			protected int wave;
-			protected int currentWave;
-			protected double waveStartTimer;
-			protected double waveTimeDif;
-			protected boolean waveStart;
-			protected int waveDelay = 5000; //Amount of miliseconds before the next wave start
-			protected int enemyMeleeAmount = 2;
-			protected int enemyRangedAmount = 1;
-			protected int randEnemyPos;
-			protected int bossLevel = 1;
+			private Random randPos = new Random();
+			private int spawnPosVari;
+			private int wave;
+			private int currentWave;
+			private double waveStartTimer;
+			private double waveTimeDif;
+			private boolean waveStart;
+			private int waveDelay = 5000; //Amount of miliseconds before the next wave start
+			private int enemyMeleeAmount = 2;
+			private int enemyRangedAmount = 1;
+			private int randEnemyPos;
+			private int bossLevel = 1;
 			
 
 			protected static Vector2f mousePos;
 			
 			//Images =================================================
 			
-			public static TiledMap bgMap = null;
+			private static TiledMap bgMap = null;
 			private Image playerDamageWarning = null; 
 			private Image guiButtomEquipmentUnderlay = null;
-			private Image[] playerEquippedMeleeWepList = new Image[5];
-			private Image[] playerEquippedRangedWepList = new Image[5];
+			private Image[] playerEquippedMeleeWepList = new Image[6];
+			private Image[] playerEquippedRangedWepList = new Image[6];
 			private Image[] playerEquippedArmorList = new Image[6];
 			
 			
@@ -65,8 +65,8 @@ public class GameState extends BasicGameState {
 			//public static Sound mainTheme = null;
 			
 			//Misc.
-			DecimalFormat df = new DecimalFormat("#.##");
-			protected float waveTextOpacity = 255;
+			private DecimalFormat df = new DecimalFormat("#.##");
+			private float waveTextOpacity = 255;
 			private TrueTypeFont font;
 			private boolean antiAlias = true;
 			float playerDamageWarningOpacity = 0;
@@ -90,17 +90,19 @@ public class GameState extends BasicGameState {
 		playerDamageWarning = new Image("data/playerDamageWarning.png");
 		guiButtomEquipmentUnderlay = new Image("data/guiButtomEquipmentUnderlay.png");
 		
-		playerEquippedMeleeWepList[0] = new Image("data/meleeWeaponTestSprite.png");
-		playerEquippedMeleeWepList[1] = new Image("data/meleeWeaponTestSprite.png");
-		playerEquippedMeleeWepList[2] = new Image("data/meleeWeaponTestSprite.png");
-		playerEquippedMeleeWepList[3] = new Image("data/meleeWeaponTestSprite.png");
-		playerEquippedMeleeWepList[4] = new Image("data/meleeWeaponTestSprite.png");
+		playerEquippedMeleeWepList[0] = new Image("data/meleeWeapon0.png");
+		playerEquippedMeleeWepList[1] = new Image("data/meleeWeapon1.png");
+		playerEquippedMeleeWepList[2] = new Image("data/meleeWeapon2.png");
+		playerEquippedMeleeWepList[3] = new Image("data/meleeWeapon3.png");
+		playerEquippedMeleeWepList[4] = new Image("data/meleeWeapon4.png");
+		playerEquippedMeleeWepList[5] = new Image("data/meleeWeapon5.png");
 		
-		playerEquippedRangedWepList[0] = new Image("data/rangedWeaponTestSprite.png");
-		playerEquippedRangedWepList[1] = new Image("data/rangedWeaponTestSprite.png");
-		playerEquippedRangedWepList[2] = new Image("data/rangedWeaponTestSprite.png");
-		playerEquippedRangedWepList[3] = new Image("data/rangedWeaponTestSprite.png");
-		playerEquippedRangedWepList[4] = new Image("data/rangedWeaponTestSprite.png");
+		playerEquippedRangedWepList[0] = new Image("data/rangedWeapon0.png");
+		playerEquippedRangedWepList[1] = new Image("data/rangedWeapon1.png");
+		playerEquippedRangedWepList[2] = new Image("data/rangedWeapon2.png");
+		playerEquippedRangedWepList[3] = new Image("data/rangedWeapon3.png");
+		playerEquippedRangedWepList[4] = new Image("data/rangedWeapon4.png");
+		playerEquippedRangedWepList[5] = new Image("data/rangedWeapon5.png");
 		
 		playerEquippedArmorList[0] = new Image("data/armorSprite0.png");
 		playerEquippedArmorList[1] = new Image("data/armorSprite1.png");
@@ -162,19 +164,13 @@ public class GameState extends BasicGameState {
 			Menu.resetGame = false;
 		}
 		
-		
 		collisionLayer = bgMap.getLayerIndex("Collision");
 		
 		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
-		
 			//Menu.menuTheme.stop();
-			
 		}
-		
-
-		inventory.update(gc, sbg, delta);
 		
 		//PLAYER STUFF ====================================================================================================================================
 		player.update(gc, sbg, enemyList, projectileList, healthGlobeList);
@@ -383,7 +379,7 @@ public class GameState extends BasicGameState {
 				if(projectileList.size() > 0){
 					for(int i = projectileList.size()-1; i >= 0; i--){
 					
-						projectileList.get(i).update(player, i, gc, sbg, delta, projectileList, enemyList);
+						projectileList.get(i).update(i, projectileList);
 					}
 				}
 		
@@ -456,7 +452,6 @@ public class GameState extends BasicGameState {
 		
 		//RENDER PROJECTILE SPRITES
 		if(projectileList.size() > 0){
-			g.setColor(Arrow.arrowTestCol);
 			for(int i = projectileList.size()-1; i >= 0; i--) {
 				projectileList.get(i).render(gc, sbg, g);
 			}
@@ -829,7 +824,7 @@ public class GameState extends BasicGameState {
 		if(wepSwap == false){
 			playerEquippedRangedWepList[Player.rangedWepID].draw(48, 640);
 			guiButtomEquipmentUnderlay.draw(18, 618);
-			playerEquippedMeleeWepList[Player.rangedWepID].draw(18, 618);
+			playerEquippedMeleeWepList[Player.meleeWepID].draw(18, 618);
 		}
 		else{
 			playerEquippedMeleeWepList[Player.meleeWepID].draw(48, 640);

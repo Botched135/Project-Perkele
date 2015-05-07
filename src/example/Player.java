@@ -75,8 +75,8 @@ public class Player extends GameObject{
 	private Image hpBar = null; 
 	private Image arrow = null;
 	private Image[]playerBaseSprite = new Image[2];
-	private Image[] playerEquippedMeleeWepList = new Image[5];
-	private Image[] playerEquippedRangedWepList = new Image[5];
+	private Image[] playerEquippedMeleeWepList = new Image[6];
+	private Image[] playerEquippedRangedWepList = new Image[6];
 	private Image[][] playerEquippedArmorList = new Image[6][2];
 	
 	//Variables for animations of weapons
@@ -121,17 +121,19 @@ public class Player extends GameObject{
 		arrow = new Image("data/arrowSprite.png");
 		hpBar = new Image("data/hpBar.png");
 		
-		playerEquippedMeleeWepList[0] = new Image("data/meleeWepEquip1.png");
+		playerEquippedMeleeWepList[0] = new Image("data/meleeWepEquip0.png");
 		playerEquippedMeleeWepList[1] = new Image("data/meleeWepEquip1.png");
-		playerEquippedMeleeWepList[2] = new Image("data/meleeWepEquip1.png");
-		playerEquippedMeleeWepList[3] = new Image("data/meleeWepEquip1.png");
-		playerEquippedMeleeWepList[4] = new Image("data/meleeWepEquip1.png");
+		playerEquippedMeleeWepList[2] = new Image("data/meleeWepEquip2.png");
+		playerEquippedMeleeWepList[3] = new Image("data/meleeWepEquip3.png");
+		playerEquippedMeleeWepList[4] = new Image("data/meleeWepEquip4.png");
+		playerEquippedMeleeWepList[5] = new Image("data/meleeWepEquip5.png");
 		
-		playerEquippedRangedWepList[0] = new Image("data/rangedWepEquip1.png");
+		playerEquippedRangedWepList[0] = new Image("data/rangedWepEquip0.png");
 		playerEquippedRangedWepList[1] = new Image("data/rangedWepEquip1.png");
-		playerEquippedRangedWepList[2] = new Image("data/rangedWepEquip1.png");
-		playerEquippedRangedWepList[3] = new Image("data/rangedWepEquip1.png");
-		playerEquippedRangedWepList[4] = new Image("data/rangedWepEquip1.png");
+		playerEquippedRangedWepList[2] = new Image("data/rangedWepEquip2.png");
+		playerEquippedRangedWepList[3] = new Image("data/rangedWepEquip3.png");
+		playerEquippedRangedWepList[4] = new Image("data/rangedWepEquip4.png");
+		playerEquippedRangedWepList[5] = new Image("data/rangedWepEquip5.png");
 		
 		playerEquippedArmorList[0][0] = new Image("data/playerEquipArmor0Up.png");
 		playerEquippedArmorList[0][1] = new Image("data/playerEquipArmor0Down.png");

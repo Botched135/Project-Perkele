@@ -9,7 +9,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class RangedWeapon extends Loot {
 
 	//VARIABLE DECLARATION ============================================================================================================================================
-	private Image[] rangedWeaponSprite = new Image[5];
+	private Image[] rangedWeaponSprite = new Image[6];
 	private String[] rangedWeaponNames = {"Shortbow ","Crossbow ", "Compoundbow ","Repeater Crossbow ", "Eaglehorn "}; 
 	private int spriteRenderID = 0;
 	
@@ -25,16 +25,23 @@ public class RangedWeapon extends Loot {
 		wepMinDMG = 100;
 		wepMaxDMG = 200;
 		attackSpeed = 5.8f;
+		numberOfStats = 3;
 		
 	}
 	RangedWeapon(Enemy _enemy){//Constructor for enemy dropped ranged weapon
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
+		numberOfStats =3;
 		ID = 5;
 		
 		
 		
 		//Setting the items stats depending on the level of the enemy which dropped it.
+		this.lootLevel = _enemy.EnemyLevel;
+		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
+		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
+		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
+		this.Name = this.setName(rangedWeaponNames);
 		
 		if(this.lootLevel > 5){
 			spriteRenderID = 5;
@@ -42,21 +49,16 @@ public class RangedWeapon extends Loot {
 		else{
 			spriteRenderID = this.lootLevel;
 		}
-		this.lootLevel = _enemy.EnemyLevel;
-		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
-		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
-		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
-		this.Name = this.setName(rangedWeaponNames);
-		
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
-	rangedWeaponSprite[0] = new Image("data/rangedWeaponTestSprite.png");
-	rangedWeaponSprite[1] = new Image("data/rangedWeaponTestSprite.png");
-	rangedWeaponSprite[2] = new Image("data/rangedWeaponTestSprite.png");
-	rangedWeaponSprite[3] = new Image("data/rangedWeaponTestSprite.png");
-	rangedWeaponSprite[4] = new Image("data/rangedWeaponTestSprite.png");
+	rangedWeaponSprite[0] = new Image("data/rangedWeapon0.png");
+	rangedWeaponSprite[1] = new Image("data/rangedWeapon1.png");
+	rangedWeaponSprite[2] = new Image("data/rangedWeapon2.png");
+	rangedWeaponSprite[3] = new Image("data/rangedWeapon3.png");
+	rangedWeaponSprite[4] = new Image("data/rangedWeapon4.png");
+	rangedWeaponSprite[5] = new Image("data/rangedWeapon5.png");
 	
 	}
 	

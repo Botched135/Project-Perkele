@@ -345,6 +345,7 @@ public class Loot extends GameObject {
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
 						_enemyList.get(i).enemyVamp = _lootList.get(index).Vamp;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
+						_enemyList.get(i).meleeWepID = _lootList.get(index).lootLevel;
 						_lootList.remove(index);
 					}
 					else if(_lootList.get(index) instanceof RangedWeapon && _enemyList.get(i).enemyType==1){
@@ -352,6 +353,7 @@ public class Loot extends GameObject {
 						_enemyList.get(i).MaxDamage=_lootList.get(index).wepMaxDMG;
 						_enemyList.get(i).AttackSpeed = _lootList.get(index).attackSpeed;
 						_enemyList.get(i).WeaponName = _lootList.get(index).Name;
+						_enemyList.get(i).rangedWepID = _lootList.get(index).lootLevel;
 						_lootList.remove(index);
 					}
 					else if(_lootList.get(index) instanceof Armor){

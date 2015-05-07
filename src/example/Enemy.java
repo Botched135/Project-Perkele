@@ -151,7 +151,7 @@ public class Enemy extends GameObject {
 			meleeWepID = EnemyLevel;
 			speedMultiplier = 2.0f;
 			
-			EnemyNames[0] = "Perkele the Destroyer of Worlds";
+			EnemyNames[0] = "Perkele, the Destroyer of Worlds";
 		}
 		
 		

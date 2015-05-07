@@ -19,7 +19,7 @@ public class Projectile extends GameObject {
 	protected float speedMultiplier = 0;
 	private float duration = 3;
 	protected boolean disableDmg;
-	protected long startTime = System.currentTimeMillis();
+	private long startTime = System.currentTimeMillis();
 
 	//CONSTRUCTERS ===========================================================================================================================================================
 	Projectile(Enemy _owner, Vector2f _target){

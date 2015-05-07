@@ -25,11 +25,13 @@ public class RangedWeapon extends Loot {
 		wepMinDMG = 100;
 		wepMaxDMG = 200;
 		attackSpeed = 5.8f;
+		numberOfStats = 3;
 		
 	}
 	RangedWeapon(Enemy _enemy){//Constructor for enemy dropped ranged weapon
 		hitboxX = 32.0f;
 		hitboxY = 32.0f;
+		numberOfStats =3;
 		ID = 5;
 		
 		

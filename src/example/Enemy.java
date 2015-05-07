@@ -58,9 +58,6 @@ public class Enemy extends GameObject {
 	
 	//variables used for stopping movement when attacking =====================================================
 	private boolean stopMoving = false;
-	private long attackSTime;
-	private long attackETime;
-	private int moveWaitTime = 1000;
 	
 	//Variables for animations of weapons =====================================================================
 	private boolean vectorSnapshotted = false;
@@ -151,6 +148,7 @@ public class Enemy extends GameObject {
 			minSeekDistance = 0;
 			maxSeekDistance = 500;
 			wepRenderId = 0;
+			speedMultiplier = 1.5f;
 			
 			EnemyNames[0] = "Perkele the Destroyer of Worlds";
 		}
@@ -560,6 +558,12 @@ public class Enemy extends GameObject {
 					
 			_projectileList.add(new Arrow(this, _player.vector, projectileSpeed));
 			_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+			if(enemyType == 2){
+				_projectileList.add(new Arrow(this, new Vector2f((float)(_player.vector.getX() / Math.cos(0.2f)),(float)(_player.vector.getY() / Math.cos(0.2f))), projectileSpeed));
+				_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+				_projectileList.add(new Arrow(this, new Vector2f((float)(_player.vector.getX() * Math.cos(0.2f)),(float)(_player.vector.getY() * Math.cos(0.2f))), projectileSpeed));
+				_projectileList.get(_projectileList.size()-1).init(gc, sbg);
+			}
 		}
 	}
 	
@@ -569,17 +573,24 @@ public class Enemy extends GameObject {
 	 */
 	private void stopMovingWhenAttacking(boolean stopMoving){ //Method to make the enemy stop moving when attacking
 		if(stopMoving == true){
-			
-			if(this.attackSTime == 0){
-				this.speedMultiplier = 0.0f; //Movement is stopped by making the enemy's speed 0 for one second
-				this.attackSTime = System.currentTimeMillis();
+			long attackSTime = 0;
+			long attackETime = 0;
+			int moveWaitTime = 1000;
+			if(attackSTime == 0){
+				speedMultiplier = 0.5f; //Movement is stopped by making the enemy's speed 0 for one second
+				attackSTime = System.currentTimeMillis();
 			}
 			else {
-				this.attackETime = System.currentTimeMillis() - this.attackSTime;
+				attackETime = System.currentTimeMillis() - attackSTime;
 				if(attackETime > moveWaitTime / this.AttackSpeed){
-					this.speedMultiplier = 1.0f;
-					this.attackSTime = 0;
-					this.attackETime = 0;
+					if(enemyType == 2){
+						this.speedMultiplier = 1.5f;
+					}
+					else{
+						this.speedMultiplier = 1.0f;
+					}
+					attackSTime = 0;
+					attackETime = 0;
 					this.stopMoving = false;
 				}
 			}	

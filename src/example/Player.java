@@ -65,8 +65,8 @@ public class Player extends GameObject{
 	private int regWTime = 1000;
 	
 	//Player movement variables ===========================================================================================================================
-	protected float speedMultiplier = 5.0f;
-	
+	protected float speedMultiplier = 3.5f;
+
 	//Images =================================================
 	private int imageDirection = 0;
 	private Image hpBar = null; 
@@ -400,7 +400,9 @@ public class Player extends GameObject{
 	 * @throws SlickException
 	 */
 	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList) throws SlickException{
-		if(this.isRangedReady && this.isAttackReady){			
+		if(this.isRangedReady && this.isAttackReady){
+			this.speedMultiplier = 0.8f; //Movement is stopped by making the player's speed 0 for one second
+
 			//Play players ranged attack sound
 			rangedAttackSound0.play();
 			this.isRangedAttacking = true;
@@ -442,6 +444,7 @@ public class Player extends GameObject{
 			if((this.rangeEndTime-this.rangeStartTime)>= 1000/playerRangedAttackSpeed){
 				this.rangeStartTime=this.rangeEndTime;
 				this.isRangedReady = true;
+				this.speedMultiplier = 3.5f;
 			}
 		}
 		else if(this.isRangedReady){

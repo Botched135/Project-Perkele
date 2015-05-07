@@ -545,7 +545,7 @@ public class Enemy extends GameObject {
 		if(stopMoving == true){
 			
 			if(this.attackSTime == 0){
-				this.speedMultiplier = 0.0f; //Movement is stopped by making the enemy's speed 0 for one second
+				this.speedMultiplier = 0.5f; //Movement is stopped by making the enemy's speed 0 for one second
 				this.attackSTime = System.currentTimeMillis();
 			}
 			else {

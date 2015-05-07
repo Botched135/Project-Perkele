@@ -214,7 +214,7 @@ public class Enemy extends GameObject {
 		//Statements detecting if the boss should melee attacking or use a ranged attack
 		if(vector.distance(_player.vector) < this.hitboxX + _player.hitboxX + maxSeekDistance && vector.distance(_player.vector) >  minRange){
 			if(enemyType == 2){
-				if(vector.distance(_player.vector) > this.hitboxX + _player.hitboxX + (maxSeekDistance/2)){
+				if(vector.distance(_player.vector) > this.hitboxX + _player.hitboxX + (maxSeekDistance/1.5)){
 					isRangedAttacking(gc, sbg, _player, _projectileList);
 					setAttackReady();
 				}
@@ -593,13 +593,13 @@ public class Enemy extends GameObject {
 			System.out.println("attackETime: "+ attackETime + "   Target: " + (moveWaitTime / this.AttackSpeed));
 			
 			if(attackETime > moveWaitTime / this.AttackSpeed){
-				if(enemyType == 2){
-					this.speedMultiplier = 1.5f;
+				if(enemyType == 0){
+					this.speedMultiplier = 1.2f;
 				}
 				else if(enemyType == 1){
 					this.speedMultiplier = 1.0f;
 				}
-				else if(enemyType == 1){
+				else if(enemyType == 2){
 					this.speedMultiplier = 2.0f;
 				}
 				

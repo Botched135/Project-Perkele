@@ -421,7 +421,7 @@ public class Player extends GameObject{
 	 */
 	public void isRangedAttacking(GameContainer gc, StateBasedGame sbg, ArrayList<Projectile> _projectileList) throws SlickException{
 		if(this.isRangedReady && this.isAttackReady){
-			this.speedMultiplier = 0.8f; //Movement is stopped by making the player's speed 0 for one second
+			this.speedMultiplier = 1.0f; //Movement is stopped by making the player's speed 0 for one second
 
 			//Play players ranged attack sound
 			rangedAttackSound0.play();

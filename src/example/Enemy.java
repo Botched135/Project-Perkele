@@ -34,13 +34,15 @@ public class Enemy extends GameObject {
 	private float projectileSpeed;
 	protected boolean isMeleeAttacking = false;
 	protected boolean isRangedAttacking = false;
-	private int wepRenderId;
 	//Attack cooldown variables
 	private long StartTime = System.currentTimeMillis();
 	private long EndTime = 0;
 	protected boolean isAttackReady = false;
 	protected int meleeWepID = 0;
 	protected int rangedWepID = 0;
+	long attackSTime = 0;
+	long attackETime = 0;
+	int moveWaitTime = 1000;
 	
 	//Enemy defensive stats ===================================================================================
 	protected float hitpoints = 100;
@@ -192,7 +194,7 @@ public class Enemy extends GameObject {
 			_enemyIndicatorList.get(index).destroy(index, _enemyIndicatorList);
 			this.destroy(index, _enemyList);
 		}
-		
+		//System.out.println(stopMoving);
 		meleeWepID = EnemyLevel;
 		rangedWepID = EnemyLevel;
 		
@@ -318,7 +320,7 @@ public class Enemy extends GameObject {
 				if(enemyType == 0 && stopMoving == false){
 					moveY = 0;
 					maxMoveY = 64;
-					moveYIncrement = 3;
+					moveYIncrement = 5;
 				}
 				if(enemyType == 0 && stopMoving == true){
 					moveY = moveY + moveYIncrement;
@@ -578,28 +580,32 @@ public class Enemy extends GameObject {
 	 * Method for stopping the enemy's movement by reducing the speedMultiplier to 0
 	 * @param stopMoving is used for detecting whether or not this methods should be used
 	 */
-	private void stopMovingWhenAttacking(boolean stopMoving){ //Method to make the enemy stop moving when attacking
+	private void stopMovingWhenAttacking(boolean stopMoving){ //Method to make the enemy have slowed movement when attacking
 		if(stopMoving == true){
-			long attackSTime = 0;
-			long attackETime = 0;
-			int moveWaitTime = 1000;
 			if(attackSTime == 0){
-				speedMultiplier = 0.5f; //Movement is stopped by making the enemy's speed 0 for one second
+				speedMultiplier = 0.5f; //Movement is slowed while attacking
 				attackSTime = System.currentTimeMillis();
+				//System.out.println("im here!");
 			}
-			else {
-				attackETime = System.currentTimeMillis() - attackSTime;
-				if(attackETime > moveWaitTime / this.AttackSpeed){
-					if(enemyType == 2){
-						this.speedMultiplier = 1.5f;
-					}
-					else{
-						this.speedMultiplier = 1.0f;
-					}
-					attackSTime = 0;
-					attackETime = 0;
-					this.stopMoving = false;
+			
+			attackETime = System.currentTimeMillis() - attackSTime;
+			
+			System.out.println("attackETime: "+ attackETime + "   Target: " + (moveWaitTime / this.AttackSpeed));
+			
+			if(attackETime > moveWaitTime / this.AttackSpeed){
+				if(enemyType == 2){
+					this.speedMultiplier = 1.5f;
 				}
+				else if(enemyType == 1){
+					this.speedMultiplier = 1.0f;
+				}
+				else if(enemyType == 1){
+					this.speedMultiplier = 2.0f;
+				}
+				
+				attackSTime = 0;
+				attackETime = 0;
+				this.stopMoving = false;
 			}	
 		}
 	}

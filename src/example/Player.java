@@ -79,7 +79,7 @@ public class Player extends GameObject{
 	//Variables for animations of weapons
 	private float moveY = 0;
 	private float maxMoveY = 32;
-	private float moveYIncrement = 2*maxMoveY/(AttackSpeed);
+	private float moveYIncrement = 0;
 	private float spriteAngle = 0;
 	
 	//Sounds =================================================
@@ -263,10 +263,30 @@ public class Player extends GameObject{
 		playerEquippedRangedWepList[rangedWepID].setCenterOfRotation(32,96);
 		playerEquippedRangedWepList[rangedWepID].setRotation(spriteAngle);
 		
-		if(GameState.wepSwap == false && isAttackReady == false){
+		if(GameState.wepSwap == false && isAttackReady == true){
 			moveY = 0;
 			maxMoveY = 64;
-			moveYIncrement = 3;
+			if(AttackSpeed > 0 && AttackSpeed < 0.5f){
+				moveYIncrement = 2;
+			}
+			else if(AttackSpeed > 0.5f && AttackSpeed < 1.0f){
+				moveYIncrement = 1;
+			}
+			else if(AttackSpeed > 1.0f && AttackSpeed < 1.5f){
+				moveYIncrement = 2;
+			}
+			else if(AttackSpeed > 1.5f && AttackSpeed < 2.0f){
+				moveYIncrement = 3;
+			}
+			else if(AttackSpeed > 2.0f && AttackSpeed < 2.5f){
+				moveYIncrement = 4;
+			}
+			else if(AttackSpeed > 2.5f && AttackSpeed < 3.0f){
+				moveYIncrement = 5;
+			}
+			else if(AttackSpeed > 3.0f){
+				moveYIncrement = 6;
+			}
 		}
 		if(GameState.wepSwap == false && isAttackReady == false){
 			moveY = moveY + moveYIncrement;

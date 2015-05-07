@@ -461,7 +461,7 @@ public class GameState extends BasicGameState {
 		//RENDER ENEMY SPRITES ==============================================================================================================================
 		
 		if(enemyList.size() > 0){
-			for(int i = enemyList.size()-1; i >= 0; i--) {
+			for(int i = 0; i <= enemyList.size()-1; i++) {
 				enemyList.get(i).render(gc, sbg, g, player);
 			}
 		}

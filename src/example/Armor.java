@@ -12,7 +12,6 @@ public class Armor extends Loot{
 	protected String[]ArmorNames = {"Leather Armor","Scalemail","Breast Plate","Full Plate","Dragonbone Armor"};
 	private Image[] armorSprite = new Image[6];
 	private int spriteRenderID = 0;
-	//protected float hpBonus = 10;
 	
 	Armor() {
 		 

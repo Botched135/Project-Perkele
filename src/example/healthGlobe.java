@@ -37,7 +37,7 @@ public class healthGlobe extends Loot {
 	}
 	
 	//METHODS
-	void separate(ArrayList<Loot> _lootList){
+	public void separate(ArrayList<Loot> _lootList){
 
 		float desiredSeparation = hitboxX*2;
 		Vector2f sum = new Vector2f(0.0f, 0.0f);

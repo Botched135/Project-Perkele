@@ -35,25 +35,25 @@ public class GameState extends BasicGameState {
 			private ArrayList <Vector2f> spawnPos = new ArrayList <Vector2f>();
 			
 			//Enemy wave system
-			protected Random randPos = new Random();
-			protected int spawnPosVari;
-			protected int wave;
-			protected int currentWave;
-			protected double waveStartTimer;
-			protected double waveTimeDif;
-			protected boolean waveStart;
-			protected int waveDelay = 5000; //Amount of miliseconds before the next wave start
-			protected int enemyMeleeAmount = 2;
-			protected int enemyRangedAmount = 1;
-			protected int randEnemyPos;
-			protected int bossLevel = 1;
+			private Random randPos = new Random();
+			private int spawnPosVari;
+			private int wave;
+			private int currentWave;
+			private double waveStartTimer;
+			private double waveTimeDif;
+			private boolean waveStart;
+			private int waveDelay = 5000; //Amount of miliseconds before the next wave start
+			private int enemyMeleeAmount = 2;
+			private int enemyRangedAmount = 1;
+			private int randEnemyPos;
+			private int bossLevel = 1;
 			
 
 			protected static Vector2f mousePos;
 			
 			//Images =================================================
 			
-			public static TiledMap bgMap = null;
+			private static TiledMap bgMap = null;
 			private Image playerDamageWarning = null; 
 			private Image guiButtomEquipmentUnderlay = null;
 			private Image[] playerEquippedMeleeWepList = new Image[6];
@@ -65,8 +65,8 @@ public class GameState extends BasicGameState {
 			//public static Sound mainTheme = null;
 			
 			//Misc.
-			DecimalFormat df = new DecimalFormat("#.##");
-			protected float waveTextOpacity = 255;
+			private DecimalFormat df = new DecimalFormat("#.##");
+			private float waveTextOpacity = 255;
 			private TrueTypeFont font;
 			private boolean antiAlias = true;
 			float playerDamageWarningOpacity = 0;
@@ -164,19 +164,13 @@ public class GameState extends BasicGameState {
 			Menu.resetGame = false;
 		}
 		
-		
 		collisionLayer = bgMap.getLayerIndex("Collision");
 		
 		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
-		
 			//Menu.menuTheme.stop();
-			
 		}
-		
-
-		inventory.update(gc, sbg, delta);
 		
 		//PLAYER STUFF ====================================================================================================================================
 		player.update(gc, sbg, enemyList, projectileList, healthGlobeList);
@@ -385,7 +379,7 @@ public class GameState extends BasicGameState {
 				if(projectileList.size() > 0){
 					for(int i = projectileList.size()-1; i >= 0; i--){
 					
-						projectileList.get(i).update(player, i, gc, sbg, delta, projectileList, enemyList);
+						projectileList.get(i).update(i, projectileList);
 					}
 				}
 		
@@ -458,7 +452,6 @@ public class GameState extends BasicGameState {
 		
 		//RENDER PROJECTILE SPRITES
 		if(projectileList.size() > 0){
-			g.setColor(Arrow.arrowTestCol);
 			for(int i = projectileList.size()-1; i >= 0; i--) {
 				projectileList.get(i).render(gc, sbg, g);
 			}

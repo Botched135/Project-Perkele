@@ -10,7 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Main extends StateBasedGame
 {
-	public Main(String gamename)
+	private Main(String gamename)
 	{
 		super(gamename);
 	}

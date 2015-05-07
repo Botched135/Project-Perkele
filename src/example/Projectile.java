@@ -17,7 +17,7 @@ public class Projectile extends GameObject {
 	protected Vector2f dir;
 	protected float damage;
 	protected float speedMultiplier = 0;
-	protected float duration = 3;
+	private float duration = 3;
 	protected boolean disableDmg;
 	protected long startTime = System.currentTimeMillis();
 
@@ -47,7 +47,7 @@ public class Projectile extends GameObject {
 	}
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
-	public void update(Player _player, int index, GameContainer gc, StateBasedGame sbg, int delta, ArrayList<Projectile> _projectileList, ArrayList<Enemy> _enemyList){
+	public void update(int index, ArrayList<Projectile> _projectileList){
 		
 		moveTo();
 		if(((System.currentTimeMillis()) - startTime)/1000 >= duration){
@@ -59,13 +59,15 @@ public class Projectile extends GameObject {
 		
 	}	
 	
+	
 	/**
 	 * Method which enables projectile to fork
 	 * @param _projectileList is used in order to add new projectiles to a list
 	 * @param _owner is used in order to get whom shot the projectile
 	 * @param _target is used to get the direction the projectile should move towards
 	 */
-	public void spawnSubProjectile(ArrayList<Projectile> _projectileList, Player _owner, Vector2f _target){
+	/* This method is not being used atm
+	private void spawnSubProjectile(ArrayList<Projectile> _projectileList, Player _owner, Vector2f _target){
 		
 		int maxRandDist = 10;
 		Random randLoot = new Random();
@@ -74,13 +76,13 @@ public class Projectile extends GameObject {
 		Projectile subProjectile = new Projectile(_owner, _target);
 		subProjectile.vector.set(subProjectile.vector.getX() + tempRandX - maxRandDist/2, subProjectile.vector.getY() + tempRandY + maxRandDist/2);
 		_projectileList.add(subProjectile);
-		
 	}
+	*/
 	
 	/**
 	 * Method used for moving the projectile at a set speed in a direction
 	 */
-	public void moveTo(){
+	private void moveTo(){
 		
 		dir.normalise();
 		dir = dir.scale(speedMultiplier);	

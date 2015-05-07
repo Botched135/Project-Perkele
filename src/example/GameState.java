@@ -162,19 +162,13 @@ public class GameState extends BasicGameState {
 			Menu.resetGame = false;
 		}
 		
-		
 		collisionLayer = bgMap.getLayerIndex("Collision");
 		
 		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
-		
 			//Menu.menuTheme.stop();
-			
 		}
-		
-
-		inventory.update(gc, sbg, delta);
 		
 		//PLAYER STUFF ====================================================================================================================================
 		player.update(gc, sbg, enemyList, projectileList, healthGlobeList);

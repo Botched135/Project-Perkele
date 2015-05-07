@@ -37,10 +37,6 @@ public class Inventory {
 		guiButtom = new Image("data/guiButtom.png");
 		
 	}
-
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-
-	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		

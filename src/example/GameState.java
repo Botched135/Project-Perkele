@@ -56,8 +56,8 @@ public class GameState extends BasicGameState {
 			public static TiledMap bgMap = null;
 			private Image playerDamageWarning = null; 
 			private Image guiButtomEquipmentUnderlay = null;
-			private Image[] playerEquippedMeleeWepList = new Image[5];
-			private Image[] playerEquippedRangedWepList = new Image[5];
+			private Image[] playerEquippedMeleeWepList = new Image[6];
+			private Image[] playerEquippedRangedWepList = new Image[6];
 			private Image[] playerEquippedArmorList = new Image[6];
 			
 			
@@ -90,17 +90,19 @@ public class GameState extends BasicGameState {
 		playerDamageWarning = new Image("data/playerDamageWarning.png");
 		guiButtomEquipmentUnderlay = new Image("data/guiButtomEquipmentUnderlay.png");
 		
-		playerEquippedMeleeWepList[0] = new Image("data/meleeWeaponTestSprite.png");
-		playerEquippedMeleeWepList[1] = new Image("data/meleeWeaponTestSprite.png");
-		playerEquippedMeleeWepList[2] = new Image("data/meleeWeaponTestSprite.png");
-		playerEquippedMeleeWepList[3] = new Image("data/meleeWeaponTestSprite.png");
-		playerEquippedMeleeWepList[4] = new Image("data/meleeWeaponTestSprite.png");
+		playerEquippedMeleeWepList[0] = new Image("data/meleeWeapon0.png");
+		playerEquippedMeleeWepList[1] = new Image("data/meleeWeapon1.png");
+		playerEquippedMeleeWepList[2] = new Image("data/meleeWeapon2.png");
+		playerEquippedMeleeWepList[3] = new Image("data/meleeWeapon3.png");
+		playerEquippedMeleeWepList[4] = new Image("data/meleeWeapon4.png");
+		playerEquippedMeleeWepList[5] = new Image("data/meleeWeapon5.png");
 		
-		playerEquippedRangedWepList[0] = new Image("data/rangedWeaponTestSprite.png");
-		playerEquippedRangedWepList[1] = new Image("data/rangedWeaponTestSprite.png");
-		playerEquippedRangedWepList[2] = new Image("data/rangedWeaponTestSprite.png");
-		playerEquippedRangedWepList[3] = new Image("data/rangedWeaponTestSprite.png");
-		playerEquippedRangedWepList[4] = new Image("data/rangedWeaponTestSprite.png");
+		playerEquippedRangedWepList[0] = new Image("data/rangedWeapon0.png");
+		playerEquippedRangedWepList[1] = new Image("data/rangedWeapon1.png");
+		playerEquippedRangedWepList[2] = new Image("data/rangedWeapon2.png");
+		playerEquippedRangedWepList[3] = new Image("data/rangedWeapon3.png");
+		playerEquippedRangedWepList[4] = new Image("data/rangedWeapon4.png");
+		playerEquippedRangedWepList[5] = new Image("data/rangedWeapon5.png");
 		
 		playerEquippedArmorList[0] = new Image("data/armorSprite0.png");
 		playerEquippedArmorList[1] = new Image("data/armorSprite1.png");
@@ -775,7 +777,7 @@ public class GameState extends BasicGameState {
 		if(wepSwap == false){
 			playerEquippedRangedWepList[Player.rangedWepID].draw(48, 640);
 			guiButtomEquipmentUnderlay.draw(18, 618);
-			playerEquippedMeleeWepList[Player.rangedWepID].draw(18, 618);
+			playerEquippedMeleeWepList[Player.meleeWepID].draw(18, 618);
 		}
 		else{
 			playerEquippedMeleeWepList[Player.meleeWepID].draw(48, 640);

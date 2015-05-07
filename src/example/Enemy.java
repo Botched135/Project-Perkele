@@ -171,12 +171,12 @@ public class Enemy extends GameObject {
 		enemyEquippedMeleeWepList[4] = new Image("data/meleeWepEquip4.png");
 		enemyEquippedMeleeWepList[4] = new Image("data/meleeWepEquip5.png");
 		
-		enemyEquippedRangedWepList[0] = new Image("data/rangedWepEquip1.png");
+		enemyEquippedRangedWepList[0] = new Image("data/rangedWepEquip0.png");
 		enemyEquippedRangedWepList[1] = new Image("data/rangedWepEquip1.png");
-		enemyEquippedRangedWepList[2] = new Image("data/rangedWepEquip1.png");
-		enemyEquippedRangedWepList[3] = new Image("data/rangedWepEquip1.png");
-		enemyEquippedRangedWepList[4] = new Image("data/rangedWepEquip1.png");
-		enemyEquippedRangedWepList[4] = new Image("data/rangedWepEquip1.png");
+		enemyEquippedRangedWepList[2] = new Image("data/rangedWepEquip2.png");
+		enemyEquippedRangedWepList[3] = new Image("data/rangedWepEquip3.png");
+		enemyEquippedRangedWepList[4] = new Image("data/rangedWepEquip4.png");
+		enemyEquippedRangedWepList[5] = new Image("data/rangedWepEquip5.png");
 		
 		meleeAttackSound0 = new Sound("data/meleeAttackSound0.ogg");
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
@@ -321,7 +321,7 @@ public class Enemy extends GameObject {
 					enemyEquippedMeleeWepList[meleeWepID].draw(vector.getX()-32, vector.getY()-96);
 					
 				}
-				else{
+				else if(enemyType == 0){
 					enemyEquippedMeleeWepList[meleeWepID].setCenterOfRotation(32,96);
 					enemyEquippedMeleeWepList[meleeWepID].setRotation(spriteAngle);
 					enemyEquippedMeleeWepList[meleeWepID].draw(vector.getX()-32, vector.getY()-96);

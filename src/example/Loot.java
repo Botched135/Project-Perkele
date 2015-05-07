@@ -44,9 +44,9 @@ public class Loot extends GameObject {
 	protected float Vamp = 0;
 	
 	//Armor Stats
-	protected String[]ArmorNames = {"Leather Armor","Breast Plate","Scale Mail","Full Plate","Crystal Armor"};
 	protected float hpBonus;
 	protected float Armor;
+	protected int isLifeRegen;
 	protected float lifeRegen;
 	
 

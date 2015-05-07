@@ -10,6 +10,7 @@ public class RangedWeapon extends Loot {
 
 	//VARIABLE DECLARATION ============================================================================================================================================
 	private Image[] rangedWeaponSprite = new Image[5];
+	private String[] rangedWeaponNames = {"Shortbow ","Crossbow ", "Longbow ","Repeater Crossbow ", "Eaglehorn "}; 
 	private int spriteRenderID = 0;
 	
 	RangedWeapon(){ //Constructor for initial ranged weapon of the player
@@ -20,10 +21,10 @@ public class RangedWeapon extends Loot {
 		lootLevel = 0;
 		
 		//Setting the starting item of this type's stats.
-		Name = "Bow-ner";
-		wepMinDMG = 80;
-		wepMaxDMG = 120;
-		attackSpeed = 5f;
+		Name = "Stick with String";
+		wepMinDMG = 100;
+		wepMaxDMG = 200;
+		attackSpeed = 5.8f;
 		
 	}
 	RangedWeapon(Enemy _enemy){//Constructor for enemy dropped ranged weapon
@@ -45,7 +46,7 @@ public class RangedWeapon extends Loot {
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
-		this.Name = this.setName();
+		this.Name = this.setName(rangedWeaponNames);
 		
 	}
 	
@@ -77,7 +78,13 @@ public class RangedWeapon extends Loot {
 		}
 	
 	}
-	public String setName(){
+
+	/**
+	 * Method used for giving ranged weapon names based on lootLevel and their attributes
+	 * @param string is a array of ranged weapon names
+	 * @return returns the name of the weapon
+	 */
+	public String setName(String[] names){
 		String Name="";
 		if(this.attackSpeed <= 0.5){
 			Name += "Rusty ";
@@ -85,17 +92,11 @@ public class RangedWeapon extends Loot {
 		else if(this.attackSpeed >= 2 ){
 			Name+="Automated ";
 		}
-		if(this.wepMinDMG < (this.lootLevel*20+10)){
-			Name+="Shortbow ";
-		}
-		else if(this.wepMinDMG >= (this.lootLevel*20+10) && this.wepMinDMG <= (this.lootLevel*20+15)){
-			Name+="Longbow ";
-		}
-		else if(this.wepMinDMG > (this.lootLevel*20+15)){
-			Name+="Crossbow ";
-		}
+		
+		Name+=names[this.lootLevel-1];
+		
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
-			Name+="made of Cotton";
+			Name+="made of Glulam";
 		}
 		else if(this.wepMaxDMG >(this.lootLevel*20+47)){
 			Name+="blessed by Holmen";

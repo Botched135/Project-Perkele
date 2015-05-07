@@ -9,7 +9,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Armor extends Loot{
 	
-	protected String[]ArmorNames = {"Leather Armor","Ringmail","Breast Plate","Full Plate","Dragonbone Armor"};
+	protected String[]ArmorNames = {"Leather Armor","Scalemail","Breast Plate","Full Plate","Dragonbone Armor"};
 	private Image[] armorSprite = new Image[6];
 	private int spriteRenderID = 0;
 	//protected float hpBonus = 10;
@@ -56,7 +56,10 @@ public class Armor extends Loot{
 			this.Armor = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
 		}
 		this.hpBonus = (_enemy.EnemyLevel * 10) + (randArmor.nextInt(11)-5);
-		this.lifeRegen = ((float)_enemy.EnemyLevel / 5) + (((float)randlifeRegen.nextInt(3)-1)/10);
+		this.isLifeRegen = randlifeRegen.nextInt(101);
+		if(isLifeRegen > 50){
+			this.lifeRegen = ((float)_enemy.EnemyLevel / 5) + (((float)randlifeRegen.nextInt(3)-1)/10);
+		}
 		this.Name = this.setName(ArmorNames);
 	}
 	
@@ -88,7 +91,7 @@ public class Armor extends Loot{
 	}
 	
 	/**
-	 * Method used for giving armor names based on lootLevel
+	 * Method used for giving armor names based on lootLevel and their attributes
 	 * @param string is a array of armor names
 	 * @return returns the name of the armor
 	 */
@@ -99,6 +102,12 @@ public class Armor extends Loot{
 		}
 		else{
 			setName = string[this.lootLevel-1]; 
+		}
+		if(this.hpBonus <=7*this.lootLevel){
+			setName += " of Thorns";
+		}
+		else if(this.hpBonus>10*this.lootLevel){
+			setName +=", Ryge Incarnated";
 		}
 		return setName;
 	}

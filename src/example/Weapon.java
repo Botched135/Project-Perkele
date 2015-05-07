@@ -11,6 +11,7 @@ public class Weapon extends Loot{
 	
 	private Image[] meleeWeaponSprite = new Image[5];
 	private int spriteRenderID = 0;
+	protected String[]WeaponNames ={"Dagger ","Shortsword ","Warhammer ","Zweihander ","Demon-Infused Sword "};
 	//protected int wepDMG = (randDmg.nextInt(100))*LootLevel;
 	//protected float attackSpeed = (randSpeed.nextFloat())*2*LootLevel;
 	
@@ -45,16 +46,16 @@ public class Weapon extends Loot{
 			spriteRenderID = this.lootLevel;
 		}
 		
-		this.Health = this.lootLevel;
+		this.lootLevel = _enemy.EnemyLevel;
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
 		this.isVamp = randVamp.nextInt(101);
 		if(isVamp > 80 ){
-			Vamp = 2.5f*_enemy.EnemyLevel*(randDmg.nextFloat()+0.5f);
+			Vamp = 2.5f*_enemy.EnemyLevel*(randVamp.nextFloat()+0.5f);
 			this.numberOfStats+=1;
 		}
-		this.Name = this.setName();
+		this.Name = this.setName(WeaponNames);
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {//Initialise the sprite used to display the weapon		
@@ -82,8 +83,12 @@ public class Weapon extends Loot{
 		}
 	}
 	
-
-	public String setName(){//Returns the name of the weapon based on the stats of the loot. 
+	/**
+	 * Method used for giving weapon names based on lootLevel and their attributes
+	 * @param string is a array of weapon names
+	 * @return returns the name of the weapon
+	 */
+	public String setName(String[] names){
 		String Name = ""; 
 		if(this.attackSpeed <= 0.5){
 			Name += "Slow ";
@@ -94,19 +99,7 @@ public class Weapon extends Loot{
 		if(Vamp > 0){
 			Name+="Vampiric ";
 		}
-		if(this.wepMinDMG > (this.lootLevel*20+15) && this.wepMaxDMG >(this.lootLevel*20+50)){
-			Name="Andúril, Flame of the West";
-			return Name;
-		}
-		if(this.wepMinDMG < (this.lootLevel*20+10)){
-			Name+="Dagger ";
-		}
-		else if(this.wepMinDMG >= (this.lootLevel*20+10) && this.wepMinDMG <= (this.lootLevel*20+15)){
-			Name+="Broad Sword ";
-		}
-		else if(this.wepMinDMG > (this.lootLevel*20+15)){
-			Name+="Zweihander ";
-		}
+		Name += names[this.lootLevel-1];
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
 			Name+="of the Weak";
 		}

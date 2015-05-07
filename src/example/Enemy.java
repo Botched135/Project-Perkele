@@ -14,7 +14,7 @@ import org.newdawn.slick.Sound;
 
 public class Enemy extends GameObject {
 	
-	//VARIABLE DECLARATION ===========================================================================================================================================================
+	//VARIABLE DECLARATION =====================================================================================
 	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;
 	protected Random randLvl = new Random();
@@ -62,21 +62,21 @@ public class Enemy extends GameObject {
 	protected long attackETime;
 	protected int moveWaitTime = 1000;
 	
-	//Variables for animations of weapons
+	//Variables for animations of weapons =====================================================================
 	boolean vectorSnapshotted = false;
 	float moveY = 0;
 	float maxMoveY = 32;
 	float moveYIncrement = 2*maxMoveY/(AttackSpeed);
 	float spriteAngle = 0;
 	
-	//Images =================================================
+	//Images ==================================================================================================
 	private int imageDirection = 0;
 	protected Image[][] sprite = new Image[3][2];
 	private Image arrow = null;
 	private Image[] enemyEquippedMeleeWepList = new Image[6];
 	private Image[] enemyEquippedRangedWepList = new Image[6];
 	
-	//Sounds =================================================
+	//Sounds ==================================================================================================
 	protected Sound meleeAttackSound0 = null;
 	protected Sound rangedAttackSound0 = null;
 	protected Sound meleeHitSound = null;
@@ -85,7 +85,7 @@ public class Enemy extends GameObject {
 	
 		
 	
-	//CONTRUCTERS ===========================================================================================================================================================
+	//CONTRUCTERS =============================================================================================
 	
 	Enemy(){
 		super(); 
@@ -100,7 +100,7 @@ public class Enemy extends GameObject {
 		//hitboxY = 32.0f;		
 	}
 	
-	//INIT FUNCTION/METHOD ===============================================================================================================================================
+	//INIT FUNCTION/METHOD ====================================================================================
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		
 		//Setting variables if a melee enemy

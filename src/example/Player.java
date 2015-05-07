@@ -66,10 +66,7 @@ public class Player extends GameObject{
 	
 	//Player movement variables ===========================================================================================================================
 	protected float speedMultiplier = 3.5f;
-	
-	//variables used for stopping movement when ranged attacking =====================================================
 
-	
 	//Images =================================================
 	private int imageDirection = 0;
 	private Image hpBar = null; 

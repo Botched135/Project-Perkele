@@ -58,9 +58,6 @@ public class Enemy extends GameObject {
 	
 	//variables used for stopping movement when attacking =====================================================
 	private boolean stopMoving = false;
-	private long attackSTime;
-	private long attackETime;
-	private int moveWaitTime = 1000;
 	
 	//Variables for animations of weapons =====================================================================
 	private boolean vectorSnapshotted = false;
@@ -565,13 +562,15 @@ public class Enemy extends GameObject {
 	 */
 	private void stopMovingWhenAttacking(boolean stopMoving){ //Method to make the enemy stop moving when attacking
 		if(stopMoving == true){
-			
-			if(this.attackSTime == 0){
-				this.speedMultiplier = 0.5f; //Movement is stopped by making the enemy's speed 0 for one second
-				this.attackSTime = System.currentTimeMillis();
+			long attackSTime = 0;
+			long attackETime = 0;
+			int moveWaitTime = 1000;
+			if(attackSTime == 0){
+				speedMultiplier = 0.5f; //Movement is stopped by making the enemy's speed 0 for one second
+				attackSTime = System.currentTimeMillis();
 			}
 			else {
-				this.attackETime = System.currentTimeMillis() - this.attackSTime;
+				attackETime = System.currentTimeMillis() - attackSTime;
 				if(attackETime > moveWaitTime / this.AttackSpeed){
 					if(enemyType == 2){
 						this.speedMultiplier = 1.5f;
@@ -579,8 +578,8 @@ public class Enemy extends GameObject {
 					else{
 						this.speedMultiplier = 1.0f;
 					}
-					this.attackSTime = 0;
-					this.attackETime = 0;
+					attackSTime = 0;
+					attackETime = 0;
 					this.stopMoving = false;
 				}
 			}	

@@ -415,7 +415,7 @@ public class GameState extends BasicGameState {
 		
 		//RENDER TEXT (and miscellaneous)
 		g.setColor(new Color(0,0,0));
-		g.drawString("Wave Number: " + wave, 0, 0); //Displaying the wave number
+		g.drawString("Wave Number: " + wave, 5, 5); //Displaying the wave number
 
 		for(int i = enemyList.size()-1; i >= 0; i-- ){
 			if(GameState.mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX){

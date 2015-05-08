@@ -35,6 +35,7 @@ public class GameState extends BasicGameState {
 			private ArrayList <healthGlobe> healthGlobeList = new ArrayList <healthGlobe>();
 			private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
 			private ArrayList <Vector2f> spawnPos = new ArrayList <Vector2f>();
+			private ArrayList<Blood> bloodPool = new ArrayList <Blood>();
 			
 			//Enemy wave system
 			private Random randPos = new Random();
@@ -61,7 +62,6 @@ public class GameState extends BasicGameState {
 			private Image[] playerEquippedMeleeWepList = new Image[6];
 			private Image[] playerEquippedRangedWepList = new Image[6];
 			private Image[] playerEquippedArmorList = new Image[6];
-			private ArrayList<Blood> bloodPool;
 			
 			
 			//Sounds
@@ -421,6 +421,12 @@ public class GameState extends BasicGameState {
 		
 		//inventory.render(gc, sbg, g);
 
+		//BLOOD RENDER ============================================================================================================================
+		if(bloodPool.size()>0){
+			for(int i = bloodPool.size()-1; i >=0;i--){
+				bloodPool.get(i).render(gc, sbg, g);
+			}
+		}
 		
 		//RENDER TEXT (and miscellaneous)
 		g.setColor(new Color(0,0,0));

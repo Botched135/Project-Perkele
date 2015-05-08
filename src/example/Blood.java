@@ -13,22 +13,34 @@ public class Blood extends GameObject {
 	private Image smallBlood = null;
 	private Image bigBlood = null;
 	
+	private int type = 0;
+	
 	Blood(Enemy _enemy, int dead){
-		if(dead == 0) //if they are alive
-		this.vector = new Vector2f(_enemy.vector.getX()-16, _enemy.vector.getY()-16);
-		else
+		if(dead == 0){ //if they are alive
+		this.vector = new Vector2f(_enemy.vector.getX()-16, _enemy.vector.getY()-16);		}
+		else{
 			this.vector = new Vector2f(_enemy.vector.getX(), _enemy.vector.getY());
-	}
-	public void init() throws SlickException{
+		}
+		type = dead;
 		
-		smallBlood = new Image("data/rangedWeaponTestSprite.png");
-		bigBlood = new Image("data/meleeWeaponTestSprite.png");
 	}
-	public void update(){
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
+		
+		smallBlood = new Image("data/smallBlood.png");
+		bigBlood = new Image("data/bigBlood.png");
+		System.out.println("Hurr");
+	}
+	public void update(GameContainer gc, StateBasedGame sbg){
 		
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
-		smallBlood.draw(vector.getX()-16, vector.getY()-16);
-		bigBlood.draw(vector.getX()-32, vector.getY()-32);
+		if(type == 0){
+		smallBlood.draw(GameState.mousePos.getX(), GameState.mousePos.getY());
+
+		System.out.println("Hurr");
+		}
+		else{
+		bigBlood.draw(GameState.mousePos.getX(), GameState.mousePos.getY());
+		}
 	}
 }

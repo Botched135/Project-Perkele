@@ -77,6 +77,7 @@ public class Enemy extends GameObject {
 	private Image[][] bloodOverlay = new Image[3][2]; 
 	private Image[] enemyEquippedMeleeWepList = new Image[6];
 	private Image[] enemyEquippedRangedWepList = new Image[6];
+	private Image blood;
 	
 	//Sounds ==================================================================================================
 	private Sound meleeAttackSound0 = null;
@@ -107,6 +108,7 @@ public class Enemy extends GameObject {
 	//INIT FUNCTION/METHOD ====================================================================================
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		//Setting variables if a melee enemy
+		
 		if(enemyType == 0){
 			AttackSpeed = 1;
 			projectileSpeed = 0;
@@ -170,6 +172,7 @@ public class Enemy extends GameObject {
 		arrow = new Image("data/arrowSprite.png");
 		smallShadow = new Image("data/64PixShadow.png");
 		bigShadow = new Image("data/128PixShadow.png");
+		blood = new Image("data/rangedWeaponTestSprite.png");
 		
 		bloodOverlay[0][0] = new Image("data/smallBloodOverlayUp.png");
 		bloodOverlay[0][1] = new Image("data/smallBloodOverlayDown.png");
@@ -207,11 +210,13 @@ public class Enemy extends GameObject {
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList, ArrayList<Blood> _bloodList) throws SlickException {
 		if(this.hitpoints <= 0){
 			this.hitpoints=0;
 			this.dropLoot(gc, sbg, _lootList, _healthGlobeList);
 			_enemyIndicatorList.get(index).destroy(index, _enemyIndicatorList);
+			_bloodList.add(new Blood(this,1));
+			_bloodList.get(_bloodList.size()-1).init(gc, sbg);
 			this.destroy(index, _enemyList);
 		}
 		//System.out.println(stopMoving);
@@ -245,8 +250,8 @@ public class Enemy extends GameObject {
 		}
 		
 		stopMovingWhenAttacking(stopMoving);
-		beingMeleeAttacked(_player);
-		beingRangedAttacked(_projectileList);
+		beingMeleeAttacked(_player, _bloodList, gc, sbg);
+		beingRangedAttacked(_projectileList, _bloodList, gc, sbg);
 		
 		separate(_enemyList);
 		
@@ -297,6 +302,7 @@ public class Enemy extends GameObject {
 	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g, Player player) throws SlickException{
+		//Display blood
 		
 		//Display drop shadows
 		if(enemyType == 2){
@@ -527,8 +533,9 @@ public class Enemy extends GameObject {
 	/**
 	 * Method used for detecting if the player is close enough to deal damage. Will deal damage to the enemy if the player is close enough
 	 * @param _player is used in order to get the player's position and damage value. And giving the palyer hitpoints based on vampire value
+	 * @throws SlickException 
 	 */
-	private void beingMeleeAttacked (Player _player){
+	private void beingMeleeAttacked (Player _player, ArrayList<Blood> _bloodList, GameContainer gc, StateBasedGame sbg) throws SlickException{
 		
 		if(_player.isMeleeAttacking && GameState.mousePos.distance(vector) < hitboxX && vector.distance(_player.vector) < _player.meleeRange + hitboxX){
 			_player.AttackDamage();
@@ -539,6 +546,8 @@ public class Enemy extends GameObject {
 			//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 			beingHit = true;
 			_player.hitPoints+=_player.playerVamp;
+			_bloodList.add(new Blood(this,0));
+			_bloodList.get(_bloodList.size()-1).init(gc, sbg);
 			
 			//(nextFloat()*(_player.MaxDamage-_player.MinDamage))+_player.MinDamage;
 			if(this.hitpoints - _player.playerMeleeDamage - ((_player.playerMeleeDamage / 100) * this.Armor) < 0){
@@ -553,8 +562,9 @@ public class Enemy extends GameObject {
 	/**
 	 * Method to check if the enemy is being hit by a ranged attack
 	 * @param _projectileList is used in order to destroy the arrow that hit the enemy. and get the damage that the arrow have
+	 * @throws SlickException 
 	 */
-	private void beingRangedAttacked (ArrayList<Projectile> _projectileList){
+	private void beingRangedAttacked (ArrayList<Projectile> _projectileList, ArrayList<Blood> _bloodList, GameContainer gc, StateBasedGame sbg) throws SlickException{
 		
 		if(_projectileList.size() > 0){
 			for(int i = _projectileList.size()-1; i >= 0; i--){
@@ -565,7 +575,8 @@ public class Enemy extends GameObject {
 					
 					//Sets "beingHit" to true -> used to make the sprite blink on taking damage (used in the render method)
 					beingHit = true;
-					
+					_bloodList.add(new Blood(this,0));
+					_bloodList.get(_bloodList.size()-1).init(gc, sbg);
 					if(this.hitpoints - _projectileList.get(i).damage - ((_projectileList.get(i).damage / 100) * this.Armor)<0){ //Setting the hitpoints to 0 if damage taken is more then remaing hp
 						this.hitpoints=0;
 					}

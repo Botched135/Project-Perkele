@@ -71,6 +71,7 @@ public class Player extends GameObject{
 	private int imageDirection = 0;
 	private Image hpBar = null; 
 	private Image arrow = null;
+	private Image smallShadow = null;
 	private Image[]playerBaseSprite = new Image[2];
 	private Image[] playerEquippedMeleeWepList = new Image[6];
 	private Image[] playerEquippedRangedWepList = new Image[6];
@@ -117,6 +118,7 @@ public class Player extends GameObject{
 		playerBaseSprite[1] = new Image("data/playerBaseSpriteDown.png");		//index 1
 		arrow = new Image("data/arrowSprite.png");
 		hpBar = new Image("data/hpBar.png");
+		smallShadow = new Image("data/64PixShadow.png");
 		
 		playerEquippedMeleeWepList[0] = new Image("data/meleeWepEquip0.png");
 		playerEquippedMeleeWepList[1] = new Image("data/meleeWepEquip1.png");
@@ -238,6 +240,9 @@ public class Player extends GameObject{
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 		g.translate((-vector.getX())+(Window.WIDTH/2), (-vector.getY())+(Window.HEIGHT/2));
+		
+		//Display player drop shadow
+		smallShadow.draw(vector.getX()-32, vector.getY()+28);
 		
 		//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 		if(beingHit == true){

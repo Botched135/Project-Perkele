@@ -1,5 +1,7 @@
 package example;
 
+import java.awt.Font;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
@@ -17,10 +19,13 @@ public class EndScreen extends BasicGameState {
 	
 	//Other Variables
 	public static int wave;
+	private TrueTypeFont font;
+	private boolean antiAlias = true;
 	
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
-		
+		Font awtFont = new Font("Times New Roman", Font.BOLD, 30);
+		font = new TrueTypeFont(awtFont, antiAlias);
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
 		
@@ -46,8 +51,8 @@ public class EndScreen extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)throws SlickException{
 		g.setColor(new Color(255,0,0));
 		
-		g.drawString("YOU DIED AT WAVE "+EndScreen.wave, (Window.WIDTH/2)-86, Window.HEIGHT/2-64);
-		g.drawString("Press Enter or Mouse to return to main menu", Window.WIDTH/2-190,Window.HEIGHT/2+64);
+		font.drawString(Window.WIDTH/2-146, Window.HEIGHT/2-64, "YOU DIED AT WAVE "+EndScreen.wave);
+		font.drawString(Window.WIDTH/2-206,Window.HEIGHT/2+64, "Press Enter to return to main menu");
 	}
 	public int getID(){
 		return 2; //ID of this state

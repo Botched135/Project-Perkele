@@ -35,6 +35,7 @@ public class GameState extends BasicGameState {
 			private ArrayList <healthGlobe> healthGlobeList = new ArrayList <healthGlobe>();
 			private ArrayList <Loot> inventoryList = new ArrayList <Loot>();	//Inventory place 0 = Armor.	Inventory place 1 = Weapon
 			private ArrayList <Vector2f> spawnPos = new ArrayList <Vector2f>();
+			private ArrayList <Blood> bloodPool = new ArrayList <Blood>();
 			
 			//Enemy wave system
 			private Random randPos = new Random();
@@ -389,7 +390,7 @@ public class GameState extends BasicGameState {
 		if(enemyList.size() > 0){
 			for(int i = enemyList.size()-1; i >= 0; i--) {
 		
-				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList, enemyIndicatorList);
+				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList, enemyIndicatorList, bloodPool);
 
 			}
 		}

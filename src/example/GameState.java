@@ -167,7 +167,7 @@ public class GameState extends BasicGameState {
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
 			
-			wave = 0;
+			wave = 10;
 			currentWave = 0;
 			waveStartTimer = 0;
 			waveTimeDif = 0;
@@ -452,7 +452,7 @@ public class GameState extends BasicGameState {
 			
 		}
 		
-		//TRANSLATE (move "camera") ACCORDING TO PLAYER MOVEMENT ============================================================================================
+		//RENDER BLOOD POOLS =================================================================================================================
 		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
 		if(bloodPool.size()>0){
 			for(int i = bloodPool.size()-1; i >=0;i--){

@@ -41,7 +41,7 @@ public class RangedWeapon extends Loot {
 		this.wepMinDMG = _enemy.EnemyLevel*20+randDmg.nextInt(21);
 		this.wepMaxDMG = _enemy.EnemyLevel*20+40+randDmg.nextInt(16);
 		this.attackSpeed = 0.3f*_enemy.EnemyLevel+(randSpeed.nextFloat());
-		this.Name = this.setName(rangedWeaponNames);
+		//this.Name = this.setName(rangedWeaponNames);
 		
 		if(this.lootLevel > 5){
 			spriteRenderID = 5;
@@ -49,6 +49,13 @@ public class RangedWeapon extends Loot {
 		else{
 			spriteRenderID = this.lootLevel;
 		}
+		
+		if(this.spriteRenderID-1 < 0)
+			spriteRenderID = 0;
+		else{
+			spriteRenderID = this.lootLevel;
+		}
+		this.Name = this.setName(rangedWeaponNames);
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
@@ -97,11 +104,7 @@ public class RangedWeapon extends Loot {
 			Name+="Automated ";
 		}
 		
-		if(this.spriteRenderID-1 < 0)
-			Name += names[0];
-		else{
-			Name += names[this.spriteRenderID-1];
-		}
+		Name += names[this.spriteRenderID-1];
 		
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
 			Name+="made of Glulam";

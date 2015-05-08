@@ -85,6 +85,7 @@ public class Menu extends BasicGameState {
 			}
 			sbg.enterState(1, new FadeOutTransition(new Color(0,0,0),250), new FadeInTransition(new Color(0,0,0),0));
 			//gc.reinit();
+			//test
 		}
 		
 		//Clicking on seconds menu button (can be Exit or new game depending on game state)

@@ -8,7 +8,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class Blood extends GameObject {
-	
+	//test
 	//Images
 	private Image smallBlood = null;
 	private Image bigBlood = null;

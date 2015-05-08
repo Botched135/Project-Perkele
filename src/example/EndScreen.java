@@ -4,6 +4,7 @@ import java.awt.Font;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
+import org.newdawn.slick.state.transition.*;
 
 public class EndScreen extends BasicGameState {
 
@@ -47,7 +48,7 @@ public class EndScreen extends BasicGameState {
 		leftMousePressed = true;
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_ENTER) && enterPressed == false){
-			sbg.enterState(0);
+			sbg.enterState(0, new FadeOutTransition(new Color(0,0,0),250), new FadeInTransition(new Color(0,0,0),250));
 			enterPressed = true;
 		}
 	}
@@ -57,8 +58,8 @@ public class EndScreen extends BasicGameState {
 		
 		g.setColor(new Color(255,0,0));
 		
-		font.drawString(Window.WIDTH/2-146, Window.HEIGHT/2-64, "YOU DIED AT WAVE "+EndScreen.wave);
-		font.drawString(Window.WIDTH/2-206,Window.HEIGHT/2+64, "Press Enter to return to main menu");
+		font.drawString(Window.WIDTH/2-170, Window.HEIGHT/2-126, "YOU DIED AT WAVE "+EndScreen.wave);
+		font.drawString(Window.WIDTH/2-206,Window.HEIGHT/2+226, "Press Enter to return to main menu");
 	}
 	public int getID(){
 		return 2; //ID of this state

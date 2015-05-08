@@ -2,6 +2,7 @@ package example;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
+import org.newdawn.slick.state.transition.*;
 
 public class EndScreen extends BasicGameState {
 
@@ -40,7 +41,7 @@ public class EndScreen extends BasicGameState {
 		leftMousePressed = true;
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_ENTER) && enterPressed == false){
-			sbg.enterState(0);
+			sbg.enterState(0, new FadeOutTransition(new Color(0,0,0),250), new FadeInTransition(new Color(0,0,0),250));
 			enterPressed = true;
 		}
 	}

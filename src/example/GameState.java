@@ -16,6 +16,8 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.geom.*;
 
@@ -178,7 +180,7 @@ public class GameState extends BasicGameState {
 		//UDATES PLAYER SPRITE
 		if(player.hitPoints<=0){
 			EndScreen.wave = currentWave;
-			sbg.enterState(2);
+			sbg.enterState(2, new FadeOutTransition(new Color(135,7,10),1200), new FadeInTransition(new Color(135,7,10),2500));
 		}
 			
 		

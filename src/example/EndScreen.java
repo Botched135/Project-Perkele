@@ -6,7 +6,7 @@ import org.newdawn.slick.state.*;
 public class EndScreen extends BasicGameState {
 
 	//Images
-	private Image EndScreenBG = null;
+	private Image endScreenBG = null;
 	
 	//Keys
 	private boolean leftMousePressed;
@@ -21,6 +21,7 @@ public class EndScreen extends BasicGameState {
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		
+		endScreenBG = new Image("data/endScreen.png");
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
 		
@@ -35,7 +36,7 @@ public class EndScreen extends BasicGameState {
 			enterPressed = false;
 		}
 		if(gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON) && leftMousePressed == false){
-		sbg.enterState(0);	
+		//sbg.enterState(0);	
 		leftMousePressed = true;
 		}
 		if(gc.getInput().isKeyDown(Input.KEY_ENTER) && enterPressed == false){
@@ -44,6 +45,9 @@ public class EndScreen extends BasicGameState {
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)throws SlickException{
+		
+		endScreenBG.draw(0,0);
+		
 		g.setColor(new Color(255,0,0));
 		
 		g.drawString("YOU DIED AT WAVE "+EndScreen.wave, (Window.WIDTH/2)-86, Window.HEIGHT/2-64);

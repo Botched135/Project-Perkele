@@ -155,7 +155,7 @@ public class GameState extends BasicGameState {
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
 			
-			wave = 0;
+			wave = 9;
 			currentWave = 0;
 			waveStartTimer = 0;
 			waveTimeDif = 0;
@@ -509,8 +509,6 @@ public class GameState extends BasicGameState {
 		//RENDER PLAYER ==============================================================================================================================
 		
 		player.render(gc, sbg, g);
-		g.setColor(new Color(0,255,255));
-		g.setColor(new Color(255,255,0,80));
 
 		//RENDER Loot info on "shift" hovering ========================================================================================================
 		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));

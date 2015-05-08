@@ -16,6 +16,7 @@ public class EndScreen extends BasicGameState {
 	
 	//sounds
 	public static Sound EndScreenTheme = null;
+	private Sound evilLaugh = null;
 	
 	//Other Variables
 	public static int wave;

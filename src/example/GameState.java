@@ -62,7 +62,9 @@ public class GameState extends BasicGameState {
 			
 			
 			//Sounds
-			//public static Sound mainTheme = null;
+			public static Sound mainTheme = null;
+			private Sound evilLaugh = null;
+			private Sound endScream = null;
 			
 			//Misc.
 			private DecimalFormat df = new DecimalFormat("#.##");
@@ -83,7 +85,9 @@ public class GameState extends BasicGameState {
 		
 		Menu.resetGame = false;
 
-		//mainTheme = new Sound("data/mainTheme.ogg");
+		mainTheme = new Sound("data/mainTheme.wav");
+		evilLaugh = new Sound("data/evilLaugh.wav");
+		endScream = new Sound("data/endScream.wav");
 		
 		
 		bgMap = new TiledMap("data/map.tmx");
@@ -169,7 +173,7 @@ public class GameState extends BasicGameState {
 		mousePos = new Vector2f((gc.getInput().getMouseX() + (player.vector.getX())-Window.WIDTH/2), (gc.getInput().getMouseY() + (player.vector.getY()))-Window.HEIGHT/2);	
 		
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
-			//Menu.menuTheme.stop();
+			Menu.menuTheme.stop();
 		}
 		
 		//PLAYER STUFF ====================================================================================================================================
@@ -178,6 +182,7 @@ public class GameState extends BasicGameState {
 		//UDATES PLAYER SPRITE
 		if(player.hitPoints<=0){
 			EndScreen.wave = currentWave;
+			endScream.play();
 			sbg.enterState(2);
 		}
 			

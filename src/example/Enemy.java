@@ -83,6 +83,8 @@ public class Enemy extends GameObject {
 	private Sound rangedAttackSound0 = null;
 	private Sound meleeHitSound = null;
 	protected Sound rangedHitSound = null;
+	private Sound evilLaugh = null;
+	private boolean evilLaughCheck = false;
 	
 	
 		
@@ -195,6 +197,11 @@ public class Enemy extends GameObject {
 		rangedAttackSound0 = new Sound("data/rangedAttackSound0.ogg");
 		meleeHitSound = new Sound("data/meleeHitSound1.ogg");
 		rangedHitSound = new Sound("data/meleeHitSound1.ogg");
+		evilLaugh = new Sound("data/evilLaugh.wav");
+		
+		if(enemyType == 2){
+			evilLaugh.play();
+		}
 	
 	}
 	
@@ -323,7 +330,12 @@ public class Enemy extends GameObject {
 				bloodOverlay[enemyType][imageDirection].draw(this.vector.getX()-32, this.vector.getY()-32);
 			}
 			else if(enemyType == 2){
+				if(evilLaughCheck == false){
+					evilLaughCheck = true;
+					evilLaugh.play();
+					}
 				bloodOverlay[enemyType][imageDirection].draw(this.vector.getX()-64, this.vector.getY()-64);
+					
 			}
 		}
 	

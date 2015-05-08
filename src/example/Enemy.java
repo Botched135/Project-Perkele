@@ -13,7 +13,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 
 public class Enemy extends GameObject {
-	
+	//Test
 	//VARIABLE DECLARATION =====================================================================================
 	public int enemyType; // 0 = melee, 1 = ranged.
 	public int EnemyLevel;

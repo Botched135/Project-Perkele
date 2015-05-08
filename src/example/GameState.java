@@ -86,7 +86,7 @@ public class GameState extends BasicGameState {
 			
 
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		
+		//Test
 		Menu.resetGame = false;
 
 		mainTheme = new Sound("data/mainTheme.wav");

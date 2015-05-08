@@ -23,6 +23,7 @@ public class Main extends StateBasedGame
 			gc = new AppGameContainer(new Main("Perkele"));
 			gc.setDisplayMode(Window.WIDTH, Window.HEIGHT, Window.Fullscreen);
 			gc.setTargetFrameRate(Window.FPS);
+			gc.setShowFPS(false);
 			gc.setVSync(true);
 			gc.start();
 		}

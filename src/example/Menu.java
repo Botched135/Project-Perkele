@@ -26,7 +26,7 @@ public class Menu extends BasicGameState {
 	
 	//Sounds
 	
-	//public static Sound menuTheme = null;
+	public static Sound menuTheme = null;
 	
 	public static boolean playerDead = true;
 	public static boolean resetGame = true;
@@ -45,9 +45,9 @@ public class Menu extends BasicGameState {
 		menuBg = new Image("data/menuBg.png");
 		menuMousePos = new Vector2f(0,0);
 		
-		//menuTheme = new Sound("data/bossBattleTheme.ogg");
+		menuTheme = new Sound("data/bossBattleTheme.wav");
 		
-		//menuTheme.loop();
+		menuTheme.loop();
 		
 	}
 	
@@ -58,7 +58,7 @@ public class Menu extends BasicGameState {
 		
 		if(gc.getInput().isKeyDown(Input.KEY_M)){
 			
-			//menuTheme.stop();
+			menuTheme.stop();
 		}
 		
 		if(!gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
@@ -73,11 +73,11 @@ public class Menu extends BasicGameState {
 				menuMousePos.getY() < Window.HEIGHT/2 + 70 ){
 			
 			leftMousePressed = true;
-			//menuTheme.stop();
+			menuTheme.stop();
 			
-			//if(GameState.mainTheme.playing() == false){
-			//	GameState.mainTheme.loop();
-			//}
+			if(GameState.mainTheme.playing() == false){
+				GameState.mainTheme.loop();
+			}
 			
 			if(playerDead == true){
 				resetGame = true;
@@ -99,6 +99,8 @@ public class Menu extends BasicGameState {
 			if(playerDead == false){
 				resetGame = true;
 				playerDead = false;
+				GameState.mainTheme.stop();
+				GameState.mainTheme.loop();
 				sbg.enterState(1);
 			}
 			
@@ -127,7 +129,7 @@ public class Menu extends BasicGameState {
 		
 		//Alternative exit - Press escape to close application
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && playerDead == true) {
-			sbg.enterState(1);
+			gc.exit();
 		}
 	}
 	

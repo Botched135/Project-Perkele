@@ -23,11 +23,10 @@ public class RangedWeapon extends Loot {
 		
 		//Setting the starting item of this type's stats.
 		Name = "Stick with String";
-		wepMinDMG = 100;
-		wepMaxDMG = 200;
-		attackSpeed = 5.8f;
-		numberOfStats = 3;
-		
+		wepMinDMG = 10;
+		wepMaxDMG = 20;
+		attackSpeed = 0.8f;
+		numberOfStats = 3;		
 	}
 	RangedWeapon(Enemy _enemy){//Constructor for enemy dropped ranged weapon
 		hitboxX = 32.0f;

@@ -166,6 +166,12 @@ public class Player extends GameObject{
 			regeneration();
 		}
 		
+		if(GameState.devMode == true){
+			playerRangedMinDamage = 100;
+			playerRangedMaxDamage = 200;
+			playerRangedAttackSpeed = 5.8f;
+		}
+			
 		beingHit = false;
 		isMeleeAttacking = false;
 		isRangedAttacking = false;
@@ -179,7 +185,7 @@ public class Player extends GameObject{
 		
 		beingRangedAttacked(_projectileList);
 
-		if(gc.getInput().isKeyPressed(Input.KEY_O)){
+		if(gc.getInput().isKeyPressed(Input.KEY_I) && GameState.devMode == true){
 			if(this.hitPoints <= 0){
 				this.hitPoints = 0;
 			}

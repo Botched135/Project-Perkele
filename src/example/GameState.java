@@ -69,6 +69,7 @@ public class GameState extends BasicGameState {
 			private Sound endScream = null;
 			
 			//Misc.
+			public static boolean devMode = false;
 			private DecimalFormat df = new DecimalFormat("#.##");
 			private float waveTextOpacity = 255;
 			private TrueTypeFont font;
@@ -135,6 +136,10 @@ public class GameState extends BasicGameState {
 	//UPDATE FUNCTIONS ==================================================================================================================================
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		
+		if(gc.getInput().isKeyPressed(Input.KEY_O)) {
+			devMode = !devMode;
+		}
+		
 		if(Menu.resetGame == true){
 			
 			player = null;
@@ -161,7 +166,7 @@ public class GameState extends BasicGameState {
 			inventory.init(gc, sbg);
 			player.init(gc, sbg);
 			
-			wave = 9;
+			wave = 0;
 			currentWave = 0;
 			waveStartTimer = 0;
 			waveTimeDif = 0;
@@ -248,8 +253,15 @@ public class GameState extends BasicGameState {
 			wepSwap = !wepSwap;
 		}
 		
+		if(devMode == true){
+			gc.setShowFPS(true);
+		}
+		else{
+			gc.setShowFPS(false);
+		}
+		
 		//This satement for spawning enemies are to be removed
-		if(gc.getInput().isKeyPressed(Input.KEY_E)) {
+		if(gc.getInput().isKeyPressed(Input.KEY_E) && devMode == true) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY()),0));
 			enemyList.get(enemyList.size()-1).init(gc, sbg);
 			enemyList.get(enemyList.size()-1).SetEnemyLevel(currentWave);
@@ -258,7 +270,7 @@ public class GameState extends BasicGameState {
 			enemyIndicatorList.get(enemyIndicatorList.size()-1).init(gc, sbg);
 		}
 		//This satement for spawning enemies are to be removed
-		if(gc.getInput().isKeyPressed(Input.KEY_R)) {
+		if(gc.getInput().isKeyPressed(Input.KEY_R) && devMode == true) {
 			enemyList.add(new Enemy(new Vector2f(mousePos.getX(), mousePos.getY()),1));
 			enemyList.get(enemyList.size()-1).init(gc, sbg);
 			enemyList.get(enemyList.size()-1).SetEnemyLevel(currentWave);
@@ -423,7 +435,10 @@ public class GameState extends BasicGameState {
 		
 		//RENDER TEXT (and miscellaneous)
 		g.setColor(new Color(0,0,0));
-		g.drawString("Wave Number: " + wave, 5, 5); //Displaying the wave number
+		g.drawString("Wave Number: " + wave, 5, 30); //Displaying the wave number
+		if(devMode == true){
+			g.drawString("DEVELOPER MODE ACTIVATED!", 5, 50);
+		}
 
 		for(int i = enemyList.size()-1; i >= 0; i-- ){
 			if(GameState.mousePos.distance(enemyList.get(i).vector) < enemyList.get(i).hitboxX){

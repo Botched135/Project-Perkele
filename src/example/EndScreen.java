@@ -56,8 +56,8 @@ public class EndScreen extends BasicGameState {
 		
 		g.setColor(new Color(255,0,0));
 		
-		font.drawString(Window.WIDTH/2-146, Window.HEIGHT/2-64, "YOU DIED AT WAVE "+EndScreen.wave);
-		font.drawString(Window.WIDTH/2-206,Window.HEIGHT/2+64, "Press Enter to return to main menu");
+		font.drawString(Window.WIDTH/2-170, Window.HEIGHT/2-126, "YOU DIED AT WAVE "+EndScreen.wave);
+		font.drawString(Window.WIDTH/2-206,Window.HEIGHT/2+226, "Press Enter to return to main menu");
 	}
 	public int getID(){
 		return 2; //ID of this state

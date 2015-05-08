@@ -77,6 +77,7 @@ public class Enemy extends GameObject {
 	private Image[][] bloodOverlay = new Image[3][2]; 
 	private Image[] enemyEquippedMeleeWepList = new Image[6];
 	private Image[] enemyEquippedRangedWepList = new Image[6];
+	private Image blood;
 	
 	//Sounds ==================================================================================================
 	private Sound meleeAttackSound0 = null;
@@ -105,6 +106,7 @@ public class Enemy extends GameObject {
 	//INIT FUNCTION/METHOD ====================================================================================
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {		
 		//Setting variables if a melee enemy
+		
 		if(enemyType == 0){
 			AttackSpeed = 1;
 			projectileSpeed = 0;
@@ -168,6 +170,7 @@ public class Enemy extends GameObject {
 		arrow = new Image("data/arrowSprite.png");
 		smallShadow = new Image("data/64PixShadow.png");
 		bigShadow = new Image("data/128PixShadow.png");
+		blood = new Image("data/rangedWeaponTestSprite.png");
 		
 		bloodOverlay[0][0] = new Image("data/smallBloodOverlayUp.png");
 		bloodOverlay[0][1] = new Image("data/smallBloodOverlayDown.png");
@@ -200,11 +203,12 @@ public class Enemy extends GameObject {
 	
 	//UPDATE FUNCTION/METHOD ===========================================================================================================================================================
 	
-	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList) throws SlickException {
+	public void update(int index, GameContainer gc, StateBasedGame sbg, int delta, Player _player, ArrayList<Enemy> _enemyList, ArrayList<Projectile> _projectileList, ArrayList<Loot> _lootList, ArrayList<healthGlobe> _healthGlobeList, ArrayList<EnemyIndicator> _enemyIndicatorList, ArrayList<Blood> _bloodList) throws SlickException {
 		if(this.hitpoints <= 0){
 			this.hitpoints=0;
 			this.dropLoot(gc, sbg, _lootList, _healthGlobeList);
 			_enemyIndicatorList.get(index).destroy(index, _enemyIndicatorList);
+			_bloodList.add(new Blood(this,0));
 			this.destroy(index, _enemyList);
 		}
 		//System.out.println(stopMoving);
@@ -290,6 +294,7 @@ public class Enemy extends GameObject {
 	
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g, Player player) throws SlickException{
+		//Display blood
 		
 		//Display drop shadows
 		if(enemyType == 2){

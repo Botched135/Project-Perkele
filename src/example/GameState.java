@@ -61,6 +61,7 @@ public class GameState extends BasicGameState {
 			private Image[] playerEquippedMeleeWepList = new Image[6];
 			private Image[] playerEquippedRangedWepList = new Image[6];
 			private Image[] playerEquippedArmorList = new Image[6];
+			private ArrayList<Blood> bloodPool;
 			
 			
 			//Sounds
@@ -371,7 +372,7 @@ public class GameState extends BasicGameState {
 		if(enemyList.size() > 0){
 			for(int i = enemyList.size()-1; i >= 0; i--) {
 		
-				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList, enemyIndicatorList);
+				enemyList.get(i).update(i, gc, sbg, delta, player, enemyList, projectileList, lootList, healthGlobeList, enemyIndicatorList, bloodPool);
 
 			}
 		}

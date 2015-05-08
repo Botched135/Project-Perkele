@@ -185,7 +185,7 @@ public class GameState extends BasicGameState {
 		if(player.hitPoints<=0){
 			EndScreen.wave = currentWave;
 			endScream.play();
-
+			mainTheme.stop();
 			sbg.enterState(2, new FadeOutTransition(new Color(135,7,10),1200), new FadeInTransition(new Color(135,7,10),2500));
 		}
 			

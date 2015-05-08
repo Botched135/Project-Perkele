@@ -98,7 +98,11 @@ public class RangedWeapon extends Loot {
 			Name+="Automated ";
 		}
 		
-		Name += names[this.spriteRenderID-1];
+		if(this.spriteRenderID-1 < 0)
+			Name += names[0];
+		else{
+			Name += names[this.spriteRenderID-1];
+		}
 		
 		if(this.wepMaxDMG < (this.lootLevel*20+47)){
 			Name+="made of Glulam";

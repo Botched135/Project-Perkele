@@ -99,6 +99,8 @@ public class Menu extends BasicGameState {
 			if(playerDead == false){
 				resetGame = true;
 				playerDead = false;
+				GameState.mainTheme.stop();
+				GameState.mainTheme.loop();
 				sbg.enterState(1);
 			}
 			
@@ -127,7 +129,7 @@ public class Menu extends BasicGameState {
 		
 		//Alternative exit - Press escape to close application
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE) && playerDead == true) {
-			sbg.enterState(1);
+			gc.exit();
 		}
 	}
 	

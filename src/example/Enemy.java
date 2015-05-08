@@ -72,6 +72,9 @@ public class Enemy extends GameObject {
 	private int imageDirection = 0;
 	protected Image[][] sprite = new Image[3][2];
 	private Image arrow = null;
+	private Image smallShadow = null;
+	private Image bigShadow = null;
+	private Image[][] bloodOverlay = new Image[3][2]; 
 	private Image[] enemyEquippedMeleeWepList = new Image[6];
 	private Image[] enemyEquippedRangedWepList = new Image[6];
 	
@@ -163,6 +166,16 @@ public class Enemy extends GameObject {
 		sprite[2][0] = new Image("data/bossEnemy1Up.png"); 		
 		sprite[2][1] = new Image("data/bossEnemy1Down.png");		
 		arrow = new Image("data/arrowSprite.png");
+		smallShadow = new Image("data/64PixShadow.png");
+		bigShadow = new Image("data/128PixShadow.png");
+		
+		bloodOverlay[0][0] = new Image("data/smallBloodOverlayUp.png");
+		bloodOverlay[0][1] = new Image("data/smallBloodOverlayDown.png");
+		bloodOverlay[1][0] = new Image("data/smallBloodOverlayUp.png");
+		bloodOverlay[1][1] = new Image("data/smallBloodOverlayDown.png");
+		bloodOverlay[2][0] = new Image("data/bigBloodOverlayUp.png");
+		bloodOverlay[2][1] = new Image("data/bigBloodOverlayDown.png");
+	
 		
 		enemyEquippedMeleeWepList[0] = new Image("data/meleeWepEquip0.png");
 		enemyEquippedMeleeWepList[1] = new Image("data/meleeWepEquip1.png");
@@ -278,6 +291,14 @@ public class Enemy extends GameObject {
 	//RENDER FUNCTION/METHOD ============================================================================================================================================
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g, Player player) throws SlickException{
 		
+		//Display drop shadows
+		if(enemyType == 2){
+			bigShadow.draw(vector.getX()-64, vector.getY()+60);
+		}
+		else{
+			smallShadow.draw(vector.getX()-32, vector.getY()+28);
+		}
+		
 		//Displaying either the normal sprite or a "flash" (white color) filled version of it, depending on whether the object is hit.
 		if(beingHit == true){
 			if(enemyType == 2){
@@ -293,6 +314,16 @@ public class Enemy extends GameObject {
 			}
 			else{
 				sprite[enemyType][imageDirection].draw(vector.getX()-32, vector.getY()-32);
+			}
+		}
+		
+		//RENDER BLOOD OVERLAY
+		if(hitpoints < maxHitpoints*0.3f){
+			if(enemyType == 0 || enemyType == 1){
+				bloodOverlay[enemyType][imageDirection].draw(this.vector.getX()-32, this.vector.getY()-32);
+			}
+			else if(enemyType == 2){
+				bloodOverlay[enemyType][imageDirection].draw(this.vector.getX()-64, this.vector.getY()-64);
 			}
 		}
 	

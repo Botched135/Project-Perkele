@@ -430,9 +430,6 @@ public class GameState extends BasicGameState {
 		bgMap.render(32*(-20), 32*(-11));
 		g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
 		
-		//inventory.render(gc, sbg, g);
-
-		
 		//RENDER TEXT (and miscellaneous)
 		g.setColor(new Color(0,0,0));
 		g.drawString("Wave Number: " + wave, 30, 30); //Displaying the wave number
@@ -455,7 +452,13 @@ public class GameState extends BasicGameState {
 		}
 		
 		//TRANSLATE (move "camera") ACCORDING TO PLAYER MOVEMENT ============================================================================================
-		
+		g.translate((-player.vector.getX())+(Window.WIDTH/2), (-player.vector.getY())+(Window.HEIGHT/2));
+		if(bloodPool.size()>0){
+			for(int i = bloodPool.size()-1; i >=0;i--){
+				bloodPool.get(i).render(gc, sbg, g);
+			}
+		}
+		g.translate((player.vector.getX())-(Window.WIDTH/2), (player.vector.getY())-(Window.HEIGHT/2));
 		//ENEMY INDICATOR SPRITES
 		
 		if(enemyIndicatorList.size() > 0){

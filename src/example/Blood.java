@@ -17,7 +17,9 @@ public class Blood extends GameObject {
 	
 	Blood(Enemy _enemy, int dead){
 		if(dead == 0){ //if they are alive
-		this.vector = new Vector2f(_enemy.vector.getX()-16, _enemy.vector.getY()-16);		}
+		this.vector = new Vector2f(_enemy.vector.getX(), _enemy.vector.getY());
+		System.out.println(this.vector);
+		}
 		else{
 			this.vector = new Vector2f(_enemy.vector.getX(), _enemy.vector.getY());
 		}
@@ -28,19 +30,17 @@ public class Blood extends GameObject {
 		
 		smallBlood = new Image("data/smallBlood.png");
 		bigBlood = new Image("data/bigBlood.png");
-		System.out.println("Hurr");
 	}
 	public void update(GameContainer gc, StateBasedGame sbg){
 		
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g){
 		if(type == 0){
-		smallBlood.draw(GameState.mousePos.getX(), GameState.mousePos.getY());
+		smallBlood.draw(vector.getX()-16, vector.getY()-16);
 
-		System.out.println("Hurr");
 		}
 		else{
-		bigBlood.draw(GameState.mousePos.getX(), GameState.mousePos.getY());
+		bigBlood.draw(vector.getX()-32, vector.getY()-32);
 		}
 	}
 }
